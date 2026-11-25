@@ -40,6 +40,7 @@
               <button class="btn btn-outline" type="button" id="gh-cek">Cek koneksi</button>
             </div>
             <p class="meta" id="gh-status" role="status" aria-live="polite"></p>
+            <p class="meta"><strong>Catatan:</strong> <em>Cek koneksi</em> hanya memastikan token bisa <strong>membaca</strong>. Izin <strong>menulis</strong> baru teruji saat klik <em>Unggah &amp; terbitkan</em>.</p>
             <p class="meta">Buat token di <a href="https://github.com/settings/tokens" target="_blank" rel="noopener noreferrer">GitHub → Settings → Developer settings → Tokens</a>. Token klasik perlu izin <strong>repo</strong>; fine-grained perlu <strong>Contents: read &amp; write</strong> dan <strong>Metadata: read</strong>. Simpan token hanya di perangkat pemilik dan cabut jika perlu.</p>
           </section>
 
@@ -107,7 +108,7 @@
     };
     const pesanGagal = (r) => {
       if (r.status === 401) return 'Token ditolak (401). Periksa atau buat token baru.';
-      if (r.status === 403) return 'Tidak ada izin atau kuota API habis (403). Periksa izin token.';
+      if (r.status === 403) return 'Token hanya bisa membaca (403). Buat token klasik dengan izin "repo", atau fine-grained dengan Contents: Read and write pada repository faisal.cms.com. Tempel token barunya, Simpan pengaturan, lalu coba lagi.';
       if (r.status === 404) return 'Repository tidak ditemukan (404). Periksa nama akun dan repository.';
       return 'GitHub menolak permintaan (' + r.status + '): ' + (r.message || 'tidak diketahui');
     };
