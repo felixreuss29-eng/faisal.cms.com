@@ -283,8 +283,11 @@ function perbaruiTicker() {
   if (!el || !BERITA.articles.length) return;
   const potong = (s) => s.length > 72 ? s.slice(0, 69).replace(/\s+\S*$/, '') + '…' : s;
   // Utamakan topik yang sedang ramai; jika tidak ada, pakai tiga berita terbaru.
-  const ramai = /cpns|pongkor|km 50|hoaks|pilkada|pemilu|inflasi|badak|slank|pon/i;
-  const pilihan = BERITA.articles.filter((a) => ramai.test(a.title)).slice(0, 3);
+  const kataViral = ['cpns', 'pongkor', 'km 50', 'hoaks', 'badak', 'pilkada', 'pemilu', 'inflasi', 'slank', 'pon'];
+  const pilihan = kataViral
+    .map((k) => BERITA.articles.find((a) => a.title.toLowerCase().includes(k)))
+    .filter(Boolean)
+    .slice(0, 3);
   const daftar = pilihan.length ? pilihan : BERITA.articles.slice(0, 3);
   el.textContent = daftar.map((a) => potong(a.title)).join(' · ');
 }
