@@ -8,37 +8,31 @@ const AUTHORS = {
 
 const ARTICLES = [
   {
-    id: 'ruu-pemilu',
+    id: 'pilkada-2027',
     category: 'Politik',
-    title: 'DPR Sahkan RUU Pemilu, Ini Enam Poin Perubahan yang Disepakati',
-    excerpt: 'Persetujuan rapat paripurna menutup pembahasan enam bulan dan mengubah sejumlah ketentuan teknis penyelenggaraan pemilu.',
+    title: 'KPU Tetapkan Jadwal Pilkada 2027, Ini Rangkaian Tahapannya',
+    excerpt: 'Komisi Pemilihan Umum merilis kalender pemilihan kepala daerah berikutnya, dari pencalonan hingga pelantikan.',
     image: 'hero.jpg',
     author: AUTHORS.andi,
     published: '2026-11-25T09:12:00+07:00',
     updated: '2026-11-25T10:15:00+07:00',
     featured: true,
     body: [
-      { type: 'p', text: 'Dewan Perwakilan Rakyat mengesahkan Rancangan Undang-Undang Pemilu dalam rapat paripurna yang berlangsung hingga malam hari. Persetujuan ini menutup pembahasan yang berjalan selama enam bulan sejak draf pertama diperkenalkan kepada publik. Pimpinan rapat menyatakan keputusan diambil secara musyawarah setelah seluruh fraksi menyampaikan pendiriannya.' },
-      { type: 'p', text: 'Keputusan tersebut diambil setelah fraksi-fraksi mencapai kesepakatan atas sejumlah pasal yang sempat menjadi perdebatan, terutama yang berkaitan dengan ambang batas pencalonan, mekanisme seleksi internal partai, dan batas waktu penyelesaian sengketa hasil. Paket perubahan ini kemudian dibawa ke tahap pengesahan bersama antara DPR dan pemerintah.' },
-      { type: 'h2', text: '1. Ambang batas pencalonan' },
-      { type: 'p', text: 'Aturan baru menetapkan ambang batas pencalonan presiden sebesar 20 persen kursi DPR atau 25 persen suara sah nasional. Ketentuan ini menggantikan formulasi sebelumnya yang dianggap memberi ruang terlalu sempit bagi partai menengah. Fraksi kecil semula meminta penyesuaian bertahap dengan masa transisi dua siklus pemilu, namun mayoritas fraksi sepakat angka tersebut cukup untuk menjaga stabilitas sistem kepartaian tanpa mengunci persaingan politik.' },
-      { type: 'p', text: 'Penetapan angka ini juga disertai kewajiban partai untuk menunjukkan dukungan yang tersebar di sejumlah provinsi. KPU akan memverifikasi data dukungan tersebut sebelum menetapkan daftar calon tetap. Verifikasi dilakukan dengan sistem informasi pencalonan yang terhubung secara langsung dengan data hasil pemilu sebelumnya, sehingga mengurangi kemungkinan duplikasi dukungan.' },
-      { type: 'h2', text: '2. Mekanisme nominasi' },
-      { type: 'p', text: 'Partai politik kini diwajibkan mengajukan calon melalui mekanisme seleksi internal yang terdokumentasi. Setiap tahapan seleksi harus dicatat, mulai dari pendaftaran calon, penyaringan, hingga penetapan nama oleh badan pengurus. KPU akan memverifikasi kelengkapan administrasi sebelum menetapkan daftar calon tetap. Dokumentasi internal menjadi syarat tambahan yang tidak boleh diabaikan.' },
-      { type: 'p', text: 'Aturan ini dimaksudkan untuk meningkatkan akuntabilitas proses pencalonan sekaligus memberi kepastian bagi kader partai yang mengikuti seleksi. Beberapa partai menyambut ketentuan ini karena dianggap dapat mengurangi praktik penunjukan calon tanpa proses yang jelas. Namun, partai lain meminta pedoman teknis yang lebih rinci agar tidak menimbulkan perbedaan interpretasi di daerah.' },
-      { type: 'quote', text: 'Kami ingin aturan yang stabil, tidak berubah setiap siklus pemilu. Kepastian hukum adalah kunci kepercayaan publik.', cite: 'Ketua Komisi II DPR' },
-      { type: 'h2', text: '3. Sengketa hasil pemilu' },
-      { type: 'p', text: 'Mahkamah Konstitusi tetap menjadi lembaga pertama yang memeriksa sengketa hasil, dengan batas waktu penyelesaian yang diperketat menjadi 14 hari kerja sejak permohonan didaftarkan. Perubahan ini menjadi perhatian khusus karena sengketa hasil kerap menjadi titik ketegangan setelah pemungutan suara. Pemerintah dan DPR sepakat bahwa percepatan penanganan perlu diimbangi dengan jaminan akses bagi pemohon untuk mengajukan bukti.' },
-      { type: 'p', text: 'Untuk mendukung percepatan tersebut, MK akan menambah jumlah hakim dan staf pendukung pada masa sengketa. Sistem pendaftaran perkara juga akan diperbarui agar pemohon dapat memantau perkembangan berkas secara daring. Pembaruan ini diharapkan mengurangi antrean perkara dan memberi transparansi yang lebih besar kepada publik.' },
-      { type: 'h2', text: '4. Kampanye digital' },
-      { type: 'p', text: 'RUU Pemilu juga mengatur kampanye digital untuk pertama kalinya secara eksplisit. Konten kampanye yang dibayarkan wajib diberi penanda yang jelas, dan platform diminta menyediakan repositori iklan politik yang dapat diakses publik. Ketentuan ini menjadi respons terhadap maraknya konten bersponsor yang tidak transparan pada media sosial.' },
-      { type: 'p', text: 'KPU akan menerbitkan pedoman teknis tentang format penanda iklan dan kewajiban pelaporan. Partaipolitik dan calon yang melanggar dapat dikenakan sanksi administratif berupa penghentian konten atau pembatalan jadwal kampanye. Pengawasan dilakukan bersama antara KPU, Komisi Pemilihan Umum daerah, dan lembaga pengawas media.' },
-      { type: 'h2', text: '5. Tenaga ad hoc pemilu' },
-      { type: 'p', text: 'Penyelenggara pemilu diberi kewenangan merekrut tenaga ad hoc dengan kriteria yang lebih jelas, termasuk batas usia, pendidikan minimum, dan larangan menjadi anggota partai politik pada masa bertugas. Rekrutmen dilakukan secara terbuka dan hasilnya diumumkan di setiap kantor kecamatan. Langkah ini diambil untuk mengurangi ketergantungan pada tenaga sukarela yang jumlahnya tidak menentu.' },
-      { type: 'p', text: 'Tenaga ad hoc akan menerima pelatihan standar sebelum bertugas dan mendapatkan kontrak kerja yang menjamin hak upah. KPU memperkirakan kebutuhan tenaga tambahan meningkat sekitar 15 persen dibanding siklus sebelumnya, terutama di wilayah dengan jumlah pemilih yang bertambah signifikan.' },
-      { type: 'h2', text: '6. Transparansi hasil' },
-      { type: 'p', text: 'Setiap hasil penghitungan suara kini wajib diunggah ke portal publik dalam waktu maksimal 24 jam setelah penghitungan di tempat pemungutan suara selesai. Portal tersebut juga menampilkan versi teduh dari formulir hasil agar warga dapat membandingkan data tanpa harus mengunduh berkas berukuran besar. KPU menyebut transparansi sebagai upaya menekan potensi sengketa.' },
-      { type: 'p', text: 'Dengan enam perubahan ini, DPR berharap penyelenggaraan pemilu berikutnya lebih tertib, lebih cepat, dan lebih mudah diawasi publik. RUU masih memerlukan penandatanganan presiden sebelum berlaku penuh. Setelah diundangkan, pemerintah dan KPU memiliki waktu enam bulan untuk menyiapkan seluruh peraturan turunan.' }
+      { type: 'p', text: 'Komisi Pemilihan Umum telah menetapkan kalender penyelenggaraan pemilihan kepala daerah tahun 2027. Jadwal tersebut mencakup seluruh tahapan, mulai dari persiapan administrasi dan pencalonan hingga penghitungan suara serta pelantikan kepala daerah terpilih.' },
+      { type: 'p', text: 'Penetapan jadwal ini menjadi acuan bagi kantor KPU di seluruh daerah untuk menyusun rencana kerja dan anggaran. KPU mengimbau partisipasi warga sejak awal, terutama pada tahapan pemutakhiran data pemilih yang kerap menjadi titik kritis.' },
+      { type: 'h2', text: '1. Pemutakhiran data pemilih' },
+      { type: 'p', text: 'Tahap awal difokuskan pada pemutakhiran daftar pemilih secara berjenjang. Petugas akan melakukan pencocokan dan penelitian langsung ke rumah tangga, lalu mempublikasikan daftar hasil untuk mendapat masukan warga sebelum ditetapkan.' },
+      { type: 'p', text: 'KPU membuka kanal pengaduan daring agar warga dapat melaporkan data yang tidak sesuai. Setiap masukan diverifikasi oleh panitia pemutakhiran sebelum dimasukkan ke dalam daftar pemilih tetap.' },
+      { type: 'h2', text: '2. Pencalonan dan verifikasi' },
+      { type: 'p', text: 'Partai politik mengajukan pasangan calon melalui kantor KPU daerah dengan melengkapi persyaratan administratif. Berkas yang diterima akan diperiksa pada tahap verifikasi faktual untuk memastikan keabsahan dukungan dan identitas calon.' },
+      { type: 'p', text: 'Calon dari jalur perseorangan wajib menunjukkan bukti dukungan yang tersebar di sejumlah kecamatan sesuai ketentuan. KPU akan mengumumkan hasil verifikasi secara terbuka sebelum menetapkan daftar calon tetap.' },
+      { type: 'quote', text: 'Jadwal yang jelas memberi kepastian bagi penyelenggara maupun warga. Kami mengajak semua pihak menjaga tahapan tetap tertib.', cite: 'Juru Bicara KPU' },
+      { type: 'h2', text: '3. Kampanye dan pemungutan suara' },
+      { type: 'p', text: 'Masa kampanye dimulai setelah penetapan calon tetap dan dibatasi oleh ketentuan waktu yang berlaku. KPU akan mengawasi pelaksanaan kampanye, termasuk materi yang disebarkan melalui media sosial, agar tetap mematuhi aturan yang ditetapkan.' },
+      { type: 'p', text: 'Pada hari pemungutan suara, warga dapat menggunakan hak pilih di tempat pemungutan suara yang telah ditentukan berdasarkan domisili. Informasi lokasi dan jadwal dapat diakses melalui portal resmi KPU.' },
+      { type: 'h2', text: '4. Penghitungan dan penetapan hasil' },
+      { type: 'p', text: 'Penghitungan suara dilakukan di tempat pemungutan suara, kemudian dilanjutkan secara berjenjang hingga tingkat daerah. Hasil penghitungan diunggah ke portal publik agar dapat dipantau oleh warga.' },
+      { type: 'p', text: 'Setelah hasil ditetapkan, kepala daerah terpilih dilantik sesuai jadwal yang ditentukan. KPU menegaskan seluruh tahapan dapat dipantau publik sebagai bentuk komitmen terhadap transparansi penyelenggaraan pemilu.' }
     ]
   },
   {
@@ -77,7 +71,7 @@ const ARTICLES = [
     published: '2026-11-25T04:10:00+07:00',
     body: [
       { type: 'p', text: 'Mahkamah Konstitusi menggelar sidang perdana sengketa hasil pemilihan kepala daerah kabupaten. Majelis hakim membacakan jadwal pemeriksaan dan memberi kesempatan kepada pemohon untuk melengkapi bukti pendukung dalam tiga hari kerja.' },
-      { type: 'p', text: 'Sidang ini menjadi yang pertama menggunakan batas waktu 14 hari kerja setelah disahkannya perubahan aturan pemilu. Panitera menyebut sistem pendaftaran berkas daring sudah digunakan sejak pekan lalu.' }
+      { type: 'p', text: 'Sidang ini menjadi yang pertama menggunakan batas waktu 14 hari kerja sesuai ketentuan yang berlaku. Panitera menyebut sistem pendaftaran berkas daring sudah digunakan sejak pekan lalu.' }
     ]
   }
 ];
@@ -89,9 +83,9 @@ const OPINIONS = [
 ];
 
 const POPULAR = [
-  'DPR Sahkan RUU Pemilu, Ini Enam Poin Perubahannya',
-  'KPU Tetapkan Jadwal Pilkada 2027',
+  'KPU Tetapkan Jadwal Pilkada 2027, Ini Rangkaian Tahapannya',
   'Sengketa Pilkada: MK Gelar Sidang Perdana',
+  'Pengamat: Stabilitas Aturan Jadi Kunci Pemilu 2027',
   'Timnas Indonesia Menang 2-0 atas Jepang',
   'Inflasi Turun ke 2,8 Persen di November'
 ];

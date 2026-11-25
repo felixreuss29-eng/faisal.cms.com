@@ -352,7 +352,7 @@ function iklanHTML(kelas) {
       <span class="ad-copy">
         <span class="ad-kicker">IKUTI FAISAL</span>
         <strong class="ad-judul">Kabar langsung dari redaksi</strong>
-        <span class="ad-detail">Instagram <b>@faisalakbar0423</b> · TikTok <b>@felixreuss</b></span>
+        <span class="ad-detail">Instagram <b>@faisalakbar0423</b> · TikTok <b>felix reuss</b></span>
       </span>
       <span class="ad-links">
         <a class="btn" href="https://www.instagram.com/faisalakbar0423/" target="_blank" rel="noopener noreferrer" aria-label="Buka Instagram Faisal">Instagram ↗</a>
@@ -387,8 +387,8 @@ function renderHome() {
 
   document.querySelector('#politik').innerHTML = `
     <div class="split">
-      <article class="lead"><a href="artikel.html?id=${utama.id}"><img src="${img('politik3.jpg')}" alt="Ilustrasi koalisi partai" /></a><span class="kicker">Politik</span><h3><a href="artikel.html?id=${utama.id}">Koalisi Partai Sepakat Dukung Perubahan Aturan Pemilu</a></h3></article>
-      <div>${rankedHTML(['Komisi II Minta Aturan Turunan Segera Ditetapkan', 'Pengamat: Stabilitas Aturan Jadi Kunci Pemilu 2027', 'DPR Sahkan RUU Pemilu dan Perubahan Lima Pasal', 'KPU Buka Pendaftaran Tenaga Ad Hoc Pemilu'])}</div>
+      <article class="lead"><a href="artikel.html?id=${utama.id}"><img src="${img('politik3.jpg')}" alt="Ilustrasi suasana rapat politik" /></a><span class="kicker">Politik</span><h3><a href="artikel.html?id=${utama.id}">${esc(utama.title)}</a></h3></article>
+      <div>${rankedHTML(['Komisi II Minta Aturan Turunan Segera Ditetapkan', 'Pengamat: Stabilitas Aturan Jadi Kunci Pemilu 2027', 'KPU Buka Pendaftaran Tenaga Ad Hoc Pemilu', 'Warga Mulai Cek Daftar Pemilih di Kanal Daring'])}</div>
     </div>`;
 
   document.querySelector('#populer-fakta').innerHTML = `
@@ -455,8 +455,8 @@ function renderArticle() {
           <p class="meta" data-akses-status aria-live="polite"></p>
           <p class="meta">Belum berlangganan? <a href="langganan.html#form-konfirmasi">Kirim bukti pembayaran di sini.</a> Bantuan: <a href="https://wa.me/6281286484770">081286484770</a> · <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a></p>
         </section>
-        <div class="tags"><span class="tag">#Pemilu</span><span class="tag">#DPR</span><span class="tag">#RUU Pemilu</span><span class="tag">#KPU</span></div>
-        <div class="correction"><strong>Catatan redaksi</strong><br />Angka ambang batas pada paragraf ketiga diperbarui menjadi 20 persen pada <span data-clock></span>.</div>
+        <div class="tags"><span class="tag">#Pilkada2027</span><span class="tag">#KPU</span><span class="tag">#Pemilih</span><span class="tag">#Demokrasi</span></div>
+        <div class="correction"><strong>Catatan redaksi</strong><br />Jadwal dan tahapan mengikuti kalender resmi penyelenggara pemilu, diperbarui pada <span data-clock></span>.</div>
         <div class="author-bio"><img src="${img(a.author.photo)}" alt="Foto penulis" /><div><h3>${esc(a.author.name)}</h3><div class="meta">${esc(a.author.role)} · Faisal</div><p class="meta">Meliput dinamika parlemen dan proses pemilu sejak 2015.</p></div><button class="btn btn-outline" data-toast="Anda mengikuti penulis ini">+ Ikuti penulis</button></div>
         <section class="comments"><h3 class="komentar-judul">Komentar</h3>
           <div class="comment-form"><label class="sr-only" for="komentar">Komentar</label><textarea id="komentar" placeholder="Bagikan pandangan Anda tentang artikel ini…"></textarea><div class="row"><button class="btn btn-primary" type="button" data-kirim-komentar>Kirim</button></div></div>
@@ -554,8 +554,8 @@ function renderCategory() {
     <div class="wrap">
       <div class="filter-bar">${topik.map((t, i) => `<button class="chip ${i === 0 ? 'active' : ''}" data-filter type="button">${t}</button>`).join('')}<select aria-label="Urutkan"><option>Terbaru</option><option>Terpopuler</option></select></div>
       <div class="section"><h2 class="sr-only">Sorotan politik</h2><div class="split">
-        <article class="lead"><a href="artikel.html?id=ruu-pemilu"><img src="${img('hero.jpg')}" alt="Berita utama politik" /></a><span class="kicker">Utama</span><h3><a href="artikel.html?id=ruu-pemilu">DPR Sahkan RUU Pemilu, Ini Enam Poin Perubahan yang Disepakati</a></h3></article>
-        <div>${rankedHTML(['KPU Tetapkan Jadwal Pilkada 2027', 'MK Gelar Sidang Sengketa Hasil', 'Koalisi Partai Sepakat Dukung RUU'])}</div>
+        <article class="lead"><a href="artikel.html?id=${ARTICLES[0].id}"><img src="${img(ARTICLES[0].image)}" alt="Berita utama politik" /></a><span class="kicker">Utama</span><h3><a href="artikel.html?id=${ARTICLES[0].id}">${esc(ARTICLES[0].title)}</a></h3></article>
+        <div>${rankedHTML(['Sengketa Pilkada: MK Gelar Sidang Perdana', 'Komisi II Minta Aturan Turunan Segera Ditetapkan', 'Warga Mulai Cek Daftar Pemilih di Kanal Daring'])}</div>
       </div></div>
       <div class="section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title">Berita Politik</h2></div><div class="grid-3">${ARTICLES.map(cardHTML).join('')}</div></div>
       <button class="load-more" data-toast="Menampilkan artikel berikutnya…">Muat lebih banyak</button>
