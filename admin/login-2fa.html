@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Verifikasi 2 Langkah — Faisal CMS</title>
+  <meta name="description" content="Verifikasi dua langkah untuk akun Faisal CMS." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body data-admin="1">
+  <main class="auth-page">
+    <section class="auth-art">
+      <img src="../assets/img/hero.jpg" alt="Latar ruang redaksi" />
+      <span class="brand-name">Faisal CMS</span><span class="kicker" style="color:#93c5fd;letter-spacing:.14em">RUANG REDAKSI</span>
+      <h1>Berita yang sampai ke publik, dimulai dari sini.</h1>
+      <p>Kelola naskah, alur persetujuan, dan publikasi dalam satu ruang kerja redaksi.</p>
+      <ul class="auth-features"><li>Alur persetujuan yang jelas</li><li>Koreksi dan hak jawab tercatat</li><li>Analitik pembaca secara real-time</li></ul>
+      <p style="font-size:10px;color:#64748b;margin-top:24px">© 2026 Faisal Media · Penggunaan internal</p>
+    </section>
+    <section class="auth-form-side">
+      <div class="auth-card">
+        <span class="kicker">Langkah 2 dari 2</span>
+        <h2>Verifikasi dua langkah</h2>
+        <p class="subtitle">Masukkan kode 6 digit dari aplikasi autentikasi pada perangkat Anda.</p>
+        <div class="step-bars"><i class="on"></i><i class="on"></i></div>
+        <div class="panel" style="display:flex;gap:12px;align-items:center;padding:12px"><img src="../assets/img/pemilik-profil.jpg" alt="Foto profil Faisal Akbar" style="width:32px;height:32px;border-radius:50%;object-fit:cover" /><div style="flex:1"><strong id="akun-email" style="font-size:13px">felixreuss29@gmail.com</strong><div class="meta">Redaktur · Hak akses penuh</div></div><a class="kicker" href="login.html">Ganti akun</a></div>
+        <div class="form-field" style="margin-top:20px"><label>Kode verifikasi</label>
+          <div class="otp-row" id="otp-row">
+            <input inputmode="numeric" maxlength="1" aria-label="Digit 1" /><input inputmode="numeric" maxlength="1" aria-label="Digit 2" /><input inputmode="numeric" maxlength="1" aria-label="Digit 3" /><input inputmode="numeric" maxlength="1" aria-label="Digit 4" /><input inputmode="numeric" maxlength="1" aria-label="Digit 5" /><input inputmode="numeric" maxlength="1" aria-label="Digit 6" />
+          </div>
+        </div>
+        <p class="meta">Pratinjau alur: enam digit apa pun akan melanjutkan ke dasbor.</p>
+        <div class="alert error">Kode tidak valid. Periksa kembali atau minta kode baru.</div>
+        <button class="btn btn-primary btn-block" id="verifikasi" type="button">Verifikasi & Masuk</button>
+        <div class="auth-links"><a href="#" id="kirim-ulang">Kirim ulang kode</a><a href="login.html">← Kembali ke masuk</a></div>
+        <p class="secure-note">Verifikasi ini simulasi. Kode asli dan sesi aman memerlukan backend.</p>
+      </div>
+    </section>
+  </main>
+  <div class="toast" role="status" aria-live="polite"></div>
+  <script>document.getElementById('akun-email').textContent = localStorage.getItem('faisal-account') || 'felixreuss29@gmail.com';</script>
+  <script src="../assets/js/data.js"></script><script src="../assets/js/app.js"></script>
+</body>
+</html>

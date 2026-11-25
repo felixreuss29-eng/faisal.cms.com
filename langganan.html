@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Langganan — Faisal</title>
+  <meta name="description" content="Berlangganan Faisal dengan pembayaran via DANA 0895323964130 dan konfirmasi ke WhatsApp 081286484770." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body data-page="Beranda">
+  <div data-site-header></div>
+
+  <main class="wrap langganan-page" style="padding-top:40px">
+    <span class="kicker">Langganan</span>
+    <h1 style="font-family:var(--font-display);font-size:40px;margin:8px 0">Dukung jurnalisme independen</h1>
+    <p class="meta" style="font-size:14px;max-width:680px">Baca seluruh artikel tanpa batas, dapatkan rangkuman harian, dan bantu redaksi tetap bekerja secara mandiri. Pembayaran diverifikasi langsung oleh pemilik.</p>
+
+    <section class="section" aria-labelledby="judul-paket">
+      <div class="section-head"><span class="section-mark"></span><h2 class="section-title" id="judul-paket">Pilih paket</h2></div>
+      <div class="grid-3" id="paket-grid">
+        <article class="panel plan" data-paket="Digital">
+          <h3 class="panel-title">Digital</h3>
+          <p class="harga">Rp 10.000<span class="meta"> / bulan</span></p>
+          <p class="meta">Semua artikel · Newsletter harian · Arsip penuh</p>
+          <button class="btn btn-outline btn-block" type="button" data-pilih-paket="Digital">Pilih paket</button>
+        </article>
+        <article class="panel plan" data-paket="Digital Plus">
+          <h3 class="panel-title">Digital Plus</h3>
+          <p class="harga">Rp 15.000<span class="meta"> / bulan</span></p>
+          <p class="meta">Semua artikel · Analisis mendalam · Tanpa iklan</p>
+          <button class="btn btn-outline btn-block" type="button" data-pilih-paket="Digital Plus">Pilih paket</button>
+        </article>
+        <article class="panel plan" data-paket="Koran + Digital">
+          <h3 class="panel-title">Koran + Digital</h3>
+          <p class="harga">Rp 10.000<span class="meta"> / bulan</span></p>
+          <p class="meta">Koran digital · Semua artikel · Prioritas acara</p>
+          <button class="btn btn-outline btn-block" type="button" data-pilih-paket="Koran + Digital">Pilih paket</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="cara-bayar" aria-labelledby="judul-cara">
+      <div class="section-head"><span class="section-mark"></span><h2 class="section-title" id="judul-cara">Cara berlangganan</h2></div>
+      <div class="two-col">
+        <div class="panel">
+          <h3 class="panel-title">1. Transfer via DANA</h3>
+          <ol class="step-list">
+            <li>Buka aplikasi DANA dan pilih <strong>Kirim</strong>.</li>
+            <li>Masukkan nomor DANA Faisal Media di bawah ini.</li>
+            <li>Transfer sesuai harga paket yang dipilih.</li>
+            <li>Simpan bukti transaksi sebagai catatan pribadi.</li>
+          </ol>
+          <div class="payment-number">
+            <div><span>Nomor DANA</span><strong id="dana-number">0895323964130</strong></div>
+            <button class="btn btn-outline" type="button" data-copy="0895323964130" aria-label="Salin nomor DANA">Salin nomor</button>
+          </div>
+          <p class="meta" style="margin-top:12px">Atas nama Faisal Media. Gunakan nama pengirim yang sama dengan nama pada formulir agar mudah diverifikasi.</p>
+        </div>
+        <div class="panel">
+          <h3 class="panel-title">2. Kirim konfirmasi</h3>
+          <p class="meta">Setelah transfer, unggah bukti pada formulir di bawah, lalu kirim nama, email, nomor WhatsApp, paket, jumlah bayar, <strong>dan bukti transfer</strong> melalui WhatsApp atau email pemilik. Setelah bukti dicek, pemilik mengirim <strong>kode akses</strong>. Masukkan kode itu di halaman artikel untuk membuka paywall.</p>
+          <div class="contact-row">
+            <a class="btn btn-primary" id="wa-direct" href="https://wa.me/6281286484770?text=Konfirmasi%20langganan%20Faisal" target="_blank" rel="noopener">WhatsApp 081286484770</a>
+            <a class="btn btn-outline" id="email-direct" href="mailto:felixreuss29@gmail.com?subject=Konfirmasi%20langganan%20Faisal">Email pemilik</a>
+          </div>
+          <p class="meta" id="kontak-pemilik">Pemilik: <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a> · WhatsApp: <a href="https://wa.me/6281286484770">081286484770</a></p>
+          <p class="meta">Estimasi aktivasi: maksimal 1×24 jam kerja.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="form-langganan" aria-labelledby="judul-form">
+      <div class="section-head"><span class="section-mark"></span><h2 class="section-title" id="judul-form">Formulir konfirmasi pembayaran</h2></div>
+      <div class="panel form-panel">
+        <form id="form-konfirmasi" novalidate>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="nama">Nama lengkap</label>
+              <input id="nama" name="nama" type="text" autocomplete="name" placeholder="Sesuai nama pengirim DANA" required />
+              <span class="error hidden" data-error="nama">Nama lengkap wajib diisi.</span>
+            </div>
+            <div class="form-field">
+              <label for="email-langganan">Alamat email</label>
+              <input id="email-langganan" name="email" type="email" autocomplete="email" placeholder="nama@email.com" required />
+              <span class="error hidden" data-error="email">Alamat email tidak valid.</span>
+            </div>
+            <div class="form-field">
+              <label for="wa">Nomor WhatsApp</label>
+              <input id="wa" name="wa" type="tel" inputmode="tel" autocomplete="tel" placeholder="08xxxxxxxxxx" required />
+              <span class="error hidden" data-error="wa">Nomor WhatsApp harus diawali 08 dan berisi 10–13 digit.</span>
+            </div>
+            <div class="form-field">
+              <label for="paket-pilihan">Paket yang dibayar</label>
+              <select id="paket-pilihan" name="paket" required>
+                <option value="">Pilih paket</option>
+                <option value="Digital">Digital — Rp 10.000</option>
+                <option value="Digital Plus">Digital Plus — Rp 15.000</option>
+                <option value="Koran + Digital">Koran + Digital — Rp 10.000</option>
+              </select>
+              <span class="error hidden" data-error="paket">Pilih paket terlebih dahulu.</span>
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="catatan">Catatan untuk pemilik (opsional)</label>
+            <textarea id="catatan" name="catatan" rows="3" placeholder="Misalnya: nama pengirim DANA berbeda, atau tanggal transfer."></textarea>
+          </div>
+          <div class="form-field">
+            <label for="bukti">Bukti transfer DANA <span aria-hidden="true">*</span></label>
+            <input id="bukti" name="bukti" type="file" accept="image/jpeg,image/png,image/webp" required />
+            <span class="meta">Wajib: foto atau tangkapan layar bukti transfer (JPG, PNG, atau WebP, maksimal 10 MB). Bukti disimpan di perangkat ini dan harus dikirim ke pemilik lewat WhatsApp/email.</span>
+            <span class="error hidden" data-error="bukti">Bukti transfer wajib diunggah berupa gambar maksimal 10 MB.</span>
+            <div class="bukti-preview hidden" id="bukti-preview"><img id="bukti-preview-img" alt="Pratinjau bukti transfer DANA" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" /></div>
+          </div>
+          <label class="check-row">
+            <input id="setuju" type="checkbox" required />
+            <span>Saya menyetujui bahwa pembayaran diverifikasi manual oleh pemilik dan status langganan dikonfirmasi melalui WhatsApp atau email.</span>
+          </label>
+          <span class="error hidden" data-error="setuju">Centang persetujuan untuk melanjutkan.</span>
+          <div class="form-actions">
+            <button class="btn btn-primary" type="submit">Kirim konfirmasi via WhatsApp</button>
+            <button class="btn btn-outline" type="button" id="kirim-email">Kirim via email</button>
+          </div>
+        </form>
+        <div class="submission-result hidden" id="hasil-pengajuan" role="status" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="section" id="cek-status" aria-labelledby="judul-status">
+      <div class="section-head"><span class="section-mark"></span><h2 class="section-title" id="judul-status">Cek status pengajuan</h2></div>
+      <div class="panel form-panel">
+        <p class="meta">Status di bawah ini dibaca dari catatan pada perangkat ini. Konfirmasi akhir tetap dikirim pemilik lewat WhatsApp atau email.</p>
+        <div class="status-row">
+          <label class="sr-only" for="cek-email">Email yang digunakan</label>
+          <input id="cek-email" type="email" placeholder="Alamat email yang didaftarkan" />
+          <button class="btn btn-primary" type="button" id="btn-cek">Cek status</button>
+        </div>
+        <div id="hasil-status" class="submission-result hidden" role="status" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="section" id="riwayat-pengajuan" aria-labelledby="judul-riwayat">
+      <div class="section-head"><span class="section-mark"></span><h2 class="section-title" id="judul-riwayat">Riwayat pengajuan di perangkat ini</h2></div>
+      <div class="panel form-panel" id="daftar-pengajuan"></div>
+    </section>
+  </main>
+
+  <dialog id="dialog-bukti" aria-labelledby="judul-dialog-bukti" style="padding:20px;border:1px solid var(--border);border-radius:8px;max-width:min(92vw,720px);background:var(--surface);color:var(--text)">
+    <h3 id="judul-dialog-bukti" style="font-family:var(--font-display);margin:0 0 12px">Bukti transfer</h3>
+    <img id="gambar-bukti" alt="Bukti transfer DANA yang diunggah" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" style="display:block;max-width:100%;max-height:70vh;margin:0 auto" />
+    <div class="form-actions" style="margin-top:16px"><button class="btn btn-outline" type="button" id="tutup-bukti">Tutup</button></div>
+  </dialog>
+
+  <div data-site-footer></div>
+  <div class="toast" role="status" aria-live="polite"></div>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

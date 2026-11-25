@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Editor Artikel — Faisal CMS</title>
+  <meta name="description" content="Editor naskah dan alur persetujuan artikel Faisal CMS." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body data-admin="1">
+  <div class="admin-shell">
+    <aside class="admin-sidebar">
+      <span class="brand-name">Faisal CMS</span>
+      <nav aria-label="Navigasi admin">
+        <a href="dasbor.html">▦ Dasbor</a><a href="daftar-artikel.html">▤ Artikel</a><a class="active" href="editor.html">✎ Editor</a>
+        <a href="posting.html">↑ Tulis Postingan</a><a href="../index.html">← Lihat situs</a>
+      </nav>
+    </aside>
+    <div class="admin-main">
+      <header class="admin-topbar"><button class="icon-btn" type="button" data-sidebar-toggle aria-label="Ciutkan sidebar" aria-expanded="true">☰</button><h1>Editor Artikel</h1><div class="spacer"></div><span class="badge draft">Draf</span><button class="btn btn-outline" data-toast="Draf tersimpan">Simpan draf</button><button class="btn btn-primary" data-toast="Artikel dikirim untuk review">Kirim review</button></header>
+      <main class="admin-content">
+        <nav class="breadcrumb" aria-label="Breadcrumb">Admin › Artikel › Editor</nav>
+        <div class="panel" style="margin-bottom:18px"><p class="meta"><strong>Catatan:</strong> halaman ini adalah pratinjau alur redaksi. Untuk menerbitkan tulisan ke website, gunakan <a href="posting.html">Tulis Postingan</a>.</p></div>
+        <div class="admin-card" style="margin-top:0">
+          <div class="form-field"><label for="judul">Judul</label><input id="judul" value="DPR Sahkan RUU Pemilu, Ini Enam Poin Perubahan yang Disepakati" /></div>
+          <div class="form-field"><label for="ringkasan">Ringkasan</label><input id="ringkasan" value="Persetujuan rapat paripurna menutup pembahasan enam bulan." /></div>
+          <div class="form-field"><label for="kategori">Kategori</label><select id="kategori"><option>Politik</option><option>Ekonomi</option><option>Olahraga</option><option>Hukum</option><option>Opini</option></select></div>
+          <div class="form-field"><label for="isi">Isi artikel</label><textarea id="isi">Dewan Perwakilan Rakyat mengesahkan Rancangan Undang-Undang Pemilu dalam rapat paripurna yang berlangsung hingga malam hari.</textarea><span class="meta">Estimasi baca: <b id="estimasi-baca">— menit baca</b> · dihitung otomatis dari jumlah kata.</span></div>
+        </div>
+        <section class="admin-card">
+          <h2>Alur persetujuan</h2>
+          <table><thead><tr><th>Tahap</th><th>Oleh</th><th>Waktu</th><th>Status</th></tr></thead><tbody>
+            <tr><td>Draf</td><td>Andi Wijaya</td><td><span data-relative="2026-11-25T04:10:00+07:00"></span></td><td><span class="badge published">Selesai</span></td></tr>
+            <tr><td>Review</td><td>Rina Puspita</td><td><span data-relative="2026-11-25T06:00:00+07:00"></span></td><td><span class="badge review">Menunggu</span></td></tr>
+            <tr><td>Disetujui</td><td>Redaktur Pelaksana</td><td>—</td><td><span class="badge draft">Belum</span></td></tr>
+            <tr><td>Terbit</td><td>Penerbit</td><td>—</td><td><span class="badge draft">Belum</span></td></tr>
+          </tbody></table>
+        </section>
+      </main>
+    </div>
+  </div>
+  <div class="toast" role="status" aria-live="polite"></div>
+  <script src="../assets/js/data.js"></script><script src="../assets/js/app.js"></script>
+</body>
+</html>

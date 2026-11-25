@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tulis Postingan — Faisal CMS</title>
+  <meta name="description" content="Unggah postingan baru ke website Faisal langsung dari ruang admin." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body data-admin="1">
+  <div class="admin-shell">
+    <aside class="admin-sidebar">
+      <span class="brand-name">Faisal CMS</span>
+      <nav aria-label="Navigasi admin">
+        <a href="dasbor.html">▦ Dasbor</a>
+        <a href="daftar-artikel.html">▤ Artikel</a>
+        <a href="editor.html">✎ Editor</a>
+        <a class="active" href="posting.html">↑ Tulis Postingan</a>
+        <a href="../index.html">← Lihat situs</a>
+      </nav>
+    </aside>
+    <div class="admin-main">
+      <header class="admin-topbar"><button class="icon-btn" type="button" data-sidebar-toggle aria-label="Ciutkan sidebar" aria-expanded="true">☰</button><h1>Tulis Postingan</h1><div class="spacer"></div><span class="meta" data-clock></span><a class="btn btn-outline" href="../berita.html" target="_blank" rel="noopener noreferrer">Lihat situs ↗</a></header>
+      <main class="admin-content">
+        <nav class="breadcrumb" aria-label="Breadcrumb">Admin › Tulis Postingan</nav>
+        <div class="two-col">
+          <section class="admin-card">
+            <h2>1. Hubungkan ke GitHub</h2>
+            <p class="meta">Isi sekali saja. Pengaturan tersimpan di browser perangkat ini.</p>
+            <div class="form-field"><label for="gh-owner">Pemilik repository</label><input id="gh-owner" type="text" autocomplete="off" placeholder="nama-akun-github" /></div>
+            <div class="form-field"><label for="gh-repo">Nama repository</label><input id="gh-repo" type="text" autocomplete="off" placeholder="Web_Diplomat" /></div>
+            <div class="form-field"><label for="gh-branch">Cabang</label><input id="gh-branch" type="text" value="main" autocomplete="off" /></div>
+            <div class="form-field"><label for="gh-token">Personal Access Token</label><input id="gh-token" type="password" autocomplete="off" placeholder="ghp_… atau github_pat_…" /></div>
+            <div class="form-actions">
+              <button class="btn btn-outline" type="button" id="gh-simpan">Simpan pengaturan</button>
+              <button class="btn btn-outline" type="button" id="gh-cek">Cek koneksi</button>
+            </div>
+            <p class="meta" id="gh-status" role="status" aria-live="polite"></p>
+            <p class="meta">Buat token di <a href="https://github.com/settings/tokens" target="_blank" rel="noopener noreferrer">GitHub → Settings → Developer settings → Tokens</a>. Token klasik perlu izin <strong>repo</strong>; fine-grained perlu <strong>Contents: read &amp; write</strong> dan <strong>Metadata: read</strong>. Simpan token hanya di perangkat pemilik dan cabut jika perlu.</p>
+          </section>
+
+          <section class="admin-card">
+            <h2>2. Isi postingan</h2>
+            <form id="form-posting" novalidate>
+              <div class="form-field"><label for="post-judul">Judul</label><input id="post-judul" type="text" placeholder="Judul postingan" required /></div>
+              <div class="form-field"><label for="post-kategori">Kategori</label>
+                <select id="post-kategori" required>
+                  <option value="Nasional">Nasional</option><option value="Politik">Politik</option>
+                  <option value="Ekonomi">Ekonomi</option><option value="Olahraga">Olahraga</option>
+                  <option value="Hukum">Hukum</option><option value="Opini">Opini</option>
+                  <option value="Teknologi">Teknologi</option>
+                </select>
+              </div>
+              <div class="form-field"><label for="post-ringkasan">Ringkasan singkat</label><textarea id="post-ringkasan" rows="2" placeholder="Satu atau dua kalimat yang tampil di kartu berita" required></textarea></div>
+              <div class="form-field"><label for="post-gambar">Foto postingan (opsional)</label><input id="post-gambar" type="file" accept="image/jpeg,image/png,image/webp" /><span class="meta">Jika kosong, dipakai foto utama bawaan.</span></div>
+              <div class="post-preview" id="post-preview" hidden><img id="post-preview-img" alt="Pratinjau foto postingan" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" /></div>
+              <div class="form-field"><label for="post-alt">Teks alternatif foto</label><input id="post-alt" type="text" placeholder="Jelaskan isi foto untuk pembaca tunanetra" /></div>
+              <div class="form-field"><label for="post-isi">Isi postingan</label><textarea id="post-isi" rows="8" placeholder="Tulis paragraf. Pisahkan antarparagraf dengan baris kosong." required></textarea></div>
+              <span class="error hidden" id="post-error" role="alert"></span>
+              <div class="form-actions"><button class="btn btn-primary" type="submit" id="post-kirim">Unggah &amp; terbitkan</button></div>
+            </form>
+            <div class="submission-result hidden" id="hasil-posting" role="status" aria-live="polite"></div>
+          </section>
+        </div>
+
+        <section class="admin-card" style="margin-top:18px">
+          <h2>3. Kode akses pelanggan</h2>
+          <p class="meta">Setelah bukti transfer dicek, kirim kode ini ke pelanggan lewat WhatsApp. Pelanggan memasukkannya di halaman artikel untuk membuka paywall. Repository hanya menyimpan sidik jari (hash) kode, bukan kode aslinya.</p>
+          <div class="form-field"><label for="akses-kode">Kode akses baru</label><input id="akses-kode" type="text" autocomplete="off" placeholder="Misalnya: FAISAL-2026" value="FAISAL-2026" /></div>
+          <div class="form-actions"><button class="btn btn-primary" type="button" id="akses-simpan">Simpan kode ke website</button></div>
+          <p class="meta" id="akses-status" role="status" aria-live="polite"></p>
+        </section>
+      </main>
+    </div>
+  </div>
+  <div class="toast" role="status" aria-live="polite"></div>
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script>
+  (function () {
+    const KUNCI = 'faisal-github';
+    const $ = (s) => document.querySelector(s);
+    const el = (id) => document.getElementById(id);
+    const baca = () => { try { return JSON.parse(localStorage.getItem(KUNCI) || '{}'); } catch { return {}; } };
+    const teksStatus = (pesan) => { el('gh-status').textContent = pesan; };
+    const kepala = (denganJson = false) => {
+      const c = baca();
+      if (!c.owner || !c.repo || !c.token) throw new Error('Lengkapi pemilik repository, nama repository, dan token terlebih dahulu.');
+      const h = {
+        Authorization: 'Bearer ' + c.token,
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28'
+      };
+      if (denganJson) h['Content-Type'] = 'application/json';
+      return { c, h };
+    };
+    const pesanGagal = (r) => {
+      if (r.status === 401) return 'Token ditolak (401). Periksa atau buat token baru.';
+      if (r.status === 403) return 'Tidak ada izin atau kuota API habis (403). Periksa izin token.';
+      if (r.status === 404) return 'Repository tidak ditemukan (404). Periksa nama akun dan repository.';
+      return 'GitHub menolak permintaan (' + r.status + '): ' + (r.message || 'tidak diketahui');
+    };
+    const isiForm = () => {
+      const c = baca();
+      el('gh-owner').value = c.owner || '';
+      el('gh-repo').value = c.repo || '';
+      el('gh-branch').value = c.branch || 'main';
+      el('gh-token').value = c.token || '';
+    };
+    const simpanForm = () => {
+      localStorage.setItem(KUNCI, JSON.stringify({
+        owner: el('gh-owner').value.trim(), repo: el('gh-repo').value.trim(),
+        branch: el('gh-branch').value.trim() || 'main', token: el('gh-token').value.trim()
+      }));
+      teksStatus('Pengaturan tersimpan di browser ini.');
+      toast('Pengaturan GitHub tersimpan.');
+    };
+    const base64DariBytes = async (bytes) => {
+      let biner = '';
+      for (let i = 0; i < bytes.length; i += 0x8000) biner += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+      return btoa(biner);
+    };
+    const teksDariBase64 = (base64) => {
+      const biner = atob((base64 || '').replace(/\s/g, ''));
+      return new TextDecoder('utf-8').decode(Uint8Array.from(biner, (c) => c.charCodeAt(0)));
+    };
+    const bacaFile = async (path) => {
+      const { c, h } = kepala();
+      const r = await fetch('https://api.github.com/repos/' + c.owner + '/' + c.repo + '/contents/' + path + '?ref=' + encodeURIComponent(c.branch), { headers: h });
+      if (r.status === 404) return null;
+      if (!r.ok) throw new Error(pesanGagal(await r.json().catch(() => ({}))));
+      return r.json();
+    };
+    const tulisFile = async (path, content, message, sha) => {
+      const { c, h } = kepala(true);
+      const body = { message, content, branch: c.branch };
+      if (sha) body.sha = sha;
+      const r = await fetch('https://api.github.com/repos/' + c.owner + '/' + c.repo + '/contents/' + path, {
+        method: 'PUT', headers: h, body: JSON.stringify(body)
+      });
+      if (!r.ok) throw new Error(pesanGagal(await r.json().catch(() => ({}))));
+      return r.json();
+    };
+    const validasi = () => {
+      const judul = el('post-judul').value.trim();
+      const ringkasan = el('post-ringkasan').value.trim();
+      const isi = el('post-isi').value.trim();
+      let pesan = '';
+      if (judul.length < 5) pesan = 'Judul minimal 5 karakter.';
+      else if (ringkasan.length < 10) pesan = 'Ringkasan minimal 10 karakter.';
+      else if (isi.length < 30) pesan = 'Isi postingan minimal 30 karakter.';
+      el('post-error').textContent = pesan;
+      el('post-error').classList.toggle('hidden', !pesan);
+      return !pesan;
+    };
+    const terbitkan = async (e) => {
+      e.preventDefault();
+      if (!validasi()) return;
+      const tombol = el('post-kirim');
+      tombol.disabled = true;
+      tombol.textContent = 'Mengunggah…';
+      const box = el('hasil-posting');
+      box.classList.add('hidden');
+      try {
+        const { c } = kepala();
+        const judul = el('post-judul').value.trim();
+        const id = 'post-' + Date.now();
+        const file = el('post-gambar').files[0];
+        const ekstensi = file ? (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg' : 'jpg';
+        const gambar = file ? 'upload/' + id + '.' + ekstensi : 'hero.jpg';
+        if (file) {
+          await tulisFile('assets/img/' + gambar, await base64DariBytes(new Uint8Array(await file.arrayBuffer())), 'Tambah foto postingan: ' + judul);
+        }
+        const lama = await bacaFile('assets/js/posts.json');
+        let daftar = [];
+        if (lama) {
+          try { daftar = JSON.parse(teksDariBase64(lama.content)).posts || []; }
+          catch { daftar = []; }
+        }
+        const baru = {
+          id,
+          title: judul,
+          category: el('post-kategori').value,
+          excerpt: el('post-ringkasan').value.trim(),
+          image: gambar,
+          alt: el('post-alt').value.trim() || judul,
+          author: { name: 'Faisal Akbar', role: 'Pemilik & Redaktur Utama', photo: 'pemilik-profil.jpg' },
+          published: new Date().toISOString(),
+          body: el('post-isi').value.trim().split(/\n\s*\n/).filter(Boolean).map((p) => ({ type: 'p', text: p.trim() }))
+        };
+        await tulisFile('assets/js/posts.json', await base64DariBytes(new TextEncoder().encode(JSON.stringify({ posts: [baru, ...daftar] }, null, 2))), 'Tambah postingan: ' + judul, lama && lama.sha);
+        box.classList.remove('hidden');
+        box.innerHTML = '<h3>Postingan berhasil diunggah</h3><p><strong>' + judul + '</strong> sudah masuk ke repository <code>' + c.owner + '/' + c.repo + '</code>.</p><p><a class="btn btn-primary" href="../artikel.html?id=' + id + '" target="_blank" rel="noopener noreferrer">Lihat postingan</a></p><p class="meta">GitHub Pages perlu 1–3 menit untuk mempublish ulang. Jika halaman belum berubah, tunggu sebentar lalu muat ulang.</p>';
+        el('form-posting').reset();
+        el('post-preview').hidden = true;
+        toast('Postingan berhasil diunggah.');
+      } catch (err) {
+        box.classList.remove('hidden');
+        box.innerHTML = '<h3>Gagal mengunggah</h3><p>' + err.message + '</p><p class="meta">Periksa pengaturan GitHub dan izin token, lalu coba lagi.</p>';
+        toast('Gagal mengunggah postingan.');
+      } finally {
+        tombol.disabled = false;
+        tombol.textContent = 'Unggah & terbitkan';
+      }
+    };
+    el('gh-simpan').addEventListener('click', simpanForm);
+    el('gh-cek').addEventListener('click', async () => {
+      try {
+        const { c, h } = kepala();
+        const r = await fetch('https://api.github.com/repos/' + c.owner + '/' + c.repo, { headers: h });
+        if (!r.ok) throw new Error(pesanGagal(await r.json().catch(() => ({}))));
+        teksStatus('Terhubung ke ' + c.owner + '/' + c.repo + ' pada cabang ' + c.branch + '.');
+        toast('Koneksi GitHub berhasil.');
+      } catch (err) { teksStatus(err.message); }
+    });
+    el('post-gambar').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return el('post-preview').hidden = true;
+      el('post-preview-img').src = URL.createObjectURL(file);
+      el('post-preview').hidden = false;
+    });
+    el('form-posting').addEventListener('submit', terbitkan);
+    el('akses-simpan').addEventListener('click', async () => {
+      const status = el('akses-status');
+      const kode = el('akses-kode').value.trim();
+      if (kode.length < 6) return status.textContent = 'Kode akses minimal 6 karakter.';
+      try {
+        const hash = await hashTeks(kode);
+        const lama = await bacaFile('assets/js/access.json');
+        const isi = await base64DariBytes(new TextEncoder().encode(JSON.stringify({ hash, diubah: new Date().toISOString() }, null, 2)));
+        await tulisFile('assets/js/access.json', isi, 'Perbarui kode akses langganan', lama && lama.sha);
+        localStorage.setItem('faisal-akses-kode', kode);
+        status.textContent = 'Kode tersimpan. Bagikan "' + kode + '" ke pelanggan setelah bukti transfer dicek.';
+        toast('Kode akses diperbarui.');
+      } catch (err) {
+        status.textContent = err.message;
+      }
+    });
+    el('akses-kode').value = localStorage.getItem('faisal-akses-kode') || 'FAISAL-2026';
+    isiForm();
+  })();
+  </script>
+</body>
+</html>

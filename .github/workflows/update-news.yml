@@ -1,0 +1,38 @@
+name: Perbarui berita harian
+
+on:
+  schedule:
+    # 17:00 UTC = 00:00 WIB setiap hari
+    - cron: '0 17 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: berita-harian
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ambil repository
+        uses: actions/checkout@v4
+      - name: Siapkan Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Ambil berita dan foto dari ANTARA
+        run: node scripts/update-news.mjs
+      - name: Simpan perubahan bila ada
+        run: |
+          git config user.name "Faisal Bot"
+          git config user.email "felixreuss29@gmail.com"
+          git add assets/js/news.json assets/img/berita
+          if git diff --cached --quiet; then
+            echo "Berita tidak berubah, tidak ada commit."
+          else
+            git commit -m "Perbarui berita harian dari ANTARA"
+            git push
+          fi

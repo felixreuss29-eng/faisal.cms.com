@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Berita Terkini — Faisal</title>
+  <meta name="description" content="Berita terkini Indonesia yang diperbarui setiap hari dari ANTARA News: politik, ekonomi, olahraga, hukum, dan nasional." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body data-page="Berita Terkini">
+  <div data-site-header></div>
+
+  <main class="wrap" style="padding-top:32px">
+    <span class="kicker">Berita Terkini</span>
+    <h1 style="font-family:var(--font-display);font-size:40px;margin:8px 0">Kabar terbaru, setiap hari</h1>
+    <p class="meta" style="max-width:720px">Faisal mengumpulkan berita terkini dari ANTARA News melalui RSS dan memperbarui halaman ini otomatis. Judul, waktu, dan foto mengikuti sumber; klik judul untuk membaca artikel lengkap di situs ANTARA.</p>
+    <p class="meta" data-news-updated></p>
+    <div id="berita-root" style="margin-top:20px"></div>
+
+    <section class="section" id="postingan" aria-labelledby="judul-postingan">
+      <div class="section-head"><span class="section-mark"></span><h2 class="section-title" id="judul-postingan">Postingan Admin</h2></div>
+      <p class="meta">Berita atau pengumuman yang diunggah langsung oleh pemilik melalui CMS.</p>
+      <div id="postingan-root"></div>
+    </section>
+  </main>
+
+  <div data-site-footer></div>
+  <div class="toast" role="status" aria-live="polite"></div>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

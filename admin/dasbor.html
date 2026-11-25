@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dasbor — Faisal CMS</title>
+  <meta name="description" content="Dasbor ruang redaksi Faisal CMS." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body data-admin="1">
+  <div class="admin-shell">
+    <aside class="admin-sidebar">
+      <span class="brand-name">Faisal CMS</span>
+      <nav aria-label="Navigasi admin">
+        <a class="active" href="dasbor.html">▦ Dasbor</a>
+        <a href="daftar-artikel.html">▤ Artikel</a>
+        <a href="editor.html">✎ Editor</a>
+        <a href="posting.html">↑ Tulis Postingan</a>
+        <a href="../index.html">← Lihat situs</a>
+      </nav>
+    </aside>
+    <div class="admin-main">
+      <header class="admin-topbar"><button class="icon-btn" type="button" data-sidebar-toggle aria-label="Ciutkan sidebar" aria-expanded="true">☰</button><h1>Dasbor</h1><div class="spacer"></div><span class="meta" data-clock></span><a class="btn btn-outline" href="posting.html">+ Artikel baru</a></header>
+      <main class="admin-content">
+        <nav class="breadcrumb" aria-label="Breadcrumb">Admin › Dasbor</nav>
+        <div class="stat-grid">
+          <div class="stat-card"><span>Terbit bulan ini</span><strong>48</strong><small>↑ 12% dari bulan lalu</small></div>
+          <div class="stat-card"><span>Menunggu review</span><strong>6</strong><small>2 mendesak</small></div>
+          <div class="stat-card"><span>Pembaca hari ini</span><strong>24.810</strong><small>↑ 8,4% dari kemarin</small></div>
+          <div class="stat-card"><span>Komentar baru</span><strong>37</strong><small>5 perlu moderasi</small></div>
+        </div>
+        <p class="meta">Angka di atas adalah contoh tampilan. Unggahan nyata dilakukan lewat <a href="posting.html">Tulis Postingan</a>.</p>
+        <section class="admin-card">
+          <h2>Aktivitas terbaru</h2>
+          <table>
+            <thead><tr><th>Judul</th><th>Penulis</th><th>Status</th><th>Diperbarui</th></tr></thead>
+            <tbody>
+              <tr><td>DPR Sahkan RUU Pemilu, Ini Enam Poin Perubahan</td><td>Andi Wijaya</td><td><span class="badge published">Terbit</span></td><td><span data-relative="2026-11-25T09:12:00+07:00"></span></td></tr>
+              <tr><td>Inflasi November Turun ke 2,8 Persen</td><td>Rina Puspita</td><td><span class="badge review">Review</span></td><td><span data-relative="2026-11-25T07:40:00+07:00"></span></td></tr>
+              <tr><td>Timnas Indonesia Taklukkan Jepang 2-0</td><td>Budi Santoso</td><td><span class="badge approved">Disetujui</span></td><td><span data-relative="2026-11-25T05:20:00+07:00"></span></td></tr>
+              <tr><td>MK Gelar Sidang Sengketa Hasil Pilkada</td><td>Andi Wijaya</td><td><span class="badge draft">Draf</span></td><td><span data-relative="2026-11-25T04:10:00+07:00"></span></td></tr>
+              <tr><td>Video Pejabat Terima Suap (Ditolak)</td><td>Rina Puspita</td><td><span class="badge rejected">Ditolak</span></td><td><span data-relative="2026-11-24T16:00:00+07:00"></span></td></tr>
+            </tbody>
+          </table>
+        </section>
+      </main>
+    </div>
+  </div>
+  <div class="toast" role="status" aria-live="polite"></div>
+  <script src="../assets/js/data.js"></script><script src="../assets/js/app.js"></script>
+</body>
+</html>
