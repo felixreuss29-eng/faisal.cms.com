@@ -90,6 +90,46 @@ function toast(pesan) {
   el._t = setTimeout(() => el.classList.remove('show'), 2800);
 }
 
+/* ---------- Penulis & tombol ikuti ---------- */
+function bacaIkuti() {
+  try { return JSON.parse(localStorage.getItem('faisal-follow') || '{}'); } catch { return {}; }
+}
+function peranPenulis(a) {
+  const peran = (a && a.author && a.author.role) || 'Penulis Faisal';
+  return peran === 'Pemilik & Redaktur Utama' ? 'Pemilik & Pemimpin Redaksi' : peran;
+}
+function namaPenulis(a) {
+  return (a && a.author && a.author.name) || 'Faisal Akbar';
+}
+function gambarArtikel(a) {
+  const nama = (a && a.image) || 'hero.jpg';
+  return nama.startsWith('assets/') ? nama : img(nama);
+}
+function tombolIkuti(nama, kelas = 'btn btn-outline btn-follow') {
+  const id = String(nama || 'Faisal').trim() || 'Faisal';
+  const aktif = !!bacaIkuti()[id];
+  return `<button class="${kelas}" type="button" data-follow="${esc(id)}" aria-pressed="${aktif}" aria-label="${aktif ? 'Berhenti mengikuti ' : 'Ikuti '}${esc(id)}">${aktif ? '✓ Mengikuti' : '+ Ikuti'}</button>`;
+}
+function initFollow() {
+  document.addEventListener('click', (e) => {
+    const tombol = e.target.closest('[data-follow]');
+    if (!tombol) return;
+    const nama = tombol.dataset.follow;
+    const daftar = bacaIkuti();
+    const aktif = !daftar[nama];
+    if (aktif) daftar[nama] = 1;
+    else delete daftar[nama];
+    localStorage.setItem('faisal-follow', JSON.stringify(daftar));
+    document.querySelectorAll('[data-follow]').forEach((b) => {
+      if (b.dataset.follow !== nama) return;
+      b.setAttribute('aria-pressed', String(aktif));
+      b.setAttribute('aria-label', (aktif ? 'Berhenti mengikuti ' : 'Ikuti ') + nama);
+      b.textContent = aktif ? '✓ Mengikuti' : '+ Ikuti';
+    });
+    toast(aktif ? `Anda mengikuti ${nama}.` : `Anda berhenti mengikuti ${nama}.`);
+  });
+}
+
 /* ---------- Header & footer ---------- */
 const NAV = ['Beranda', 'Berita Terkini', 'Politik', 'Nasional', 'Ekonomi', 'Olahraga', 'Hukum', 'Opini', 'Teknologi'];
 const NAV_HREF = {
@@ -213,10 +253,13 @@ function beritaCardHTML(a, denganRingkasan = true) {
     : '';
   return `<article class="card">
     ${gambar}
-    <div style="margin-top:10px"><span class="kicker">${esc(a.category)}</span> <span class="sumber-label">${esc(a.sumber || 'ANTARA News')}</span></div>
+    <div class="card-tags"><span class="kicker">${esc(a.category)}</span> <span class="sumber-label">${esc(a.sumber || 'ANTARA News')}</span></div>
     <h3><a href="${esc(a.link)}" target="_blank" rel="noopener noreferrer">${esc(a.title)}</a></h3>
     ${denganRingkasan ? `<p class="meta card-excerpt">${esc(a.excerpt)}</p>` : ''}
-    <span class="meta" data-relative="${a.published}">${waktuRelatif(a.published)}</span>
+    <div class="card-meta">
+      <span class="meta" data-relative="${a.published}">${waktuRelatif(a.published)}</span>
+      ${tombolIkuti(a.sumber || 'ANTARA News', 'btn-follow follow-kicker')}
+    </div>
   </article>`;
 }
 function labelPembaruan() {
@@ -308,10 +351,13 @@ async function muatBerita() {
   renderSearch();
 }
 
-/* ---------- Postingan yang diunggah admin dari CMS ---------- */
+/* ---------- Postingan yang diunggah pemilik dari CMS ---------- */
+function postinganTerbaru() {
+  return POSTINGAN.slice().sort((a, b) => new Date(b.published || 0) - new Date(a.published || 0));
+}
 function renderPostingan() {
-  const kosong = '<p class="meta">Belum ada postingan dari admin. Gunakan menu <strong>Tulis Postingan</strong> di CMS untuk menambah.</p>';
-  const isi = POSTINGAN.length ? `<div class="grid-3">${POSTINGAN.map(cardHTML).join('')}</div>` : kosong;
+  const kosong = '<div class="empty-state"><h3>Belum ada berita dari pemilik</h3><p>Gunakan menu <strong>Tulis Postingan</strong> di CMS untuk mengunggah berita. Setiap berita yang terbit otomatis tampil di beranda.</p></div>';
+  const isi = POSTINGAN.length ? `<div class="grid-3">${postinganTerbaru().map(cardHTML).join('')}</div>` : kosong;
   const beranda = document.querySelector('#daftar-postingan');
   if (beranda) beranda.innerHTML = isi;
   const halamanBerita = document.querySelector('#postingan-root');
@@ -328,6 +374,7 @@ async function muatPostingan() {
     console.warn('Postingan admin tidak dapat dimuat:', e.message);
   }
   renderPostingan();
+  renderHome();
   if (document.querySelector('#article-root')) renderArticle();
   renderCategory();
   renderSearch();
@@ -335,11 +382,16 @@ async function muatPostingan() {
 
 /* ---------- Kartu berita ---------- */
 function cardHTML(a) {
+  const penulis = namaPenulis(a);
   return `<article class="card">
-    <a href="artikel.html?id=${a.id}"><img src="${img(a.image)}" alt="Ilustrasi: ${esc(a.title)}" loading="lazy" /></a>
-    <div style="margin-top:10px"><span class="kicker">${esc(a.category)}</span></div>
+    <a href="artikel.html?id=${a.id}"><img src="${gambarArtikel(a)}" alt="${esc(a.alt || 'Ilustrasi: ' + a.title)}" loading="lazy" /></a>
+    <div class="card-tags"><span class="kicker">${esc(a.category)}</span> <span class="sumber-label">${esc(penulis)}</span></div>
     <h3><a href="artikel.html?id=${a.id}">${esc(a.title)}</a></h3>
-    <span class="meta" data-relative="${a.published}">${waktuRelatif(a.published)}</span>
+    ${a.excerpt ? `<p class="meta card-excerpt">${esc(a.excerpt)}</p>` : ''}
+    <div class="card-meta">
+      <span class="meta" data-relative="${a.published}">${waktuRelatif(a.published)}</span>
+      ${tombolIkuti(penulis, 'btn-follow follow-kicker')}
+    </div>
   </article>`;
 }
 function rankedHTML(list, label = 'Politik') {
@@ -365,31 +417,40 @@ function iklanHTML(kelas) {
 function renderHome() {
   const hero = document.querySelector('#hero');
   if (!hero) return;
-  const [utama, ...lain] = ARTICLES;
+  // Beranda mengutamakan berita yang diunggah pemilik melalui CMS.
+  const postingan = postinganTerbaru();
+  const utama = postingan[0] || ARTICLES[0];
+  const lain = postingan.length ? postingan.slice(1, 3) : ARTICLES.slice(1, 3);
+  const penulisUtama = namaPenulis(utama);
   hero.innerHTML = `
     ${iklanHTML('ad-leaderboard')}
     <div class="hero-grid" style="margin-top:24px">
       <article class="hero-main">
-        <a href="artikel.html?id=${utama.id}"><img src="${img(utama.image)}" alt="Ilustrasi: ${esc(utama.title)}" /></a>
+        <a href="artikel.html?id=${utama.id}"><img src="${gambarArtikel(utama)}" alt="${esc(utama.alt || 'Ilustrasi: ' + utama.title)}" /></a>
         <div class="hero-overlay">
           <span class="kicker">${esc(utama.category)}</span>
           <h2><a href="artikel.html?id=${utama.id}">${esc(utama.title)}</a></h2>
-          <div class="meta">${esc(utama.author.name)} · <span data-relative="${utama.published}">${waktuRelatif(utama.published)}</span></div>
+          <div class="hero-meta">
+            <span class="meta">${esc(penulisUtama)} · <span data-relative="${utama.published}">${waktuRelatif(utama.published)}</span></span>
+            ${tombolIkuti(penulisUtama, 'btn-follow follow-overlay')}
+          </div>
         </div>
       </article>
       <div class="featured">
-        ${lain.slice(0, 2).map((a) => `<article class="featured-item">
-          <a href="artikel.html?id=${a.id}"><img src="${img(a.image)}" alt="Ilustrasi: ${esc(a.title)}" loading="lazy" /></a>
+        ${lain.map((a) => `<article class="featured-item">
+          <a href="artikel.html?id=${a.id}"><img src="${gambarArtikel(a)}" alt="${esc(a.alt || 'Ilustrasi: ' + a.title)}" loading="lazy" /></a>
           <div><span class="kicker">${esc(a.category)}</span><h3><a href="artikel.html?id=${a.id}">${esc(a.title)}</a></h3><span class="meta" data-relative="${a.published}">${waktuRelatif(a.published)}</span></div>
         </article>`).join('')}
       </div>
     </div>`;
 
-  document.querySelector('#latest').innerHTML = `<div class="grid-3">${ARTICLES.map(cardHTML).join('')}</div>`;
+  const latest = document.querySelector('#latest');
+  if (latest) latest.innerHTML = `<div class="grid-3">${(postingan.length ? postingan : ARTICLES).map(cardHTML).join('')}</div>`;
 
+  const politikUtama = ARTICLES[0];
   document.querySelector('#politik').innerHTML = `
     <div class="split">
-      <article class="lead"><a href="artikel.html?id=${utama.id}"><img src="${img('politik3.jpg')}" alt="Ilustrasi suasana rapat politik" /></a><span class="kicker">Politik</span><h3><a href="artikel.html?id=${utama.id}">${esc(utama.title)}</a></h3></article>
+      <article class="lead"><a href="artikel.html?id=${politikUtama.id}"><img src="${img('politik3.jpg')}" alt="Ilustrasi suasana rapat politik" /></a><span class="kicker">Politik</span><h3><a href="artikel.html?id=${politikUtama.id}">${esc(politikUtama.title)}</a></h3></article>
       <div>${rankedHTML(['Komisi II Minta Aturan Turunan Segera Ditetapkan', 'Pengamat: Stabilitas Aturan Jadi Kunci Pemilu 2027', 'KPU Buka Pendaftaran Tenaga Ad Hoc Pemilu', 'Warga Mulai Cek Daftar Pemilih di Kanal Daring'])}</div>
     </div>`;
 
@@ -403,7 +464,7 @@ function renderHome() {
       </section>
     </div>`;
 
-  document.querySelector('#opini').innerHTML = `<div class="opinion-grid">${OPINIONS.map((o) => `<article class="opinion-card"><div class="opinion-head"><img src="${img(o.author.photo)}" alt="Foto ${esc(o.author.name)}" loading="lazy" /><div><span class="kicker">Opini</span><div class="meta">${esc(o.author.name)} · ${esc(o.author.role)}</div></div></div><h3>${esc(o.title)}</h3><a class="kicker" href="statis.html">Baca opini →</a></article>`).join('')}</div>`;
+  document.querySelector('#opini').innerHTML = `<div class="opinion-grid">${OPINIONS.map((o) => `<article class="opinion-card"><div class="opinion-head"><img src="${img(o.author.photo)}" alt="Foto ${esc(o.author.name)}" loading="lazy" /><div><span class="kicker">Opini</span><div class="meta">${esc(o.author.name)} · ${esc(peranPenulis(o))}</div></div>${tombolIkuti(o.author.name, 'btn-follow follow-kicker')}</div><h3>${esc(o.title)}</h3><a class="kicker" href="statis.html">Baca opini →</a></article>`).join('')}</div>`;
 
   document.querySelector('#media').innerHTML = `
     <div class="media-grid">
@@ -421,13 +482,18 @@ function renderArticle() {
     || POSTINGAN.find((x) => x.id === params.get('id'))
     || ARTICLES[0];
   const dariAdmin = POSTINGAN.some((p) => p.id === a.id);
+  const penulis = namaPenulis(a);
+  const peran = peranPenulis(a);
+  const bioTeks = penulis === 'Faisal Akbar'
+    ? 'Pemilik dan pemimpin redaksi Faisal. Mengelola arah redaksi dan memverifikasi berita yang diterbitkan.'
+    : `Penulis Faisal. ${peran}.`;
   const isi = a.body.map((b) => {
     if (b.type === 'h2') return `<h2>${esc(b.text)}</h2>`;
     if (b.type === 'quote') return `<blockquote class="pull-quote"><p>“${esc(b.text)}”</p><cite>— ${esc(b.cite)}</cite></blockquote>`;
     return `<p>${esc(b.text)}</p>`;
   }).join('');
   host.innerHTML = `
-    <div class="breadcrumb"><a href="index.html">Beranda</a> › <a href="kategori.html">${esc(a.category)}</a> › ${esc(a.title)}</div>
+    <div class="breadcrumb"><a href="index.html">Beranda</a> › <a href="kategori.html?k=${encodeURIComponent(a.category)}">${esc(a.category)}</a> › ${esc(a.title)}</div>
     <div class="article-layout">
       <div>
         <header class="article-head">
@@ -435,13 +501,14 @@ function renderArticle() {
           <h1>${esc(a.title)}</h1>
           <p class="article-lead">${esc(a.excerpt)}</p>
           <div class="byline">
-            <img src="${img(a.author.photo)}" alt="Foto ${esc(a.author.name)}" />
-            <div><strong>${esc(a.author.name)}</strong><span class="meta">${esc(a.author.role)}</span></div>
-            <div class="meta"><span data-relative="${a.published}">${waktuRelatif(a.published)}</span> · <b data-reading="${a.id}">${readingMinutes(a.body)} menit baca</b></div>
+            <img src="${img(a.author.photo)}" alt="Foto ${esc(penulis)}" />
+            <div class="byline-penulis"><strong>${esc(penulis)}</strong><span class="meta">${esc(peran)}</span></div>
+            ${tombolIkuti(penulis)}
+            <div class="byline-waktu meta"><span data-relative="${a.published}">${waktuRelatif(a.published)}</span> · <b data-reading="${a.id}">${readingMinutes(a.body)} menit baca</b></div>
             <div class="share"><span>Bagikan</span><a href="#" data-bagikan="wa" aria-label="WA — bagikan ke WhatsApp">WA</a><a href="#" data-bagikan="email" aria-label="Email — bagikan lewat email">Email</a><a href="#" data-bagikan="link" aria-label="Link — salin tautan artikel">Link</a></div>
           </div>
         </header>
-        <figure class="article-figure"><img src="${img(a.image)}" alt="Ilustrasi: ${esc(a.title)}" /><figcaption>Ilustrasi artikel. Foto: Dokumentasi Faisal.</figcaption></figure>
+        <figure class="article-figure"><img src="${gambarArtikel(a)}" alt="${esc(a.alt || 'Ilustrasi: ' + a.title)}" /><figcaption>Ilustrasi artikel. Foto: Dokumentasi Faisal.</figcaption></figure>
         <div class="article-body" style="margin-top:28px">${isi}</div>
         <section class="paywall" style="margin-top:32px">
           <span class="kicker">Langganan</span><h3>Artikel ini hanya untuk pelanggan</h3>
@@ -459,7 +526,7 @@ function renderArticle() {
         </section>
         <div class="tags"><span class="tag">#Pilkada2027</span><span class="tag">#KPU</span><span class="tag">#Pemilih</span><span class="tag">#Demokrasi</span></div>
         <div class="correction"><strong>Catatan redaksi</strong><br />Jadwal dan tahapan mengikuti kalender resmi penyelenggara pemilu, diperbarui pada <span data-clock></span>.</div>
-        <div class="author-bio"><img src="${img(a.author.photo)}" alt="Foto penulis" /><div><h3>${esc(a.author.name)}</h3><div class="meta">${esc(a.author.role)} · Faisal</div><p class="meta">Meliput dinamika parlemen dan proses pemilu sejak 2015.</p></div><button class="btn btn-outline" data-toast="Anda mengikuti penulis ini">+ Ikuti penulis</button></div>
+        <div class="author-bio"><img src="${img(a.author.photo)}" alt="Foto ${esc(penulis)}" /><div><h3>${esc(penulis)}</h3><div class="meta">${esc(peran)} · Faisal</div><p class="meta">${esc(bioTeks)}</p></div>${tombolIkuti(penulis)}</div>
         <section class="comments"><h3 class="komentar-judul">Komentar</h3>
           <div class="comment-form"><label class="sr-only" for="komentar">Komentar</label><textarea id="komentar" placeholder="Bagikan pandangan Anda tentang artikel ini…"></textarea><div class="row"><button class="btn btn-primary" type="button" data-kirim-komentar>Kirim</button></div></div>
           <div id="daftar-komentar">
@@ -481,8 +548,6 @@ function renderArticle() {
     host.querySelector('.correction')?.remove();
     const tags = host.querySelector('.tags');
     if (tags) tags.innerHTML = `<span class="tag">#${esc(a.category)}</span><span class="tag">#Faisal</span>`;
-    const bio = host.querySelector('.author-bio p.meta');
-    if (bio) bio.textContent = 'Pemilik dan redaktur utama Faisal.';
     const figcaption = host.querySelector('.article-figure figcaption');
     if (figcaption) figcaption.textContent = a.alt ? `Foto: ${esc(a.alt)}.` : 'Foto: Dokumentasi Faisal.';
   }
@@ -1044,6 +1109,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderSearch();
   if (document.body.dataset.page) initOverlays();
   initForms();
+  initFollow();
   initAuth();
   initEditor();
   initLangganan();
