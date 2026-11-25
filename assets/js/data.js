@@ -1,6 +1,6 @@
 /* Konten contoh. Di situs nyata, ini diganti oleh API/CMS. */
 const AUTHORS = {
-  andi: { name: 'Andi Wijaya', role: 'Redaktur Politik', photo: 'author1.jpg', email: 'andi@faisal.id' }
+  faisal: { name: 'Faisal Akbar', role: 'Pemilik & Pemimpin Redaksi', photo: 'pemilik-profil-rapi.jpg', email: 'felixreuss29@gmail.com' }
 };
 
 const ARTICLES = [
@@ -10,7 +10,7 @@ const ARTICLES = [
     title: 'KPU Tetapkan Jadwal Pilkada 2027, Ini Rangkaian Tahapannya',
     excerpt: 'Komisi Pemilihan Umum merilis kalender pemilihan kepala daerah berikutnya, dari pencalonan hingga pelantikan.',
     image: 'hero.jpg',
-    author: AUTHORS.andi,
+    author: AUTHORS.faisal,
     published: '2026-11-25T09:12:00+07:00',
     updated: '2026-11-25T10:15:00+07:00',
     featured: true,
@@ -38,7 +38,7 @@ const ARTICLES = [
     title: 'Inflasi November Turun ke 2,8 Persen, Daya Beli Warga Mulai Pulih',
     excerpt: 'Tekanan harga pangan melandai dan permintaan domestik membaik menjelang akhir tahun.',
     image: 'news2.jpg',
-    author: AUTHORS.andi,
+    author: AUTHORS.faisal,
     published: '2026-11-25T07:40:00+07:00',
     body: [
       { type: 'p', text: 'Laju inflasi tahunan Indonesia turun ke 2,8 persen pada November 2026, terendah dalam delapan bulan terakhir. Penurunan ini terutama ditopang oleh melandainya harga komoditas pangan strategis serta membaiknya pasokan di sejumlah pasar tradisional. Badan Pusat Statistik mencatat inflasi bulanannya sebesar 0,21 persen.' },
@@ -51,7 +51,7 @@ const ARTICLES = [
     title: 'Timnas Indonesia Taklukkan Jepang 2-0 di Laga Uji Coba',
     excerpt: 'Dua gol lahir dari skema serangan balik yang disiapkan pelatih sejak awal babak kedua.',
     image: 'olahraga1.jpg',
-    author: AUTHORS.andi,
+    author: AUTHORS.faisal,
     published: '2026-11-25T05:20:00+07:00',
     body: [
       { type: 'p', text: 'Tim nasional Indonesia menang 2-0 atas Jepang dalam pertandingan uji coba yang digelar di Stadion Utama Gelora Bung Karno. Kedua gol dicetak pada babak kedua setelah pelatih melakukan perubahan formasi yang memberi ruang lebih bagi serangan balik cepat.' },
@@ -64,7 +64,7 @@ const ARTICLES = [
     title: 'MK Gelar Sidang Sengketa Hasil Pilkada Kabupaten',
     excerpt: 'Permohonan diperiksa dengan batas waktu 14 hari kerja sesuai aturan terbaru.',
     image: 'news4.jpg',
-    author: AUTHORS.andi,
+    author: AUTHORS.faisal,
     published: '2026-11-25T04:10:00+07:00',
     body: [
       { type: 'p', text: 'Mahkamah Konstitusi menggelar sidang perdana sengketa hasil pemilihan kepala daerah kabupaten. Majelis hakim membacakan jadwal pemeriksaan dan memberi kesempatan kepada pemohon untuk melengkapi bukti pendukung dalam tiga hari kerja.' },
