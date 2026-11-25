@@ -375,6 +375,9 @@ th { font-size: 10px; text-transform: uppercase; letter-spacing: .04em; color: v
 .payment-number span { display: block; font-size: 10px; color: var(--muted); }
 .payment-number strong { font-family: var(--font-display); font-size: 24px; letter-spacing: .02em; }
 .payment-number .btn { margin-left: auto; min-height: 36px; padding: 0 14px; }
+.qris-box { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; background: var(--surface); border: 1px dashed var(--border); border-radius: 8px; padding: 14px; }
+.qris-box img { display: block; width: 220px; max-width: 100%; height: auto; background: #fff; border-radius: 6px; padding: 8px; }
+.qris-box p { flex: 1 1 220px; margin: 0; line-height: 1.6; }
 .contact-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0 12px; }
 .form-panel { max-width: 900px; }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }

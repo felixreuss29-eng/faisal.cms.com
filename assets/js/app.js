@@ -171,7 +171,7 @@ function renderFooter() {
           <div>
             <span class="brand-name">Faisal</span>
             <p style="font-size:11px;margin:12px 0 0">Berita independen dan tepercaya untuk Indonesia.</p>
-            <p style="font-size:11px;margin:10px 0 0">Pemilik: <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a><br />WhatsApp: <a href="https://wa.me/6281286484770">081286484770</a><br />DANA: 0895323964130</p>
+            <p style="font-size:11px;margin:10px 0 0">Pemilik: <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a><br />WhatsApp: <a href="https://wa.me/6281286484770">081286484770</a><br />QRIS: tersedia di halaman langganan</p>
           </div>
           ${cols.map(([t, links]) => `<div><h3>${t}</h3><ul>${links.map((l) => `<li><a href="${hrefFooter(l)}" ${eksternal(l) ? 'target="_blank" rel="noopener noreferrer"' : ''}>${l}</a></li>`).join('')}</ul></div>`).join('')}
         </div>
@@ -416,7 +416,7 @@ function renderArticle() {
           <span class="kicker">Langganan</span><h3>Artikel ini hanya untuk pelanggan</h3>
           <p>Dukung jurnalisme independen dan baca seluruh artikel tanpa batas. Mulai dari Rp 10.000 per bulan.</p>
           <div class="paywall-actions"><a class="btn btn-primary" href="langganan.html">Lihat Paket Langganan</a></div>
-          <p class="meta" style="margin-top:14px">Sudah transfer via DANA dan mengirim bukti? Masukkan kode akses yang dikirim pemilik setelah bukti dicek.</p>
+          <p class="meta" style="margin-top:14px">Sudah bayar via QRIS dan mengirim bukti? Masukkan kode akses yang dikirim pemilik setelah bukti dicek.</p>
           <form class="akses-form" data-akses-form>
             <label class="sr-only" for="kode-akses">Kode akses langganan</label>
             <input id="kode-akses" type="text" placeholder="Kode akses dari pemilik" autocomplete="off" required />
@@ -424,7 +424,7 @@ function renderArticle() {
           </form>
           <span class="error hidden" data-akses-error>Kode tidak valid. Periksa kembali pesan dari pemilik.</span>
           <p class="meta" data-akses-status aria-live="polite"></p>
-          <p class="meta">Belum berlangganan? <a href="langganan.html#form-konfirmasi">Kirim bukti transfer di sini.</a> Bantuan: <a href="https://wa.me/6281286484770">081286484770</a> · <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a></p>
+          <p class="meta">Belum berlangganan? <a href="langganan.html#form-konfirmasi">Kirim bukti pembayaran di sini.</a> Bantuan: <a href="https://wa.me/6281286484770">081286484770</a> · <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a></p>
         </section>
         <div class="tags"><span class="tag">#Pemilu</span><span class="tag">#DPR</span><span class="tag">#RUU Pemilu</span><span class="tag">#KPU</span></div>
         <div class="correction"><strong>Catatan redaksi</strong><br />Angka ambang batas pada paragraf ketiga diperbarui menjadi 20 persen pada <span data-clock></span>.</div>
@@ -648,8 +648,8 @@ function initEditor() {
   hitung();
 }
 
-/* ---------- Langganan: pembayaran DANA + konfirmasi pemilik ---------- */
-const DANA_NUMBER = '0895323964130';
+/* ---------- Langganan: pembayaran QRIS + konfirmasi pemilik ---------- */
+const METODE_BAYAR = 'QRIS';
 const OWNER_WHATSAPP = '081286484770';
 const OWNER_WHATSAPP_API = '6281286484770';
 const HARGA_PAKET = { 'Digital': 10000, 'Digital Plus': 15000, 'Koran + Digital': 10000 };
@@ -673,7 +673,7 @@ function simpanPengajuan(rec) {
 }
 function kompresGambar(file) {
   return new Promise((resolve, reject) => {
-    if (!file) return reject(new Error('Bukti transfer wajib diunggah.'));
+    if (!file) return reject(new Error('Bukti pembayaran wajib diunggah.'));
     if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return reject(new Error('Bukti harus berupa JPG, PNG, atau WebP.'));
     if (file.size > 10 * 1024 * 1024) return reject(new Error('Ukuran bukti maksimal 10 MB.'));
     const reader = new FileReader();
@@ -742,11 +742,11 @@ function pesanLangganan(d) {
     `WhatsApp: ${d.wa}`,
     `Paket: ${d.paket}`,
     `Jumlah: ${rupiah(d.jumlah)}`,
-    `Nomor DANA tujuan: ${DANA_NUMBER}`,
+    `Metode pembayaran: ${METODE_BAYAR}`,
     d.catatan ? `Catatan: ${d.catatan}` : null,
-    'Bukti transfer: saya kirimkan foto bukti pada pesan ini.',
+    'Bukti pembayaran: saya kirimkan foto bukti pada pesan ini.',
     '',
-    'Saya sudah melakukan transfer via DANA. Mohon verifikasi bukti dan aktifkan langganan saya.'
+    'Saya sudah membayar via QRIS. Mohon verifikasi bukti dan aktifkan langganan saya.'
   ].filter((baris) => baris !== null).join('\n');
 }
 function tampilkanHasil(selector, d, tautan, kanal) {
@@ -757,7 +757,7 @@ function tampilkanHasil(selector, d, tautan, kanal) {
     <p><strong>${esc(d.nama)}</strong> · ${esc(d.paket)} · ${rupiah(d.jumlah)}</p>
     <p>Status: <span class="badge review">${esc(d.status)}</span></p>
     <p>Pesan sudah disiapkan untuk ${esc(kanal)} ke ${esc(kanal === 'WhatsApp' ? OWNER_WHATSAPP : OWNER_EMAIL)}. Jika aplikasi tidak terbuka otomatis, gunakan tautan di bawah.</p>
-    <p class="meta">Bukti transfer tersimpan di perangkat ini. Browser tidak bisa melampirkan file otomatis, jadi kirim foto bukti yang sama secara manual di ${esc(kanal)}. Setelah bukti dicek, pemilik akan mengirim kode akses untuk membuka artikel.</p>
+    <p class="meta">Bukti pembayaran tersimpan di perangkat ini. Browser tidak bisa melampirkan file otomatis, jadi kirim foto bukti yang sama secara manual di ${esc(kanal)}. Setelah bukti dicek, pemilik akan mengirim kode akses untuk membuka artikel.</p>
     <div class="contact-row"><a class="btn btn-primary" href="${esc(tautan)}" ${kanal === 'WhatsApp' ? 'target="_blank" rel="noopener"' : ''}>Buka ${esc(kanal)}</a><button class="btn btn-outline" type="button" data-lihat-bukti>Lihat bukti</button></div>`;
   box.querySelector('[data-lihat-bukti]')?.addEventListener('click', () => lihatBukti(d.bukti));
 }
@@ -823,7 +823,7 @@ function cekStatusLangganan() {
     <p><strong>${esc(cocok.nama)}</strong> · ${esc(cocok.paket)} · ${rupiah(cocok.jumlah)}</p>
     <p>Status: <span class="badge review">${esc(cocok.status)}</span></p>
     <p class="meta">Diajukan ${formatTanggal(new Date(cocok.waktu))}, ${formatJam(new Date(cocok.waktu))} WIB. Konfirmasi akhir dikirim ke ${esc(cocok.email)} / WhatsApp ${esc(cocok.wa)}.</p>
-    <p class="meta">Bukti transfer: ${cocok.bukti ? 'sudah diunggah dan perlu dicek pemilik' : 'belum tersedia'}.</p>`;
+    <p class="meta">Bukti pembayaran: ${cocok.bukti ? 'sudah diunggah dan perlu dicek pemilik' : 'belum tersedia'}.</p>`;
 }
 function initLangganan() {
   const form = document.querySelector('#form-konfirmasi');
@@ -848,9 +848,9 @@ function initLangganan() {
   document.querySelectorAll('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
     try {
       await navigator.clipboard.writeText(b.dataset.copy);
-      toast('Nomor DANA disalin.');
+      toast('Tersalin ke papan klip.');
     } catch {
-      toast(`Nomor DANA: ${b.dataset.copy}`);
+      toast(`Salin manual: ${b.dataset.copy}`);
     }
   }));
   const kirim = async (kanal) => {

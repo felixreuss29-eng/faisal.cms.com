@@ -10,7 +10,7 @@ berita.html             Berita harian dari RSS ANTARA + filter kategori
 artikel.html            Halaman artikel + estimasi baca otomatis
 kategori.html           Halaman kategori/daftar berita
 pencarian.html          Hasil pencarian (termasuk empty state)
-langganan.html          Paket langganan + konfirmasi DANA/WhatsApp/email
+langganan.html          Paket langganan + pembayaran QRIS, konfirmasi WhatsApp/email
 tentang.html            Tentang Faisal, prinsip redaksi, pemilik & kontak
 statis.html             Pedoman Media Siber, redaksi, hak jawab, privasi, cookie & peta situs
 404.html                Halaman tidak ditemukan
@@ -101,7 +101,7 @@ Buka `admin/posting.html` → menu **Tulis Postingan** di sidebar CMS.
 
 ## Alur akses langganan (kode manual)
 
-1. Pembaca transfer ke DANA `0895323964130`, mengisi formulir, dan **wajib mengunggah bukti transfer**.
+1. Pembaca memindai QRIS di `langganan.html` (Store baju faisal, NMID IDI 026596688139), mengisi formulir, dan **wajib mengunggah bukti pembayaran**.
 2. Pembaca mengirim data + foto bukti ke WhatsApp `081286484770` atau email `felixreuss29@gmail.com`.
 3. Pemilik memeriksa bukti, lalu membuka `admin/posting.html` → **Kode akses pelanggan**, mengisi kode, dan klik **Simpan kode ke website**. Repository hanya menyimpan hash SHA-256 kode di `assets/js/access.json`, bukan kode aslinya.
 4. Pemilik mengirim kode tersebut ke pembaca lewat WhatsApp.
@@ -126,7 +126,7 @@ Kode bisa diganti kapan saja lewat halaman admin; pembaca perlu memasukkan kode 
 - Halaman `tentang.html` berisi misi, prinsip redaksi, tim, pemilik, dan kontak.
 - Foto profil pemilik dipakai di sidebar CMS, 2FA, dan halaman tentang kami.
 - Audit Lighthouse otomatis: skor 100/100 untuk aksesibilitas, best practices, dan SEO pada halaman utama, artikel, kategori, serta dasbor (light dan dark).
-- Langganan: pilih paket → transfer ke DANA `0895323964130` → **wajib unggah bukti transfer** → formulir membuat pesan konfirmasi siap dikirim ke WhatsApp `081286484770` atau email pemilik `felixreuss29@gmail.com`. Bukti dikompresi dan tersimpan di browser bersama riwayat/status; pengguna tetap harus mengirim foto bukti manual karena browser tidak bisa melampirkannya ke WhatsApp/email.
+- Langganan: pilih paket → bayar via QRIS (gambar QR di `assets/img/qris.jpg`) → **wajib unggah bukti pembayaran** → formulir membuat pesan konfirmasi siap dikirim ke WhatsApp `081286484770` atau email pemilik `felixreuss29@gmail.com`. Bukti dikompresi dan tersimpan di browser bersama riwayat/status; pengguna tetap harus mengirim foto bukti manual karena browser tidak bisa melampirkannya ke WhatsApp/email.
 
 ## Yang masih kurang / perlu ditambahkan
 
@@ -134,7 +134,7 @@ Kode bisa diganti kapan saja lewat halaman admin; pembaca perlu memasukkan kode 
 2. **Autentikasi nyata** — CMS hanya menerima email pemilik `felixreuss29@gmail.com` dan menolak halaman admin bila belum ada penanda akun di browser, tetapi sandi/OTP masih simulasi. Unggah postingan memakai token GitHub di browser pemilik, bukan sesi pengguna. Jangan dipakai untuk data produksi.
 3. **WYSIWYG & upload media** — editor lama masih `textarea` dan berlabel pratinjau; unggah foto nyata ada di `posting.html`, tetapi belum ada rich text atau pengelola aset.
 4. **Alur persetujuan persisten** — tabel alur hanya contoh; tombol "Kirim review" belum mengubah data/status di server maupun menyimpan riwayat.
-5. **Verifikasi pembayaran otomatis** — langganan sudah memakai alur nyata (DANA → bukti wajib → konfirmasi WhatsApp/email → kode akses manual), tetapi belum ada gateway pembayaran, webhook, atau verifikasi otomatis; status masih dicatat di `localStorage` browser. Pencarian juga masih filter array lokal.
+5. **Verifikasi pembayaran otomatis** — langganan memakai QRIS statis → bukti wajib → konfirmasi WhatsApp/email → kode akses manual. QRIS statis tidak punya webhook, jadi pembayaran tidak bisa terkonfirmasi otomatis. Skema Supabase untuk approval + masa aktif 1 bulan sudah disiapkan di `supabase-setup.sql`, tetapi belum dipasang karena URL dan anon key belum diisi di `assets/js/supabase-config.js`. Pencarian juga masih filter array lokal.
 6. **Moderasi komentar** — komentar tersimpan di browser pengirim, bukan di server bersama; belum ada anti-spam atau panel moderasi.
 7. **SEO & metadata lengkap** — `robots.txt` sudah ada, tetapi belum ada canonical URL, Open Graph/Twitter card, JSON-LD, dan sitemap.xml (URL final deploy belum diketahui).
 8. **Analitik & iklan** — slot iklan masih placeholder; belum ada integrasi ads/analytics.
@@ -148,6 +148,6 @@ Lihat `HAK-CIPTA.md`. Repo ini memakai **All Rights Reserved** (tanpa file `LICE
 
 ## Catatan
 
-Email pemilik yang dipakai untuk konfirmasi langganan dan akun admin: `felixreuss29@gmail.com`. WhatsApp pemilik: `081286484770`. Nomor DANA untuk pembayaran: `0895323964130`. Instagram: `@faisalakbar0423`. Nama yang ditampilkan di profil admin: Faisal Akbar.
+Email pemilik yang dipakai untuk konfirmasi langganan dan akun admin: `felixreuss29@gmail.com`. WhatsApp pemilik: `081286484770`. Pembayaran langganan: QRIS statis di `assets/img/qris.jpg` (Store baju faisal, NMID IDI 026596688139). Instagram: `@faisalakbar0423`. Nama yang ditampilkan di profil admin: Faisal Akbar.
 
 Karena sitem ini statis di GitHub Pages, pesan konfirmasi dibuka di aplikasi WhatsApp/email pengguna dan dikirim oleh mereka sendiri. Tidak ada pembayaran yang diproses otomatis oleh website.

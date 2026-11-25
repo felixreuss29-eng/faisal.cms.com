@@ -68,7 +68,7 @@
 
         <section class="admin-card" style="margin-top:18px">
           <h2>3. Kode akses pelanggan</h2>
-          <p class="meta">Setelah bukti transfer dicek, kirim kode ini ke pelanggan lewat WhatsApp. Pelanggan memasukkannya di halaman artikel untuk membuka paywall. Repository hanya menyimpan sidik jari (hash) kode, bukan kode aslinya.</p>
+          <p class="meta">Setelah bukti pembayaran QRIS dicek, kirim kode ini ke pelanggan lewat WhatsApp. Pelanggan memasukkannya di halaman artikel untuk membuka paywall. Repository hanya menyimpan sidik jari (hash) kode, bukan kode aslinya.</p>
           <div class="form-field"><label for="akses-kode">Kode akses baru</label><input id="akses-kode" type="text" autocomplete="off" placeholder="Misalnya: FAISAL-2026" value="FAISAL-2026" /></div>
           <div class="form-actions"><button class="btn btn-primary" type="button" id="akses-simpan">Simpan kode ke website</button></div>
           <p class="meta" id="akses-status" role="status" aria-live="polite"></p>
@@ -233,7 +233,7 @@
         const isi = await base64DariBytes(new TextEncoder().encode(JSON.stringify({ hash, diubah: new Date().toISOString() }, null, 2)));
         await tulisFile('assets/js/access.json', isi, 'Perbarui kode akses langganan', lama && lama.sha);
         localStorage.setItem('faisal-akses-kode', kode);
-        status.textContent = 'Kode tersimpan. Bagikan "' + kode + '" ke pelanggan setelah bukti transfer dicek.';
+        status.textContent = 'Kode tersimpan. Bagikan "' + kode + '" ke pelanggan setelah bukti pembayaran dicek.';
         toast('Kode akses diperbarui.');
       } catch (err) {
         status.textContent = err.message;

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Langganan — Faisal</title>
-  <meta name="description" content="Berlangganan Faisal dengan pembayaran via DANA 0895323964130 dan konfirmasi ke WhatsApp 081286484770." />
+  <meta name="description" content="Berlangganan Faisal dengan pembayaran via QRIS dan konfirmasi ke WhatsApp 081286484770." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
@@ -46,22 +46,22 @@
       <div class="section-head"><span class="section-mark"></span><h2 class="section-title" id="judul-cara">Cara berlangganan</h2></div>
       <div class="two-col">
         <div class="panel">
-          <h3 class="panel-title">1. Transfer via DANA</h3>
+          <h3 class="panel-title">1. Bayar via QRIS</h3>
           <ol class="step-list">
-            <li>Buka aplikasi DANA dan pilih <strong>Kirim</strong>.</li>
-            <li>Masukkan nomor DANA Faisal Media di bawah ini.</li>
-            <li>Transfer sesuai harga paket yang dipilih.</li>
+            <li>Buka aplikasi pembayaran berlogo <strong>QRIS</strong> (DANA, GoPay, OVO, mobile banking, dll).</li>
+            <li>Pindai kode QR di bawah ini.</li>
+            <li>Bayar sesuai harga paket yang dipilih.</li>
             <li>Simpan bukti transaksi sebagai catatan pribadi.</li>
           </ol>
-          <div class="payment-number">
-            <div><span>Nomor DANA</span><strong id="dana-number">0895323964130</strong></div>
-            <button class="btn btn-outline" type="button" data-copy="0895323964130" aria-label="Salin nomor DANA">Salin nomor</button>
+          <div class="qris-box">
+            <img src="assets/img/qris.jpg" alt="Kode QRIS Statis Pembayaran Nasional atas nama Store baju faisal, NMID IDI 026596688139" />
+            <p class="meta">QRIS Statis Pembayaran Nasional · <strong>Store baju faisal</strong><br />NMID: IDI 026596688139 · AOI: SATU QRIS</p>
           </div>
-          <p class="meta" style="margin-top:12px">Atas nama Faisal Media. Gunakan nama pengirim yang sama dengan nama pada formulir agar mudah diverifikasi.</p>
+          <p class="meta" style="margin-top:12px">Gunakan nama pengirim yang sama dengan nama pada formulir agar pembayaran mudah diverifikasi.</p>
         </div>
         <div class="panel">
           <h3 class="panel-title">2. Kirim konfirmasi</h3>
-          <p class="meta">Setelah transfer, unggah bukti pada formulir di bawah, lalu kirim nama, email, nomor WhatsApp, paket, jumlah bayar, <strong>dan bukti transfer</strong> melalui WhatsApp atau email pemilik. Setelah bukti dicek, pemilik mengirim <strong>kode akses</strong>. Masukkan kode itu di halaman artikel untuk membuka paywall.</p>
+          <p class="meta">Setelah membayar via QRIS, unggah bukti pada formulir di bawah, lalu kirim nama, email, nomor WhatsApp, paket, jumlah bayar, <strong>dan bukti pembayaran</strong> melalui WhatsApp atau email pemilik. Setelah bukti dicek, pemilik mengirim <strong>kode akses</strong>. Masukkan kode itu di halaman artikel untuk membuka paywall.</p>
           <div class="contact-row">
             <a class="btn btn-primary" id="wa-direct" href="https://wa.me/6281286484770?text=Konfirmasi%20langganan%20Faisal" target="_blank" rel="noopener">WhatsApp 081286484770</a>
             <a class="btn btn-outline" id="email-direct" href="mailto:felixreuss29@gmail.com?subject=Konfirmasi%20langganan%20Faisal">Email pemilik</a>
@@ -79,7 +79,7 @@
           <div class="form-grid">
             <div class="form-field">
               <label for="nama">Nama lengkap</label>
-              <input id="nama" name="nama" type="text" autocomplete="name" placeholder="Sesuai nama pengirim DANA" required />
+              <input id="nama" name="nama" type="text" autocomplete="name" placeholder="Sesuai nama pengirim QRIS" required />
               <span class="error hidden" data-error="nama">Nama lengkap wajib diisi.</span>
             </div>
             <div class="form-field">
@@ -105,14 +105,14 @@
           </div>
           <div class="form-field">
             <label for="catatan">Catatan untuk pemilik (opsional)</label>
-            <textarea id="catatan" name="catatan" rows="3" placeholder="Misalnya: nama pengirim DANA berbeda, atau tanggal transfer."></textarea>
+            <textarea id="catatan" name="catatan" rows="3" placeholder="Misalnya: nama pengirim QRIS berbeda, atau tanggal pembayaran."></textarea>
           </div>
           <div class="form-field">
-            <label for="bukti">Bukti transfer DANA <span aria-hidden="true">*</span></label>
+            <label for="bukti">Bukti pembayaran QRIS <span aria-hidden="true">*</span></label>
             <input id="bukti" name="bukti" type="file" accept="image/jpeg,image/png,image/webp" required />
-            <span class="meta">Wajib: foto atau tangkapan layar bukti transfer (JPG, PNG, atau WebP, maksimal 10 MB). Bukti disimpan di perangkat ini dan harus dikirim ke pemilik lewat WhatsApp/email.</span>
-            <span class="error hidden" data-error="bukti">Bukti transfer wajib diunggah berupa gambar maksimal 10 MB.</span>
-            <div class="bukti-preview hidden" id="bukti-preview"><img id="bukti-preview-img" alt="Pratinjau bukti transfer DANA" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" /></div>
+            <span class="meta">Wajib: foto atau tangkapan layar bukti pembayaran (JPG, PNG, atau WebP, maksimal 10 MB). Bukti disimpan di perangkat ini dan harus dikirim ke pemilik lewat WhatsApp/email.</span>
+            <span class="error hidden" data-error="bukti">Bukti pembayaran wajib diunggah berupa gambar maksimal 10 MB.</span>
+            <div class="bukti-preview hidden" id="bukti-preview"><img id="bukti-preview-img" alt="Pratinjau bukti pembayaran QRIS" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" /></div>
           </div>
           <label class="check-row">
             <input id="setuju" type="checkbox" required />
@@ -148,8 +148,8 @@
   </main>
 
   <dialog id="dialog-bukti" aria-labelledby="judul-dialog-bukti" style="padding:20px;border:1px solid var(--border);border-radius:8px;max-width:min(92vw,720px);background:var(--surface);color:var(--text)">
-    <h3 id="judul-dialog-bukti" style="font-family:var(--font-display);margin:0 0 12px">Bukti transfer</h3>
-    <img id="gambar-bukti" alt="Bukti transfer DANA yang diunggah" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" style="display:block;max-width:100%;max-height:70vh;margin:0 auto" />
+    <h3 id="judul-dialog-bukti" style="font-family:var(--font-display);margin:0 0 12px">Bukti pembayaran</h3>
+    <img id="gambar-bukti" alt="Bukti pembayaran QRIS yang diunggah" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" style="display:block;max-width:100%;max-height:70vh;margin:0 auto" />
     <div class="form-actions" style="margin-top:16px"><button class="btn btn-outline" type="button" id="tutup-bukti">Tutup</button></div>
   </dialog>
 
