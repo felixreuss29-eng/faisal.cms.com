@@ -28,6 +28,7 @@ assets/js/news.json     Berita harian hasil scripts/update-news.mjs
 assets/js/posts.json    Postingan yang diunggah dari admin CMS
 assets/js/access.json   Sidik jari (hash SHA-256) kode terima kasih donasi
 assets/js/app.js        Perilaku: jam, waktu relatif, tema, toast, form, cookie, push
+assets/js/i18n.js       Pilihan bahasa + terjemahan otomatis seluruh teks halaman
 assets/img/*.jpg        Foto berita lokal (menggantikan placeholder gunung)
 assets/img/berita/*.jpg Foto berita harian yang diunduh otomatis
 assets/img/pemilik-profil.jpg  Foto profil pemilik di CMS & tentang kami
@@ -115,6 +116,7 @@ Kode bisa diganti kapan saja lewat halaman admin; pembaca perlu memasukkan kode 
 - Waktu nyata: tanggal, jam WIB (`Asia/Jakarta`) dan waktu relatif dihitung ulang tiap 30 detik dari `Date` dan `Intl.DateTimeFormat('id-ID')`.
 - Estimasi baca: dihitung dari jumlah kata ÷ 200 wpm saat halaman dibuka; di editor diperbarui saat mengetik.
 - Dark mode tersimpan di `localStorage`, tombol berlabel aksesibel.
+- Pilihan bahasa di header: 24 bahasa (Indonesia, Inggris, Arab, Mandarin, Jepang, Korea, dll.) plus tautan Google Translate untuk bahasa lain. Seluruh teks halaman, termasuk isi artikel dan berita, diterjemahkan otomatis dan di-cache di browser (`faisal-bahasa`, `faisal-terjemahan`); versi Indonesia tetap menjadi acuan.
 - Responsif 1440 / 768 / 390: hamburger, grid satu kolom di mobile, area sentuh minimal 44px, fokus keyboard terlihat.
 - State UI: skeleton tidak dipakai karena konten langsung tersedia; empty state (pencarian), error (email/OTP), sukses (reset sandi), toast, cookie banner, pop-up izin push, validasi form.
 - Status admin tidak hanya warna: setiap badge punya teks (Draf, Review, Revisi/Ditolak, Disetujui, Terbit) dan ikon titik. Sidebar CMS bisa diciutkan; filter status di daftar artikel berfungsi.
@@ -142,6 +144,7 @@ Kode bisa diganti kapan saja lewat halaman admin; pembaca perlu memasukkan kode 
 9. **QA lanjutan** — audit Lighthouse otomatis sudah dijalankan (aksesibilitas, best practices, SEO = 100 pada halaman utama, artikel, kategori, dan dasbor; light & dark). Namun uji pembaca layar manual dan tinjauan visual manusia pada 1440/768/390 belum dilakukan.
 10. **Desain yang belum tersalin penuh** — layout tablet admin 768 dan beberapa state UI baru belum direbuild di file desain setelah perubahan warna.
 11. **Lisensi foto** — foto berita berasal dari RSS ANTARA News dan dicantumkan sumbernya di antarmuka. Hak cipta tetap pada ANTARA/fotografer; untuk publikasi komersial atau penggunaan ulang, periksa izin dan kredit yang disyaratkan. Foto profil pemilik adalah file yang Anda kirim.
+12. **Terjemahan mesin** — terjemahan dihasilkan otomatis oleh Google Translate dan dapat salah pada istilah khusus; teks asli bahasa Indonesia tetap menjadi rujukan. Pembaca juga bisa membuka versi Google Translate penuh lewat tautan di footer atau opsi "Bahasa lain".
 
 ## Lisensi
 

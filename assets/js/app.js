@@ -171,6 +171,10 @@ function renderHeader(active = 'Beranda') {
             <label class="sr-only" for="site-search">Cari berita</label>
             <input id="site-search" type="search" placeholder="Cari berita…" />
           </form>
+          <div class="language-wrap" data-no-translate>
+            <label class="sr-only" for="pilih-bahasa">Pilih bahasa</label>
+            <select id="pilih-bahasa" class="language-select" data-bahasa aria-label="Pilih bahasa" title="Pilih bahasa. Terjemahan otomatis; teks asli tetap bahasa Indonesia."></select>
+          </div>
           <button class="icon-btn" type="button" data-theme-toggle aria-label="Aktifkan mode gelap">☾</button>
           <a class="btn btn-primary" href="donasi">Donasi</a>
           <button class="icon-btn menu-toggle" type="button" data-menu-toggle aria-label="Buka menu" aria-expanded="false">☰</button>
@@ -223,6 +227,7 @@ function renderFooter() {
             <span class="brand-name">Faisal</span>
             <p style="font-size:11px;margin:12px 0 0">Berita independen dan tepercaya untuk Indonesia.</p>
             <p style="font-size:11px;margin:10px 0 0">Pemilik: <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a><br />WhatsApp: <a href="https://wa.me/6281286484770">081286484770</a><br />QRIS: tersedia di halaman donasi</p>
+            <a class="footer-translate" href="https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=${encodeURIComponent(location.href)}" target="_blank" rel="noopener">Terjemahkan halaman (semua bahasa)</a>
           </div>
           ${cols.map(([t, links]) => `<div><h3>${t}</h3><ul>${links.map((l) => `<li><a href="${hrefFooter(l)}" ${eksternal(l) ? 'target="_blank" rel="noopener noreferrer"' : ''}>${l}</a></li>`).join('')}</ul></div>`).join('')}
         </div>
@@ -362,7 +367,9 @@ function perbaruiTicker() {
     return `<a class="ticker-item" href="${esc(href)}"${luar ? ' target="_blank" rel="noopener noreferrer"' : ''}>${esc(x.judul)}</a><span class="ticker-dot" aria-hidden="true">•</span>`;
   }).join('');
   // Dua grup identik supaya animasi -50% kembali mulus tanpa jeda.
-  el.innerHTML = `<div class="ticker-group">${isi}</div><div class="ticker-group" aria-hidden="true">${isi}</div>`;
+  // Grup kedua semi-transparan untuk pembaca layar, jadi tautannya tidak bisa difokuskan.
+  const isiPasif = isi.replace(/<a /g, '<a tabindex="-1" ');
+  el.innerHTML = `<div class="ticker-group">${isi}</div><div class="ticker-group" aria-hidden="true">${isiPasif}</div>`;
   el.style.setProperty('--ticker-lama', `${Math.max(24, daftar.length * 9)}s`);
 }
 function initTickerToggle() {
@@ -1146,6 +1153,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAdminProfile();
   initAdminSidebar();
   initArticleFilters();
+  if (typeof window.initBahasa === 'function') window.initBahasa();
   if (document.body.dataset.admin !== '1') {
     muatAkses();
     // Berita terkini menggabungkan unggahan pemilik dan RSS ANTARA,

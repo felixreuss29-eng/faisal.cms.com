@@ -95,6 +95,10 @@ button { cursor: pointer; }
 .btn-outline { background: transparent; border-color: var(--border); color: var(--text-soft); }
 .btn-block { width: 100%; }
 .icon-btn { min-width: 44px; min-height: 44px; border: 0; background: transparent; color: var(--muted); }
+.language-wrap { display: flex; align-items: center; }
+.language-select { max-width: 132px; min-height: 44px; padding: 0 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); font-size: 11px; font-weight: 600; cursor: pointer; }
+.language-select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.footer-translate { display: inline-block; margin-top: 8px; font-size: 10px; font-weight: 600; color: var(--text); text-decoration: underline; text-underline-offset: 2px; }
 
 .ticker { display: flex; align-items: center; gap: 14px; min-height: 44px; background: var(--accent-soft); border-bottom: 1px solid var(--accent-line); font-size: 12px; }
 .ticker-label { flex: 0 0 auto; background: var(--accent-solid); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: .06em; padding: 4px 10px; border-radius: 3px; }
@@ -105,7 +109,7 @@ button { cursor: pointer; }
 .ticker-item { color: var(--accent-strong); font-weight: 600; text-decoration: none; white-space: nowrap; }
 .ticker-item:hover, .ticker-item:focus-visible { text-decoration: underline; }
 .ticker-dot { color: var(--accent-solid); font-size: 14px; line-height: 1; }
-.ticker-toggle { flex: 0 0 auto; min-width: 44px; min-height: 44px; border: 0; background: transparent; color: var(--accent-strong); font-size: 11px; cursor: pointer; }
+.ticker-toggle { position: relative; z-index: 1; display: inline-grid; place-items: center; flex: 0 0 auto; min-width: 48px; min-height: 44px; margin-left: 6px; border: 0; background: transparent; color: var(--accent-strong); font-size: 11px; cursor: pointer; }
 .ticker-toggle:hover { color: var(--accent-solid); }
 @keyframes ticker-gulir { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
@@ -384,6 +388,7 @@ th { font-size: 10px; text-transform: uppercase; letter-spacing: .04em; color: v
   .brand-name { font-size: 28px; }
   .brand-tag { display: none; }
   .header-actions .btn-primary, .search-box { display: none; }
+  .language-select { max-width: 104px; font-size: 10px; padding: 0 4px; }
   .menu-toggle { display: inline-grid; }
   .mobile-nav { display: flex; position: fixed; inset: 58px 0 auto; z-index: 40; flex-direction: column; gap: 0; background: var(--bg); border-bottom: 2px solid var(--accent); box-shadow: var(--shadow); }
   .mobile-nav a { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 600; }
