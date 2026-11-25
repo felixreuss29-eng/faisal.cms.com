@@ -474,7 +474,10 @@ function renderArticle() {
     if (!cocok) return;
     localStorage.setItem('faisal-akses', AKSES.hash);
     terapkanAkses();
-    toast('Akses langganan terbuka pada perangkat ini.');
+    const ditandai = tandaiTerverifikasiDenganKode();
+    toast(ditandai
+      ? 'Akses terbuka. Status pengajuan pada perangkat ini sudah terverifikasi.'
+      : 'Akses langganan terbuka pada perangkat ini.');
   });
   const kunciKomentar = 'faisal-komentar-' + (params.get('id') || 'default');
   const bacaKomentar = () => { try { return JSON.parse(localStorage.getItem(kunciKomentar) || '[]'); } catch { return []; } };
@@ -671,6 +674,37 @@ function simpanPengajuan(rec) {
   }
   return semua;
 }
+/* Kode akses hanya diberikan pemilik setelah bukti dicek, jadi memasukkan
+   kode yang benar menandai pengajuan pada perangkat ini sebagai terverifikasi. */
+function tandaiTerverifikasiDenganKode() {
+  const semua = ambilPengajuan();
+  if (!semua.length) return 0;
+  const waktu = new Date().toISOString();
+  let berubah = 0;
+  semua.forEach((r) => {
+    if (r.status === 'Menunggu verifikasi' || r.status === 'Ditolak') {
+      r.status = 'Terverifikasi';
+      r.verifiedAt = waktu;
+      berubah++;
+    }
+  });
+  if (!berubah) return 0;
+  try {
+    localStorage.setItem('faisal-subscriptions', JSON.stringify(semua));
+  } catch {
+    return 0;
+  }
+  return berubah;
+}
+function labelStatus(r) {
+  if (r.status !== 'Terverifikasi') return r.status;
+  if (!r.verifiedAt) return 'Terverifikasi';
+  const t = new Date(r.verifiedAt);
+  return `Terverifikasi · ${formatTanggal(t)}, ${formatJam(t)} WIB`;
+}
+function kelasStatus(r) {
+  return r.status === 'Terverifikasi' ? 'published' : 'review';
+}
 function kompresGambar(file) {
   return new Promise((resolve, reject) => {
     if (!file) return reject(new Error('Bukti pembayaran wajib diunggah.'));
@@ -755,13 +789,19 @@ function tampilkanHasil(selector, d, tautan, kanal) {
   box.classList.remove('hidden');
   box.innerHTML = `<h3>Pengajuan tersimpan di perangkat ini</h3>
     <p><strong>${esc(d.nama)}</strong> · ${esc(d.paket)} · ${rupiah(d.jumlah)}</p>
-    <p>Status: <span class="badge review">${esc(d.status)}</span></p>
+    <p>Status: <span class="badge ${kelasStatus(d)}">${esc(labelStatus(d))}</span></p>
     <p>Pesan sudah disiapkan untuk ${esc(kanal)} ke ${esc(kanal === 'WhatsApp' ? OWNER_WHATSAPP : OWNER_EMAIL)}. Jika aplikasi tidak terbuka otomatis, gunakan tautan di bawah.</p>
-    <p class="meta">Bukti pembayaran tersimpan di perangkat ini. Browser tidak bisa melampirkan file otomatis, jadi kirim foto bukti yang sama secara manual di ${esc(kanal)}. Setelah bukti dicek, pemilik akan mengirim kode akses untuk membuka artikel.</p>
+    <p class="meta">${d.status === 'Terverifikasi'
+      ? 'Kode akses sudah dimasukkan pada perangkat ini. Status terverifikasi berlaku untuk catatan di perangkat ini.'
+      : 'Bukti pembayaran tersimpan di perangkat ini. Browser tidak bisa melampirkan file otomatis, jadi kirim foto bukti yang sama secara manual di ' + esc(kanal) + '. Setelah bukti dicek, pemilik akan mengirim kode akses untuk membuka artikel.'}</p>
     <div class="contact-row"><a class="btn btn-primary" href="${esc(tautan)}" ${kanal === 'WhatsApp' ? 'target="_blank" rel="noopener"' : ''}>Buka ${esc(kanal)}</a><button class="btn btn-outline" type="button" data-lihat-bukti>Lihat bukti</button></div>`;
   box.querySelector('[data-lihat-bukti]')?.addEventListener('click', () => lihatBukti(d.bukti));
 }
 function kirimPengajuan(d, kanal) {
+  if (localStorage.getItem('faisal-akses')) {
+    d.status = 'Terverifikasi';
+    d.verifiedAt = new Date().toISOString();
+  }
   simpanPengajuan(d);
   const pesan = pesanLangganan(d);
   let tautan;
@@ -802,7 +842,7 @@ function renderRiwayatPengajuan() {
   }
   host.innerHTML = semua.map((r, i) => `<div class="history-item">
     <div><strong>${esc(r.nama)}</strong><span class="meta">${esc(r.email)} · ${esc(r.wa)} · ${esc(r.paket)} · ${rupiah(r.jumlah)}</span><span class="meta">Diajukan ${formatTanggal(new Date(r.waktu))}, ${formatJam(new Date(r.waktu))} WIB</span><span class="meta">Bukti: ${r.bukti ? 'sudah diunggah' : 'belum tersedia'}</span></div>
-    <span class="badge review">${esc(r.status)}</span>
+    <span class="badge ${kelasStatus(r)}">${esc(labelStatus(r))}</span>
     ${r.bukti ? `<button class="kicker" type="button" data-lihat-bukti-index="${i}">Lihat bukti</button>` : ''}
   </div>`).join('');
   host.querySelectorAll('[data-lihat-bukti-index]').forEach((b) => b.addEventListener('click', () => lihatBukti(semua[Number(b.dataset.lihatBuktiIndex)].bukti)));
@@ -821,9 +861,9 @@ function cekStatusLangganan() {
   }
   box.innerHTML = `<h3>Status pengajuan</h3>
     <p><strong>${esc(cocok.nama)}</strong> · ${esc(cocok.paket)} · ${rupiah(cocok.jumlah)}</p>
-    <p>Status: <span class="badge review">${esc(cocok.status)}</span></p>
+    <p>Status: <span class="badge ${kelasStatus(cocok)}">${esc(labelStatus(cocok))}</span></p>
     <p class="meta">Diajukan ${formatTanggal(new Date(cocok.waktu))}, ${formatJam(new Date(cocok.waktu))} WIB. Konfirmasi akhir dikirim ke ${esc(cocok.email)} / WhatsApp ${esc(cocok.wa)}.</p>
-    <p class="meta">Bukti pembayaran: ${cocok.bukti ? 'sudah diunggah dan perlu dicek pemilik' : 'belum tersedia'}.</p>`;
+    <p class="meta">Bukti pembayaran: ${cocok.bukti ? (cocok.status === 'Terverifikasi' ? 'sudah diunggah dan sudah cocok dengan kode akses yang dimasukkan' : 'sudah diunggah dan perlu dicek pemilik') : 'belum tersedia'}.</p>`;
 }
 function initLangganan() {
   const form = document.querySelector('#form-konfirmasi');
@@ -878,6 +918,7 @@ function initLangganan() {
   });
   document.querySelector('#tutup-bukti')?.addEventListener('click', () => document.querySelector('#dialog-bukti').close());
   document.querySelector('#btn-cek')?.addEventListener('click', cekStatusLangganan);
+  if (localStorage.getItem('faisal-akses')) tandaiTerverifikasiDenganKode();
   renderRiwayatPengajuan();
 }
 

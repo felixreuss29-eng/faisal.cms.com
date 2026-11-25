@@ -107,7 +107,7 @@ Buka `admin/posting.html` → menu **Tulis Postingan** di sidebar CMS.
 4. Pemilik mengirim kode tersebut ke pembaca lewat WhatsApp.
 5. Pembaca memasukkan kode pada kolom **Kode akses** di halaman artikel. Paywall terbuka dan status tersimpan di perangkatnya.
 
-Kode bisa diganti kapan saja lewat halaman admin; pembaca perlu memasukkan kode baru setelah deploy selesai. Ini pembatasan sisi klien, bukan pengganti autentikasi server.
+Kode bisa diganti kapan saja lewat halaman admin; pembaca perlu memasukkan kode baru setelah deploy selesai. Saat kode yang benar dimasukkan, pengajuan dengan status “Menunggu verifikasi” pada **perangkat yang sama** otomatis ditandai “Terverifikasi” beserta jamnya; status ini hanya catatan lokal, bukan data server. Ini pembatasan sisi klien, bukan pengganti autentikasi server.
 
 ## Hal yang sudah berfungsi
 
