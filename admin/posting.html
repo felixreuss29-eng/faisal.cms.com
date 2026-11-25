@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/css/style.css?v=10" />
+  <link rel="stylesheet" href="../assets/css/style.css?v=11" />
 </head>
 <body data-admin="1">
   <div class="admin-shell">
@@ -68,9 +68,9 @@
         </div>
 
         <section class="admin-card" style="margin-top:18px">
-          <h2>3. Kode akses pelanggan</h2>
-          <p class="meta">Setelah bukti pembayaran QRIS dicek, kirim kode ini ke pelanggan lewat WhatsApp. Pelanggan memasukkannya di halaman artikel untuk membuka paywall. Repository hanya menyimpan sidik jari (hash) kode, bukan kode aslinya.</p>
-          <div class="form-field"><label for="akses-kode">Kode akses baru</label><input id="akses-kode" type="text" autocomplete="off" placeholder="Misalnya: FAISAL-2026" value="FAISAL-2026" /></div>
+          <h2>3. Kode terima kasih untuk pendukung</h2>
+          <p class="meta">Setelah bukti transfer QRIS dicek, kirim kode ini ke pendukung lewat WhatsApp. Pendukung memasukkannya di halaman artikel untuk membuka paywall. Repository hanya menyimpan sidik jari (hash) kode, bukan kode aslinya.</p>
+          <div class="form-field"><label for="akses-kode">Kode terima kasih baru</label><input id="akses-kode" type="text" autocomplete="off" placeholder="Misalnya: FAISAL-2026" value="FAISAL-2026" /></div>
           <div class="form-actions"><button class="btn btn-primary" type="button" id="akses-simpan">Simpan kode ke website</button></div>
           <p class="meta" id="akses-status" role="status" aria-live="polite"></p>
         </section>
@@ -85,8 +85,8 @@
     </div>
   </div>
   <div class="toast" role="status" aria-live="polite"></div>
-  <script src="../assets/js/data.js?v=10"></script>
-  <script src="../assets/js/app.js?v=10"></script>
+  <script src="../assets/js/data.js?v=11"></script>
+  <script src="../assets/js/app.js?v=11"></script>
   <script>
   (function () {
     const KUNCI = 'faisal-github';
@@ -295,15 +295,15 @@
     el('akses-simpan').addEventListener('click', async () => {
       const status = el('akses-status');
       const kode = el('akses-kode').value.trim();
-      if (kode.length < 6) return status.textContent = 'Kode akses minimal 6 karakter.';
+      if (kode.length < 6) return status.textContent = 'Kode terima kasih minimal 6 karakter.';
       try {
         const hash = await hashTeks(kode);
         const lama = await bacaFile('assets/js/access.json');
         const isi = await base64DariBytes(new TextEncoder().encode(JSON.stringify({ hash, diubah: new Date().toISOString() }, null, 2)));
-        await tulisFile('assets/js/access.json', isi, 'Perbarui kode akses langganan', lama && lama.sha);
+        await tulisFile('assets/js/access.json', isi, 'Perbarui kode terima kasih donasi', lama && lama.sha);
         localStorage.setItem('faisal-akses-kode', kode);
-        status.textContent = 'Kode tersimpan. Bagikan "' + kode + '" ke pelanggan setelah bukti pembayaran dicek.';
-        toast('Kode akses diperbarui.');
+        status.textContent = 'Kode tersimpan. Bagikan "' + kode + '" ke pendukung setelah bukti donasi dicek.';
+        toast('Kode terima kasih diperbarui.');
       } catch (err) {
         status.textContent = err.message;
       }

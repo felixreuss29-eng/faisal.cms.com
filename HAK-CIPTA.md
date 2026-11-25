@@ -7,7 +7,7 @@ Repositori `faisal.cms` dipublikasikan agar website dapat dilihat dan di-deploy 
 ## Lingkup
 
 - Seluruh kode (`*.html`, `assets/css/*.css`, `assets/js/*.js`, `scripts/*`, workflow GitHub Actions) adalah milik Faisal Akbar.
-- Wordmark **Faisal**, desain `Faisal_Portal_Design.figcraft`, foto profil pemilik, teks redaksi, dan konfigurasi langganan adalah milik Faisal Akbar.
+- Wordmark **Faisal**, desain `Faisal_Portal_Design.figcraft`, foto profil pemilik, teks redaksi, dan konfigurasi donasi adalah milik Faisal Akbar.
 
 ## Materi pihak ketiga
 

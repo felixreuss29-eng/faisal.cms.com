@@ -172,14 +172,14 @@ function renderHeader(active = 'Beranda') {
             <input id="site-search" type="search" placeholder="Cari berita…" />
           </form>
           <button class="icon-btn" type="button" data-theme-toggle aria-label="Aktifkan mode gelap">☾</button>
-          <a class="btn btn-primary" href="langganan">Langganan</a>
+          <a class="btn btn-primary" href="donasi">Donasi</a>
           <button class="icon-btn menu-toggle" type="button" data-menu-toggle aria-label="Buka menu" aria-expanded="false">☰</button>
         </div>
       </div>
     </div>
     <nav class="mobile-nav hidden" aria-label="Navigasi mobile">
       ${NAV.map((n) => `<a href="${NAV_HREF[n]}">${n}</a>`).join('')}
-      <a href="langganan">Langganan</a><a href="admin/login.html">Masuk CMS</a>
+      <a href="donasi">Donasi</a><a href="admin/login.html">Masuk CMS</a>
     </nav>
     <div class="ticker" aria-label="Berita berjalan">
       <div class="wrap" style="display:flex;align-items:center;gap:14px;width:100%">
@@ -205,12 +205,12 @@ function renderFooter() {
   if (!host) return;
   const cols = [
     ['Perusahaan', ['Tentang Kami', 'Redaksi', 'Karir', 'Iklan']],
-    ['Layanan', ['Berita Terkini', 'Langganan', 'Newsletter', 'Arsip Berita']],
+    ['Layanan', ['Berita Terkini', 'Donasi', 'Newsletter', 'Arsip Berita']],
     ['Hukum', ['Pedoman Media Siber', 'Hak Jawab', 'Kebijakan Privasi', 'Cookie']],
     ['Ikuti Kami', ['Instagram @faisalakbar0423']]
   ];
   const tautan = {
-    'Tentang Kami': 'tentang', 'Berita Terkini': 'berita', 'Langganan': 'langganan',
+    'Tentang Kami': 'tentang', 'Berita Terkini': 'berita', 'Donasi': 'donasi',
     'Instagram @faisalakbar0423': 'https://www.instagram.com/faisalakbar0423/'
   };
   const hrefFooter = (label) => tautan[label] || 'statis';
@@ -222,7 +222,7 @@ function renderFooter() {
           <div>
             <span class="brand-name">Faisal</span>
             <p style="font-size:11px;margin:12px 0 0">Berita independen dan tepercaya untuk Indonesia.</p>
-            <p style="font-size:11px;margin:10px 0 0">Pemilik: <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a><br />WhatsApp: <a href="https://wa.me/6281286484770">081286484770</a><br />QRIS: tersedia di halaman langganan</p>
+            <p style="font-size:11px;margin:10px 0 0">Pemilik: <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a><br />WhatsApp: <a href="https://wa.me/6281286484770">081286484770</a><br />QRIS: tersedia di halaman donasi</p>
           </div>
           ${cols.map(([t, links]) => `<div><h3>${t}</h3><ul>${links.map((l) => `<li><a href="${hrefFooter(l)}" ${eksternal(l) ? 'target="_blank" rel="noopener noreferrer"' : ''}>${l}</a></li>`).join('')}</ul></div>`).join('')}
         </div>
@@ -255,7 +255,7 @@ function terapkanAkses() {
   const aktif = !!AKSES.hash && localStorage.getItem('faisal-akses') === AKSES.hash;
   document.querySelectorAll('.paywall').forEach((el) => el.classList.toggle('hidden', aktif));
   const status = document.querySelector('[data-akses-status]');
-  if (status) status.textContent = aktif ? 'Langganan aktif pada perangkat ini.' : '';
+  if (status) status.textContent = aktif ? 'Terima kasih. Dukungan Anda aktif pada perangkat ini.' : '';
 }
 
 function beritaCardHTML(a, denganRingkasan = true) {
@@ -540,18 +540,18 @@ function renderArticle() {
         <figure class="article-figure"><img src="${gambarArtikel(a)}" alt="${esc(a.alt || 'Ilustrasi: ' + a.title)}" /><figcaption>Ilustrasi artikel. Foto: Dokumentasi Faisal.</figcaption></figure>
         <div class="article-body" style="margin-top:28px">${isi}</div>
         <section class="paywall" style="margin-top:32px">
-          <span class="kicker">Langganan</span><h3>Artikel ini hanya untuk pelanggan</h3>
-          <p>Dukung jurnalisme independen dan baca seluruh artikel tanpa batas. Mulai dari Rp 10.000 per bulan.</p>
-          <div class="paywall-actions"><a class="btn btn-primary" href="langganan">Lihat Paket Langganan</a></div>
-          <p class="meta" style="margin-top:14px">Sudah bayar via QRIS dan mengirim bukti? Masukkan kode akses yang dikirim pemilik setelah bukti dicek.</p>
+          <span class="kicker">Dukungan Pembaca</span><h3>Artikel ini terbuka untuk pembaca yang mendukung Faisal</h3>
+          <p>Setiap dukungan membantu redaksi tetap independen dan konsisten. Sebagai ucapan terima kasih, Anda menerima kode untuk membuka seluruh artikel. Mulai dari Rp 10.000.</p>
+          <div class="paywall-actions"><a class="btn btn-primary" href="donasi">Cara berdonasi</a></div>
+          <p class="meta" style="margin-top:14px">Sudah mengirim donasi dan buktinya? Masukkan kode terima kasih yang dikirim pemilik setelah bukti dicek.</p>
           <form class="akses-form" data-akses-form>
-            <label class="sr-only" for="kode-akses">Kode akses langganan</label>
-            <input id="kode-akses" type="text" placeholder="Kode akses dari pemilik" autocomplete="off" required />
+            <label class="sr-only" for="kode-akses">Kode terima kasih dari pemilik</label>
+            <input id="kode-akses" type="text" placeholder="Kode terima kasih dari pemilik" autocomplete="off" required />
             <button class="btn btn-outline" type="submit">Buka akses</button>
           </form>
           <span class="error hidden" data-akses-error>Kode tidak valid. Periksa kembali pesan dari pemilik.</span>
           <p class="meta" data-akses-status aria-live="polite"></p>
-          <p class="meta">Belum berlangganan? <a href="langganan#form-konfirmasi">Kirim bukti pembayaran di sini.</a> Bantuan: <a href="https://wa.me/6281286484770">081286484770</a> · <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a></p>
+          <p class="meta">Belum berdonasi? <a href="donasi#form-konfirmasi">Kirim bukti donasi di sini.</a> Bantuan: <a href="https://wa.me/6281286484770">081286484770</a> · <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a></p>
         </section>
         <div class="tags"><span class="tag">#Pilkada2027</span><span class="tag">#KPU</span><span class="tag">#Pemilih</span><span class="tag">#Demokrasi</span></div>
         <div class="correction"><strong>Catatan redaksi</strong><br />Jadwal dan tahapan mengikuti kalender resmi penyelenggara pemilu, diperbarui pada <span data-clock></span>.</div>
@@ -592,8 +592,8 @@ function renderArticle() {
     const input = host.querySelector('#kode-akses');
     const kode = input.value.trim();
     const galat = host.querySelector('[data-akses-error]');
-    if (!kode) return toast('Masukkan kode akses dari pemilik.');
-    if (!AKSES.hash) return toast('Kode akses belum disiapkan pemilik.');
+    if (!kode) return toast('Masukkan kode terima kasih dari pemilik.');
+    if (!AKSES.hash) return toast('Kode terima kasih belum disiapkan pemilik.');
     const cocok = (await hashTeks(kode)) === AKSES.hash;
     galat.classList.toggle('hidden', cocok);
     if (!cocok) return;
@@ -602,7 +602,7 @@ function renderArticle() {
     const ditandai = tandaiTerverifikasiDenganKode();
     toast(ditandai
       ? 'Akses terbuka. Status pengajuan pada perangkat ini sudah terverifikasi.'
-      : 'Akses langganan terbuka pada perangkat ini.');
+      : 'Terima kasih. Akses terbuka pada perangkat ini.');
   });
   const kunciKomentar = 'faisal-komentar-' + (params.get('id') || 'default');
   const bacaKomentar = () => { try { return JSON.parse(localStorage.getItem(kunciKomentar) || '[]'); } catch { return []; } };
@@ -788,11 +788,11 @@ function initEditor() {
   hitung();
 }
 
-/* ---------- Langganan: pembayaran QRIS + konfirmasi pemilik ---------- */
+/* ---------- Donasi: QRIS + konfirmasi pemilik ---------- */
 const METODE_BAYAR = 'QRIS';
 const OWNER_WHATSAPP = '081286484770';
 const OWNER_WHATSAPP_API = '6281286484770';
-const HARGA_PAKET = { 'Digital': 10000, 'Digital Plus': 15000, 'Koran + Digital': 10000 };
+const HARGA_PAKET = { 'Dukungan Dasar': 10000, 'Dukungan Istimewa': 15000, 'Dukungan Arsip': 10000 };
 const rupiah = (n) => 'Rp ' + new Intl.NumberFormat('id-ID').format(n);
 
 function ambilPengajuan() {
@@ -811,7 +811,7 @@ function simpanPengajuan(rec) {
   }
   return semua;
 }
-/* Kode akses hanya diberikan pemilik setelah bukti dicek, jadi memasukkan
+/* Kode terima kasih hanya diberikan pemilik setelah bukti dicek, jadi memasukkan
    kode yang benar menandai pengajuan pada perangkat ini sebagai terverifikasi. */
 function tandaiTerverifikasiDenganKode() {
   const semua = ambilPengajuan();
@@ -844,7 +844,7 @@ function kelasStatus(r) {
 }
 function kompresGambar(file) {
   return new Promise((resolve, reject) => {
-    if (!file) return reject(new Error('Bukti pembayaran wajib diunggah.'));
+    if (!file) return reject(new Error('Bukti donasi wajib diunggah.'));
     if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return reject(new Error('Bukti harus berupa JPG, PNG, atau WebP.'));
     if (file.size > 10 * 1024 * 1024) return reject(new Error('Ukuran bukti maksimal 10 MB.'));
     const reader = new FileReader();
@@ -871,7 +871,7 @@ function lihatBukti(dataUrl) {
   document.querySelector('#gambar-bukti').src = dataUrl;
   dialog.showModal();
 }
-function validasiLangganan(form) {
+function validasiDonasi(form) {
   const el = (nama) => form.elements.namedItem(nama);
   const nama = (el('nama')?.value || '').trim();
   const email = (el('email')?.value || '').trim();
@@ -905,19 +905,19 @@ function validasiLangganan(form) {
     status: 'Menunggu verifikasi'
   };
 }
-function pesanLangganan(d) {
+function pesanDonasi(d) {
   return [
-    'Konfirmasi langganan Faisal',
+    'Konfirmasi donasi Faisal',
     `Nama: ${d.nama}`,
     `Email: ${d.email}`,
     `WhatsApp: ${d.wa}`,
-    `Paket: ${d.paket}`,
+    `Nominal dukungan: ${d.paket}`,
     `Jumlah: ${rupiah(d.jumlah)}`,
-    `Metode pembayaran: ${METODE_BAYAR}`,
+    `Metode: ${METODE_BAYAR}`,
     d.catatan ? `Catatan: ${d.catatan}` : null,
-    'Bukti pembayaran: saya kirimkan foto bukti pada pesan ini.',
+    'Bukti transfer: saya sertakan foto bukti pada pesan ini.',
     '',
-    'Saya sudah membayar via QRIS. Mohon verifikasi bukti dan aktifkan langganan saya.'
+    'Saya telah mengirim donasi melalui QRIS. Mohon periksa buktinya dan kirim kode terima kasih.'
   ].filter((baris) => baris !== null).join('\n');
 }
 function tampilkanHasil(selector, d, tautan, kanal) {
@@ -929,8 +929,8 @@ function tampilkanHasil(selector, d, tautan, kanal) {
     <p>Status: <span class="badge ${kelasStatus(d)}">${esc(labelStatus(d))}</span></p>
     <p>Pesan sudah disiapkan untuk ${esc(kanal)} ke ${esc(kanal === 'WhatsApp' ? OWNER_WHATSAPP : OWNER_EMAIL)}. Jika aplikasi tidak terbuka otomatis, gunakan tautan di bawah.</p>
     <p class="meta">${d.status === 'Terverifikasi'
-      ? 'Kode akses sudah dimasukkan pada perangkat ini. Status terverifikasi berlaku untuk catatan di perangkat ini.'
-      : 'Bukti pembayaran tersimpan di perangkat ini. Browser tidak bisa melampirkan file otomatis, jadi kirim foto bukti yang sama secara manual di ' + esc(kanal) + '. Setelah bukti dicek, pemilik akan mengirim kode akses untuk membuka artikel.'}</p>
+      ? 'Kode terima kasih sudah dimasukkan pada perangkat ini. Status terverifikasi berlaku untuk catatan di perangkat ini.'
+      : 'Bukti transfer tersimpan di perangkat ini. Browser tidak bisa melampirkan file otomatis, jadi kirim foto bukti yang sama secara manual di ' + esc(kanal) + '. Setelah bukti dicek, pemilik akan mengirim kode terima kasih untuk membuka seluruh artikel.'}</p>
     <div class="contact-row"><a class="btn btn-primary" href="${esc(tautan)}" ${kanal === 'WhatsApp' ? 'target="_blank" rel="noopener"' : ''}>Buka ${esc(kanal)}</a><button class="btn btn-outline" type="button" data-lihat-bukti>Lihat bukti</button></div>`;
   box.querySelector('[data-lihat-bukti]')?.addEventListener('click', () => lihatBukti(d.bukti));
 }
@@ -940,7 +940,7 @@ function kirimPengajuan(d, kanal) {
     d.verifiedAt = new Date().toISOString();
   }
   simpanPengajuan(d);
-  const pesan = pesanLangganan(d);
+  const pesan = pesanDonasi(d);
   let tautan;
   if (kanal === 'WhatsApp') {
     tautan = `https://wa.me/${OWNER_WHATSAPP_API}?text=${encodeURIComponent(pesan)}`;
@@ -955,7 +955,7 @@ function kirimPengajuan(d, kanal) {
     a.click();
     a.remove();
   } else {
-    tautan = `mailto:${OWNER_EMAIL}?subject=${encodeURIComponent('Konfirmasi langganan Faisal — ' + d.nama)}&body=${encodeURIComponent(pesan)}`;
+    tautan = `mailto:${OWNER_EMAIL}?subject=${encodeURIComponent('Konfirmasi donasi Faisal — ' + d.nama)}&body=${encodeURIComponent(pesan)}`;
     const direct = document.querySelector('#email-direct');
     if (direct) direct.href = tautan;
     const a = document.createElement('a');
@@ -967,7 +967,7 @@ function kirimPengajuan(d, kanal) {
   }
   tampilkanHasil('#hasil-pengajuan', d, tautan, kanal === 'WhatsApp' ? 'WhatsApp' : 'email');
   renderRiwayatPengajuan();
-  toast('Pengajuan langganan tersimpan. Pesan dibuka untuk dikirim ke pemilik.');
+  toast('Pengajuan donasi tersimpan. Pesan dibuka untuk dikirim ke pemilik.');
 }
 function renderRiwayatPengajuan() {
   const host = document.querySelector('#daftar-pengajuan');
@@ -984,7 +984,7 @@ function renderRiwayatPengajuan() {
   </div>`).join('');
   host.querySelectorAll('[data-lihat-bukti-index]').forEach((b) => b.addEventListener('click', () => lihatBukti(semua[Number(b.dataset.lihatBuktiIndex)].bukti)));
 }
-function cekStatusLangganan() {
+function cekStatusDonasi() {
   const input = document.querySelector('#cek-email');
   const box = document.querySelector('#hasil-status');
   if (!input || !box) return;
@@ -1000,9 +1000,9 @@ function cekStatusLangganan() {
     <p><strong>${esc(cocok.nama)}</strong> · ${esc(cocok.paket)} · ${rupiah(cocok.jumlah)}</p>
     <p>Status: <span class="badge ${kelasStatus(cocok)}">${esc(labelStatus(cocok))}</span></p>
     <p class="meta">Diajukan ${formatTanggal(new Date(cocok.waktu))}, ${formatJam(new Date(cocok.waktu))} WIB. Konfirmasi akhir dikirim ke ${esc(cocok.email)} / WhatsApp ${esc(cocok.wa)}.</p>
-    <p class="meta">Bukti pembayaran: ${cocok.bukti ? (cocok.status === 'Terverifikasi' ? 'sudah diunggah dan sudah cocok dengan kode akses yang dimasukkan' : 'sudah diunggah dan perlu dicek pemilik') : 'belum tersedia'}.</p>`;
+    <p class="meta">Bukti transfer: ${cocok.bukti ? (cocok.status === 'Terverifikasi' ? 'sudah diunggah dan sudah cocok dengan kode terima kasih yang dimasukkan' : 'sudah diunggah dan perlu dicek pemilik') : 'belum tersedia'}.</p>`;
 }
-function initLangganan() {
+function initDonasi() {
   const form = document.querySelector('#form-konfirmasi');
   if (!form) return;
   const select = document.querySelector('#paket-pilihan');
@@ -1011,7 +1011,7 @@ function initLangganan() {
     document.querySelectorAll('.plan').forEach((p) => p.classList.toggle('selected', p.dataset.paket === paket));
     document.querySelectorAll('[data-pilih-paket]').forEach((b) => {
       const aktif = b.dataset.pilihPaket === paket;
-      b.textContent = aktif ? 'Paket dipilih ✓' : 'Pilih paket';
+      b.textContent = aktif ? 'Nominal dipilih ✓' : 'Pilih nominal';
       b.classList.toggle('btn-primary', aktif);
       b.classList.toggle('btn-outline', !aktif);
     });
@@ -1019,7 +1019,7 @@ function initLangganan() {
   document.querySelectorAll('[data-pilih-paket]').forEach((b) => b.addEventListener('click', () => {
     pilih(b.dataset.pilihPaket);
     document.querySelector('#form-konfirmasi').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    toast(`Paket ${b.dataset.pilihPaket} dipilih. Lengkapi formulir konfirmasi.`);
+    toast(`Nominal ${b.dataset.pilihPaket} dipilih. Lengkapi formulir konfirmasi.`);
   }));
   select.addEventListener('change', () => pilih(select.value));
   document.querySelectorAll('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
@@ -1031,7 +1031,7 @@ function initLangganan() {
     }
   }));
   const kirim = async (kanal) => {
-    const d = validasiLangganan(form);
+    const d = validasiDonasi(form);
     if (!d) return;
     try {
       d.bukti = await kompresGambar(d.buktiFile);
@@ -1054,7 +1054,7 @@ function initLangganan() {
     preview.classList.remove('hidden');
   });
   document.querySelector('#tutup-bukti')?.addEventListener('click', () => document.querySelector('#dialog-bukti').close());
-  document.querySelector('#btn-cek')?.addEventListener('click', cekStatusLangganan);
+  document.querySelector('#btn-cek')?.addEventListener('click', cekStatusDonasi);
   if (localStorage.getItem('faisal-akses')) tandaiTerverifikasiDenganKode();
   renderRiwayatPengajuan();
 }
@@ -1142,7 +1142,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initFollow();
   initAuth();
   initEditor();
-  initLangganan();
+  initDonasi();
   initAdminProfile();
   initAdminSidebar();
   initArticleFilters();
