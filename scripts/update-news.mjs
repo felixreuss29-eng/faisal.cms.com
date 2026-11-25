@@ -15,6 +15,12 @@ const ROOT = process.cwd();
 const JSON_PATH = join(ROOT, 'assets', 'js', 'news.json');
 const IMG_DIR = join(ROOT, 'assets', 'img', 'berita');
 const BATAS = 12;
+// Berita yang tidak ingin ditampilkan. Filter ini berlaku setiap kali RSS diambil,
+// jadi artikel yang diblokir tidak akan muncul lagi setelah pembaruan harian.
+const DIBLOKIR = [
+  /perampasan\s+aset/i,
+  /uu\s+(no\s*)?perampasan/i
+];
 
 const ambilTeks = (url) => execFileSync(CURL, ['-fsSL', '--max-time', '30', url], {
   encoding: 'utf8', maxBuffer: 16 * 1024 * 1024
@@ -66,6 +72,7 @@ for (const item of items) {
   const title = tag(item, 'title');
   const link = tag(item, 'link');
   if (!title || !link) continue;
+  if (DIBLOKIR.some((re) => re.test(title))) continue;
   const id = 'berita-' + ((link.match(/\/(\d{6,})\//) || [])[1] || String(articles.length + 1));
   const urlGambar = atribut(item, 'media:content', 'url') || atribut(item, 'enclosure', 'url');
   const image = urlGambar ? unduhGambar(urlGambar, `${id}.jpg`) : null;
