@@ -181,10 +181,11 @@ function renderHeader(active = 'Beranda') {
       ${NAV.map((n) => `<a href="${NAV_HREF[n]}">${n}</a>`).join('')}
       <a href="langganan">Langganan</a><a href="admin/login.html">Masuk CMS</a>
     </nav>
-    <div class="ticker">
+    <div class="ticker" aria-label="Berita berjalan">
       <div class="wrap" style="display:flex;align-items:center;gap:14px;width:100%">
         <span class="ticker-label">REAKSI</span>
-        <span class="ticker-text" data-ticker>Topik terkini sedang dimuat…</span>
+        <div class="ticker-viewport"><div class="ticker-track" data-ticker></div></div>
+        <button class="ticker-toggle" type="button" data-ticker-toggle aria-label="Jeda berita berjalan" aria-pressed="false">❚❚</button>
       </div>
     </div>`;
   host.querySelector('[data-search-form]').addEventListener('submit', (e) => {
@@ -343,17 +344,37 @@ function renderBeritaKategori() {
 function perbaruiTicker() {
   const el = document.querySelector('[data-ticker]');
   if (!el) return;
-  const potong = (s) => s.length > 72 ? s.slice(0, 69).replace(/\s+\S*$/, '') + '…' : s;
   // Unggahan pemilik didahulukan, lalu topik ramai dari ANTARA.
   const kataViral = ['cpns', 'pongkor', 'km 50', 'hoaks', 'badak', 'pilkada', 'pemilu', 'inflasi', 'slank', 'pon'];
   const pilihan = kataViral
     .map((k) => (BERITA.articles || []).find((a) => a.title.toLowerCase().includes(k)))
     .filter(Boolean)
     .slice(0, 3);
-  const antara = (pilihan.length ? pilihan : (BERITA.articles || []).slice(0, 3)).map((a) => a.title);
-  const daftar = [...postinganTerbaru().slice(0, 2).map((a) => a.title), ...antara].slice(0, 4);
+  const antara = pilihan.length ? pilihan : (BERITA.articles || []).slice(0, 4);
+  const daftar = [
+    ...postinganTerbaru().slice(0, 2).map((a) => ({ judul: a.title, id: a.id })),
+    ...antara.map((a) => ({ judul: a.title, id: a.id, tautan: a.link }))
+  ].slice(0, 6);
   if (!daftar.length) return;
-  el.textContent = daftar.map(potong).join(' · ');
+  const isi = daftar.map((x) => {
+    const href = x.tautan || `artikel?id=${encodeURIComponent(x.id)}`;
+    const luar = Boolean(x.tautan);
+    return `<a class="ticker-item" href="${esc(href)}"${luar ? ' target="_blank" rel="noopener noreferrer"' : ''}>${esc(x.judul)}</a><span class="ticker-dot" aria-hidden="true">•</span>`;
+  }).join('');
+  // Dua grup identik supaya animasi -50% kembali mulus tanpa jeda.
+  el.innerHTML = `<div class="ticker-group">${isi}</div><div class="ticker-group" aria-hidden="true">${isi}</div>`;
+  el.style.setProperty('--ticker-lama', `${Math.max(24, daftar.length * 9)}s`);
+}
+function initTickerToggle() {
+  const tombol = document.querySelector('[data-ticker-toggle]');
+  const baris = document.querySelector('.ticker');
+  if (!tombol || !baris) return;
+  tombol.addEventListener('click', () => {
+    const jeda = baris.classList.toggle('dijeda');
+    tombol.setAttribute('aria-pressed', String(jeda));
+    tombol.setAttribute('aria-label', jeda ? 'Lanjutkan berita berjalan' : 'Jeda berita berjalan');
+    tombol.textContent = jeda ? '▶' : '❚❚';
+  });
 }
 async function muatBerita() {
   try {
@@ -1110,6 +1131,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAdminGuard();
   initTheme();
   renderHeader(document.body.dataset.page || 'Beranda');
+  initTickerToggle();
   renderFooter();
   renderHome();
   renderArticle();

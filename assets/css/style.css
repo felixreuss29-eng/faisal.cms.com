@@ -98,7 +98,16 @@ button { cursor: pointer; }
 
 .ticker { display: flex; align-items: center; gap: 14px; min-height: 44px; background: var(--accent-soft); border-bottom: 1px solid var(--accent-line); font-size: 12px; }
 .ticker-label { flex: 0 0 auto; background: var(--accent-solid); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: .06em; padding: 4px 10px; border-radius: 3px; }
-.ticker-text { color: var(--accent-strong); font-weight: 600; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.ticker-viewport { flex: 1 1 auto; min-width: 0; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 14px, #000 calc(100% - 14px), transparent); mask-image: linear-gradient(90deg, transparent, #000 14px, #000 calc(100% - 14px), transparent); }
+.ticker-track { display: inline-flex; align-items: center; will-change: transform; animation: ticker-gulir var(--ticker-lama, 48s) linear infinite; }
+.ticker:hover .ticker-track, .ticker:focus-within .ticker-track, .ticker.dijeda .ticker-track { animation-play-state: paused; }
+.ticker-group { display: inline-flex; align-items: center; flex: none; gap: 28px; padding-right: 28px; }
+.ticker-item { color: var(--accent-strong); font-weight: 600; text-decoration: none; white-space: nowrap; }
+.ticker-item:hover, .ticker-item:focus-visible { text-decoration: underline; }
+.ticker-dot { color: var(--accent-solid); font-size: 14px; line-height: 1; }
+.ticker-toggle { flex: 0 0 auto; min-width: 44px; min-height: 44px; border: 0; background: transparent; color: var(--accent-strong); font-size: 11px; cursor: pointer; }
+.ticker-toggle:hover { color: var(--accent-solid); }
+@keyframes ticker-gulir { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
 .ad-slot { display: grid; place-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 2px; color: var(--muted); font-size: 11px; }
 .ad-leaderboard { width: min(100%, 728px); height: 90px; margin: 24px auto 8px; }
@@ -126,6 +135,8 @@ button { cursor: pointer; }
 }
 @media (prefers-reduced-motion: reduce) {
   .ad-banner, .ad-banner .ad-shimmer { animation: none; }
+  .ticker-track { animation: none; }
+  .ticker-viewport { overflow-x: auto; }
 }
 
 /* ---------- Sections ---------- */
@@ -376,7 +387,9 @@ th { font-size: 10px; text-transform: uppercase; letter-spacing: .04em; color: v
   .menu-toggle { display: inline-grid; }
   .mobile-nav { display: flex; position: fixed; inset: 58px 0 auto; z-index: 40; flex-direction: column; gap: 0; background: var(--bg); border-bottom: 2px solid var(--accent); box-shadow: var(--shadow); }
   .mobile-nav a { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 600; }
-  .ticker-text { white-space: normal; }
+  .ticker-group { gap: 18px; padding-right: 18px; }
+  .ticker-label { padding: 4px 8px; }
+  .ticker-toggle { min-width: 40px; }
   .featured-item { grid-template-columns: 120px 1fr; }
   .featured-item img { width: 120px; height: 90px; }
   .grid-3, .populer-grid { grid-template-columns: minmax(0, 1fr); }
