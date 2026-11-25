@@ -416,25 +416,42 @@ function iklanHTML(kelas) {
 function renderHome() {
   const hero = document.querySelector('#hero');
   if (!hero) return;
-  const [utama, ...lain] = ARTICLES;
   hero.innerHTML = `
     ${iklanHTML('ad-leaderboard')}
-    <div class="hero-grid" style="margin-top:24px">
-      <article class="hero-main">
-        <a href="artikel.html?id=${utama.id}"><img src="${img(utama.image)}" alt="Ilustrasi: ${esc(utama.title)}" /></a>
-        <div class="hero-overlay">
-          <span class="kicker">${esc(utama.category)}</span>
-          <h2><a href="artikel.html?id=${utama.id}">${esc(utama.title)}</a></h2>
-          <div class="meta">${esc(utama.author.name)} · <span data-relative="${utama.published}">${waktuRelatif(utama.published)}</span></div>
+    <section class="home-about" aria-labelledby="judul-tentang-web">
+      <div class="home-about-copy">
+        <span class="kicker">Kenali Faisal</span>
+        <h2 id="judul-tentang-web">Berita yang jelas, sumber yang terang.</h2>
+        <p class="home-about-lead">Faisal adalah portal berita Indonesia yang menyajikan kabar politik, ekonomi, olahraga, hukum, opini, dan cek fakta.</p>
+        <div class="home-about-list">
+          <article class="home-about-item">
+            <span class="home-about-num" aria-hidden="true">I</span>
+            <div><h3>Tentang website ini</h3><p>Faisal menghadirkan berita Indonesia dan dunia dengan bahasa yang jelas, rujukan yang disebutkan, dan pembaruan bila ada perkembangan.</p></div>
+          </article>
+          <article class="home-about-item">
+            <span class="home-about-num" aria-hidden="true">II</span>
+            <div><h3>Pemilik &amp; Pemimpin Redaksi</h3><p>Faisal Akbar adalah mahasiswa Antar Bangsa, Jakarta Timur. Situs ini dibuat sebagai sarana belajar sekaligus menyampaikan berita kepada pembaca.</p></div>
+          </article>
+          <article class="home-about-item">
+            <span class="home-about-num" aria-hidden="true">III</span>
+            <div><h3>Komitmen redaksi</h3><p>Informasi kami rangkum dari sumber yang kredibel. Untuk perkara hukum yang belum diputus pengadilan, kami menjunjung asas praduga tak bersalah.</p></div>
+          </article>
+          <article class="home-about-item">
+            <span class="home-about-num" aria-hidden="true">IV</span>
+            <div><h3>Koreksi &amp; hak jawab</h3><p>Jika menemukan kesalahan atau keberatan atas pemberitaan kami, silakan hubungi redaksi. Koreksi dicatat terbuka dan hak jawab kami beri ruang.</p></div>
+          </article>
         </div>
-      </article>
-      <div class="featured">
-        ${lain.slice(0, 2).map((a) => `<article class="featured-item">
-          <a href="artikel.html?id=${a.id}"><img src="${img(a.image)}" alt="Ilustrasi: ${esc(a.title)}" loading="lazy" /></a>
-          <div><span class="kicker">${esc(a.category)}</span><h3><a href="artikel.html?id=${a.id}">${esc(a.title)}</a></h3><span class="meta" data-relative="${a.published}">${waktuRelatif(a.published)}</span></div>
-        </article>`).join('')}
+        <div class="home-about-actions">
+          <a class="btn btn-primary" href="tentang.html">Profil lengkap →</a>
+          <a class="btn btn-outline" href="berita.html">Baca berita →</a>
+          <a class="btn btn-outline" href="mailto:${OWNER_EMAIL}">Hubungi redaksi →</a>
+        </div>
       </div>
-    </div>`;
+      <figure class="home-about-photo">
+        <img src="${img('pemilik-hero-jas.jpg')}?v=4" alt="Foto Faisal Akbar, pemilik dan pemimpin redaksi Faisal, mengenakan jas" />
+        <figcaption><strong>Faisal Akbar</strong><span>Pemilik &amp; Pemimpin Redaksi</span></figcaption>
+      </figure>
+    </section>`;
 
   const latest = document.querySelector('#latest');
   if (latest) latest.innerHTML = `<div class="grid-3">${ARTICLES.map(cardHTML).join('')}</div>`;
