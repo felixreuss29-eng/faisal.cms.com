@@ -267,7 +267,7 @@ main { padding-bottom: 64px; }
 .category-band h1 { font-family: var(--font-display); font-size: 56px; margin: 8px 0; }
 .category-band p { color: #fecaca; max-width: 700px; margin: 0; }
 .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; padding: 24px 0; border-bottom: 1px solid var(--border); }
-.chip { min-height: 36px; padding: 0 16px; border: 1px solid var(--border); border-radius: 4px; background: var(--surface); color: var(--text-soft); font-size: 11px; font-weight: 600; }
+.chip { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 16px; border: 1px solid var(--border); border-radius: 4px; background: var(--surface); color: var(--text-soft); font-size: 11px; font-weight: 600; text-decoration: none; }
 .chip.active { background: var(--accent-solid); border-color: var(--accent-solid); color: #fff; }
 .filter-bar select { margin-left: auto; min-height: 36px; padding: 0 10px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg); color: var(--text); font-size: 11px; }
 .load-more { display: block; margin: 40px auto 0; min-height: 44px; padding: 0 24px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg); color: var(--text-soft); font-size: 12px; font-weight: 600; }

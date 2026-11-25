@@ -93,9 +93,9 @@ function toast(pesan) {
 /* ---------- Header & footer ---------- */
 const NAV = ['Beranda', 'Berita Terkini', 'Politik', 'Nasional', 'Ekonomi', 'Olahraga', 'Hukum', 'Opini', 'Teknologi'];
 const NAV_HREF = {
-  'Beranda': 'index.html', 'Berita Terkini': 'berita.html', 'Politik': 'kategori.html',
-  'Nasional': 'kategori.html', 'Ekonomi': 'kategori.html', 'Olahraga': 'kategori.html',
-  'Hukum': 'kategori.html', 'Opini': 'kategori.html', 'Teknologi': 'kategori.html'
+  'Beranda': 'index.html', 'Berita Terkini': 'berita.html', 'Politik': 'kategori.html?k=Politik',
+  'Nasional': 'kategori.html?k=Nasional', 'Ekonomi': 'kategori.html?k=Ekonomi', 'Olahraga': 'kategori.html?k=Olahraga',
+  'Hukum': 'kategori.html?k=Hukum', 'Opini': 'kategori.html?k=Opini', 'Teknologi': 'kategori.html?k=Teknologi'
 };
 function renderHeader(active = 'Beranda') {
   const host = document.querySelector('[data-site-header]');
@@ -304,6 +304,7 @@ async function muatBerita() {
   renderBeritaHarian();
   renderBeritaPage();
   renderBeritaKategori();
+  renderCategory();
   renderSearch();
 }
 
@@ -328,6 +329,7 @@ async function muatPostingan() {
   }
   renderPostingan();
   if (document.querySelector('#article-root')) renderArticle();
+  renderCategory();
   renderSearch();
 }
 
@@ -340,8 +342,8 @@ function cardHTML(a) {
     <span class="meta" data-relative="${a.published}">${waktuRelatif(a.published)}</span>
   </article>`;
 }
-function rankedHTML(list) {
-  return `<ol class="ranked-list">${list.map((t, i) => `<li><span class="rank">${String(i + 1).padStart(2, '0')}</span><div><h3>${esc(t)}</h3><span class="meta">Politik</span></div></li>`).join('')}</ol>`;
+function rankedHTML(list, label = 'Politik') {
+  return `<ol class="ranked-list">${list.map((t, i) => `<li><span class="rank">${String(i + 1).padStart(2, '0')}</span><div><h3>${esc(t)}</h3><span class="meta">${esc(label)}</span></div></li>`).join('')}</ol>`;
 }
 
 /* ---------- Beranda ---------- */
@@ -548,22 +550,34 @@ function renderArticle() {
 function renderCategory() {
   const host = document.querySelector('#category-root');
   if (!host) return;
-  const topik = ['Semua', 'Pemilu', 'DPR', 'KPU', 'Partai', 'Hukum', 'Kebijakan'];
+  const daftarKategori = ['Politik', 'Nasional', 'Ekonomi', 'Olahraga', 'Hukum', 'Opini', 'Teknologi'];
+  const pilihan = new URLSearchParams(location.search).get('k');
+  const kategori = daftarKategori.includes(pilihan) ? pilihan : 'Politik';
+  document.title = kategori + ' — Faisal';
+  document.querySelectorAll('.site-nav a, .mobile-nav a').forEach((a) => {
+    if (a.textContent.trim() === kategori) a.setAttribute('aria-current', 'page');
+    else a.removeAttribute('aria-current');
+  });
+  const lokal = [...ARTICLES, ...POSTINGAN].filter((a) => a.category === kategori);
+  const berita = BERITA.articles.filter((a) => a.category === kategori);
+  const semua = [...lokal, ...berita];
+  const utama = semua[0] || ARTICLES[0];
+  const gambarUtama = utama.image && utama.image.startsWith('assets/') ? utama.image : img(utama.image || 'hero.jpg');
+  const tautanUtama = utama.link || `artikel.html?id=${utama.id}`;
+  const kartu = [...lokal.map(cardHTML), ...berita.map((a) => beritaCardHTML(a, true))];
   host.innerHTML = `
-    <section class="category-band"><div class="wrap"><span class="kicker">Kategori</span><h1>Politik</h1><p>Liputan mendalam parlemen, pemilu, kebijakan publik, dan dinamika kekuasaan.</p></div></section>
+    <section class="category-band"><div class="wrap"><span class="kicker">Kategori</span><h1>${esc(kategori)}</h1><p>Berita dan analisis ${esc(kategori.toLowerCase())} dari redaksi Faisal.</p></div></section>
     <div class="wrap">
-      <div class="filter-bar">${topik.map((t, i) => `<button class="chip ${i === 0 ? 'active' : ''}" data-filter type="button">${t}</button>`).join('')}<select aria-label="Urutkan"><option>Terbaru</option><option>Terpopuler</option></select></div>
-      <div class="section"><h2 class="sr-only">Sorotan politik</h2><div class="split">
-        <article class="lead"><a href="artikel.html?id=${ARTICLES[0].id}"><img src="${img(ARTICLES[0].image)}" alt="Berita utama politik" /></a><span class="kicker">Utama</span><h3><a href="artikel.html?id=${ARTICLES[0].id}">${esc(ARTICLES[0].title)}</a></h3></article>
-        <div>${rankedHTML(['Sengketa Pilkada: MK Gelar Sidang Perdana', 'Komisi II Minta Aturan Turunan Segera Ditetapkan', 'Warga Mulai Cek Daftar Pemilih di Kanal Daring'])}</div>
+      <div class="filter-bar">${daftarKategori.map((k) => `<a class="chip ${k === kategori ? 'active' : ''}" href="kategori.html?k=${encodeURIComponent(k)}">${k}</a>`).join('')}</div>
+      <div class="section"><h2 class="sr-only">Sorotan ${esc(kategori)}</h2><div class="split">
+        <article class="lead"><a href="${tautanUtama}"><img src="${gambarUtama}" alt="Berita utama ${esc(kategori)}" /></a><span class="kicker">Utama</span><h3><a href="${tautanUtama}">${esc(utama.title)}</a></h3></article>
+        <div>${rankedHTML(semua.slice(1, 4).map((a) => a.title), kategori)}</div>
       </div></div>
-      <div class="section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title">Berita Politik</h2></div><div class="grid-3">${ARTICLES.map(cardHTML).join('')}</div></div>
-      <button class="load-more" data-toast="Menampilkan artikel berikutnya…">Muat lebih banyak</button>
+      <div class="section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title">Berita ${esc(kategori)}</h2></div><div class="grid-3">${kartu.length ? kartu.join('') : '<p class="meta">Belum ada berita pada kategori ini.</p>'}</div></div>
+      <button class="load-more" type="button">Muat lebih banyak</button>
     </div>`;
-  host.querySelectorAll('[data-filter]').forEach((b) => b.addEventListener('click', () => {
-    host.querySelectorAll('[data-filter]').forEach((x) => x.classList.remove('active'));
-    b.classList.add('active');
-  }));
+  const tombol = host.querySelector('.load-more');
+  if (tombol) tombol.addEventListener('click', () => toast('Menampilkan artikel berikutnya…'));
 }
 
 /* ---------- Pencarian ---------- */
