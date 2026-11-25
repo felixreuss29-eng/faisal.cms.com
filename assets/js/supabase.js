@@ -7,6 +7,7 @@
 
   const KUNCI_PENGUNJUNG = 'faisal-pengunjung';
   const KUNCI_TOKEN = 'faisal-supabase-token';
+  const KUNCI_SESI = 'faisal-sesi-pemilik';
   const KUNCI_KOMENTAR = 'faisal-komentar-';
   const KUNCI_STATISTIK = 'faisal-statistik-lokal';
   const KUNCI_NAMA = 'faisal-nama-komentar';
@@ -225,16 +226,35 @@
     });
   }
 
+  function bacaSesi() {
+    let teks = '';
+    try { teks = localStorage.getItem(KUNCI_SESI) || sessionStorage.getItem(KUNCI_SESI) || ''; }
+    catch { return null; }
+    if (!teks) return null;
+    try { return JSON.parse(teks); } catch { return null; }
+  }
+  function simpanSesi(sesi, ingat) {
+    try {
+      localStorage.removeItem(KUNCI_SESI);
+      sessionStorage.removeItem(KUNCI_SESI);
+      localStorage.removeItem(KUNCI_TOKEN);
+      sessionStorage.removeItem(KUNCI_TOKEN);
+    } catch { /* abai */ }
+    try { (ingat ? localStorage : sessionStorage).setItem(KUNCI_SESI, JSON.stringify(sesi)); }
+    catch { /* abai */ }
+  }
   function tokenPemilik() {
-    try { return sessionStorage.getItem(KUNCI_TOKEN) || ''; } catch { return ''; }
+    const sesi = bacaSesi();
+    return (sesi && sesi.access_token) || '';
   }
   function statusPemilik() { return Boolean(tokenPemilik()); }
-  async function masukPemilik(email, password) {
+
+  async function masukPemilik(email, password, ingat = false) {
     const c = konfigurasi();
     if (!siap()) throw new Error('Supabase belum terhubung');
     const alamat = String(email || '').trim();
     if (alamat.toLowerCase() !== PEMILIK) throw new Error('Hanya akun pemilik yang boleh masuk.');
-    if (!password) throw new Error('Kata sandi Supabase wajib diisi.');
+    if (!password) throw new Error('Kata sandi wajib diisi.');
     let respons;
     try {
       respons = await fetch(c.url + '/auth/v1/token?grant_type=password', {
@@ -249,13 +269,76 @@
     const teks = await respons.text();
     let hasil = {};
     try { hasil = JSON.parse(teks); } catch { /* abai */ }
-    if (!respons.ok) throw new Error(hasil.message || hasil.error_description || 'Masuk gagal. Periksa email dan kata sandi.');
+    if (!respons.ok) {
+      throw new Error(hasil.msg || hasil.message || hasil.error_description || 'Kata sandi salah atau akun belum dikonfirmasi.');
+    }
     if (!hasil.access_token) throw new Error('Supabase tidak mengembalikan sesi masuk.');
-    try { sessionStorage.setItem(KUNCI_TOKEN, hasil.access_token); } catch { /* abai */ }
+    const emailSesi = String((hasil.user && hasil.user.email) || alamat).toLowerCase();
+    if (emailSesi !== PEMILIK) throw new Error('Akun ini bukan pemilik Faisal.');
+    simpanSesi({
+      access_token: hasil.access_token,
+      refresh_token: hasil.refresh_token || '',
+      expires_at: Date.now() + (Number(hasil.expires_in) || 3600) * 1000,
+      email: emailSesi
+    }, Boolean(ingat));
     return true;
   }
+
+  async function perbaruiSesi() {
+    const sesi = bacaSesi();
+    if (!sesi || !sesi.refresh_token) return false;
+    const ingat = Boolean(localStorage.getItem(KUNCI_SESI));
+    let respons;
+    try {
+      respons = await fetch(konfigurasi().url + '/auth/v1/token?grant_type=refresh_token', {
+        method: 'POST',
+        headers: header(),
+        body: JSON.stringify({ refresh_token: sesi.refresh_token }),
+        signal: sinyal()
+      });
+    } catch { return false; }
+    if (!respons.ok) return false;
+    let hasil = {};
+    try { hasil = await respons.json(); } catch { return false; }
+    if (!hasil.access_token) return false;
+    simpanSesi({
+      access_token: hasil.access_token,
+      refresh_token: hasil.refresh_token || sesi.refresh_token,
+      expires_at: Date.now() + (Number(hasil.expires_in) || 3600) * 1000,
+      email: sesi.email || PEMILIK
+    }, ingat);
+    return true;
+  }
+
+  // Memeriksa sesi ke server Supabase, bukan hanya membaca penanda di browser.
+  async function sesiPemilik() {
+    if (!siap()) return null;
+    const sesi = bacaSesi();
+    if (!sesi || !sesi.access_token) return null;
+    try {
+      const user = await minta('/auth/v1/user', { token: sesi.access_token });
+      const email = String((user && user.email) || '').toLowerCase();
+      if (email === PEMILIK) return email;
+    } catch { /* coba perbarui sesi */ }
+    if (await perbaruiSesi()) {
+      try {
+        const user = await minta('/auth/v1/user', { token: tokenPemilik() });
+        const email = String((user && user.email) || '').toLowerCase();
+        if (email === PEMILIK) return email;
+      } catch { /* gagal juga */ }
+    }
+    keluarPemilik();
+    return null;
+  }
+
   function keluarPemilik() {
-    try { sessionStorage.removeItem(KUNCI_TOKEN); } catch { /* abai */ }
+    try {
+      localStorage.removeItem(KUNCI_SESI);
+      sessionStorage.removeItem(KUNCI_SESI);
+      localStorage.removeItem(KUNCI_TOKEN);
+      sessionStorage.removeItem(KUNCI_TOKEN);
+      localStorage.removeItem('faisal-account');
+    } catch { /* abai */ }
   }
 
   window.FaisalData = {
@@ -271,6 +354,7 @@
     masukPemilik,
     keluarPemilik,
     statusPemilik,
+    sesiPemilik,
     namaTersimpan: () => { try { return localStorage.getItem(KUNCI_NAMA) || ''; } catch { return ''; } }
   };
 })();

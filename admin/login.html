@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/css/style.css?v=14" />
+  <link rel="stylesheet" href="../assets/css/style.css?v=15" />
 </head>
 <body data-admin="1">
   <main class="auth-page">
@@ -25,21 +25,22 @@
       <div class="auth-card">
         <span class="kicker">Halaman masuk</span>
         <h2>Masuk ke ruang redaksi</h2>
-        <p class="subtitle">Akses hanya untuk pemilik: <strong>felixreuss29@gmail.com</strong>.</p>
+        <p class="subtitle">Akses hanya untuk pemilik: <strong>felixreuss29@gmail.com</strong>. Kata sandi diverifikasi langsung oleh Supabase.</p>
         <form id="form-login" novalidate>
-          <div class="form-field"><label for="email">Alamat email</label><input id="email" name="email" type="email" placeholder="nama@faisal.id" value="felixreuss29@gmail.com" required /><span class="error hidden" id="email-error">Email tidak ditemukan. Periksa kembali alamat email Anda.</span></div>
-          <div class="form-field"><label for="password">Kata sandi</label><input id="password" name="password" type="password" placeholder="Masukkan kata sandi" required /></div>
-          <label style="font-size:11px;display:flex;gap:8px;align-items:center"><input type="checkbox" checked style="width:auto;min-height:auto" /> Ingat saya selama 30 hari</label>
+          <div class="form-field"><label for="email">Alamat email</label><input id="email" name="email" type="email" placeholder="nama@faisal.id" value="felixreuss29@gmail.com" autocomplete="username" required /></div>
+          <div class="form-field"><label for="password">Kata sandi</label><input id="password" name="password" type="password" placeholder="Masukkan kata sandi" autocomplete="current-password" required /></div>
+          <p class="error hidden" id="login-error" role="alert" style="margin:0 0 12px"></p>
+          <label style="font-size:11px;display:flex;gap:8px;align-items:center"><input type="checkbox" name="ingat" checked style="width:auto;min-height:auto" /> Ingat sesi di perangkat ini</label>
           <div class="auth-links"><a href="lupa-password.html">Lupa kata sandi?</a></div>
-          <button class="btn btn-primary btn-block" type="submit">Lanjut ke verifikasi →</button>
+          <button class="btn btn-primary btn-block" type="submit">Masuk ke ruang redaksi →</button>
         </form>
-        <p class="secure-note" style="margin-top:18px">Ini adalah pembatas akses di browser. Untuk keamanan sungguhan (sandi, OTP, dan sesi), situs perlu backend.</p>
+        <p class="secure-note" style="margin-top:18px">Kata sandi yang salah ditolak. Sesi pemeriksaan ulang ke Supabase saat membuka halaman admin; tanpa itu, tidak ada yang bisa masuk.</p>
       </div>
     </section>
   </main>
   <div class="toast" role="status" aria-live="polite"></div>
-  <script src="../assets/js/supabase-config.js?v=14"></script>
-  <script src="../assets/js/supabase.js?v=14"></script>
-  <script src="../assets/js/data.js?v=14"></script><script src="../assets/js/app.js?v=14"></script>
+  <script src="../assets/js/supabase-config.js?v=15"></script>
+  <script src="../assets/js/supabase.js?v=15"></script>
+  <script src="../assets/js/data.js?v=15"></script><script src="../assets/js/app.js?v=15"></script>
 </body>
 </html>

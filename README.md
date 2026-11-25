@@ -16,7 +16,7 @@ statis.html             Pedoman Media Siber, redaksi, hak jawab, privasi, cookie
 404.html                Halaman tidak ditemukan
 admin/
   login.html            Masuk
-  login-2fa.html        Verifikasi dua langkah
+  login-2fa.html        Halaman lama, otomatis dialihkan ke login.html
   lupa-password.html    Reset kata sandi + state sukses
   dasbor.html           Dasbor ringkas
   daftar-artikel.html   Daftar artikel + status berlabel
@@ -129,9 +129,9 @@ Komentar dan angka kunjungan baru sama di semua perangkat setelah Supabase dihub
    ```
 
    **Jangan** memasukkan `service_role key` ke repo; kunci itu hanya untuk server. `anon key` memang boleh dipublikasikan.
-5. Commit dan push. Setelah deploy, buka dasbor admin → **Moderasi komentar** → masukkan kata sandi Supabase pemilik untuk menghapus komentar. Angka di dasbor dan "Dilihat N kali" langsung memakai data Supabase.
+5. Commit dan push. Setelah deploy, buka `admin/login.html`, masukkan email + kata sandi Supabase pemilik, lalu **Masuk ke ruang redaksi**. Buka dasbor admin → **Moderasi komentar** untuk menghapus komentar. Angka di dasbor dan "Dilihat N kali" langsung memakai data Supabase. Sesi dicek ulang ke Supabase setiap kali membuka halaman admin; centang **Ingat sesi** menyimpannya di perangkat itu; tanpa centangan, sesi berhenti saat browser ditutup.
 
-Sebelum langkah 4 selesai, situs tetap berfungsi dengan catatan "Supabase belum terhubung": komentar dan kunjungan tersimpan lokal di browser masing-masing.
+Sebelum langkah 4 selesai, halaman publik tetap berfungsi dengan catatan "Supabase belum terhubung": komentar dan kunjungan tersimpan lokal di browser masing-masing. **Halaman admin tidak bisa dimasuki siapa pun** sampai konfigurasi dan user pemilik tersedia.
 
 ## Hal yang sudah berfungsi
 
@@ -140,7 +140,7 @@ Sebelum langkah 4 selesai, situs tetap berfungsi dengan catatan "Supabase belum 
 - Dark mode tersimpan di `localStorage`, tombol berlabel aksesibel.
 - Pilihan bahasa di header: 24 bahasa (Indonesia, Inggris, Arab, Mandarin, Jepang, Korea, dll.) plus tautan Google Translate untuk bahasa lain. Seluruh teks halaman, termasuk isi artikel dan berita, diterjemahkan otomatis dan di-cache di browser (`faisal-bahasa`, `faisal-terjemahan`); versi Indonesia tetap menjadi acuan.
 - Responsif 1440 / 768 / 390: hamburger, grid satu kolom di mobile, area sentuh minimal 44px, fokus keyboard terlihat.
-- State UI: skeleton tidak dipakai karena konten langsung tersedia; empty state (pencarian), error (email/OTP), sukses (reset sandi), toast, cookie banner, pop-up izin push, validasi form.
+- State UI: skeleton tidak dipakai karena konten langsung tersedia; empty state (pencarian), error (email/kata sandi), sukses (reset sandi), toast, cookie banner, pop-up izin push, validasi form.
 - Status admin tidak hanya warna: setiap badge punya teks (Draf, Review, Revisi/Ditolak, Disetujui, Terbit) dan ikon titik. Sidebar CMS bisa diciutkan; filter status di daftar artikel berfungsi.
 - Halaman `statis.html` berisi Pedoman Media Siber, identitas redaksi, hak jawab, kebijakan privasi, karir, iklan, cookie, dan peta situs.
 - Komentar artikel tampil untuk semua pengunjung lewat Supabase (`faisal_komentar`), lengkap dengan nama, waktu WIB, dan tombol hapus untuk pemilik yang sudah masuk dengan akun Supabase. Jika Supabase belum terhubung, komentar jatuh ke penyimpanan lokal (`faisal-komentar-<id>`) dan diberi catatan demikian; tombol bagikan WA/email/salin tautan tetap berfungsi nyata.
@@ -150,14 +150,14 @@ Sebelum langkah 4 selesai, situs tetap berfungsi dengan catatan "Supabase belum 
 - Unggah postingan dari CMS: form admin → GitHub Contents API → `posts.json` + foto → tampil di beranda, `berita.html`, pencarian, dan halaman artikel.
 - Media sosial hanya Instagram `@faisalakbar0423`; Facebook, X/Twitter, dan YouTube dihapus karena belum tersedia.
 - Halaman `tentang.html` berisi misi, prinsip redaksi, tim, pemilik, dan kontak.
-- Foto profil pemilik dipakai di sidebar CMS, 2FA, dan halaman tentang kami.
+- Foto profil pemilik dipakai di sidebar CMS, halaman masuk, dan halaman tentang kami.
 - Audit Lighthouse otomatis: skor 100/100 untuk aksesibilitas, best practices, dan SEO pada halaman utama, artikel, kategori, serta dasbor (light dan dark).
 - Donasi: pilih nominal → kirim dukungan via QRIS (gambar QR di `assets/img/qris.jpg`) → **wajib unggah bukti transfer** → formulir membuat pesan konfirmasi siap dikirim ke WhatsApp `081286484770` atau email pemilik `felixreuss29@gmail.com`. Bukti dikompresi dan tersimpan di browser bersama riwayat/status; pengguna tetap harus mengirim foto bukti manual karena browser tidak bisa melampirkannya ke WhatsApp/email.
 
 ## Yang masih kurang / perlu ditambahkan
 
 1. **Backend & CMS penuh** — artikel contoh masih di `assets/js/data.js`, dan unggahan admin memakai GitHub Contents API (bukan database). Belum ada versioning Konten, penjadwalan terbit, atau pengelolaan media yang lengkap.
-2. **Autentikasi nyata** — CMS hanya menerima email pemilik `felixreuss29@gmail.com` dan menolak halaman admin bila belum ada penanda akun di browser, tetapi sandi/OTP masih simulasi. Unggah postingan memakai token GitHub di browser pemilik, bukan sesi pengguna. Jangan dipakai untuk data produksi.
+2. **Autentikasi nyata** — kata sandi login dan sesi admin diverifikasi Supabase Auth; email selain `felixreuss29@gmail.com`, kata sandi salah, dan penanda buatan di browser ditolak. Sebelum `assets/js/supabase-config.js` diisi dan `supabase-setup.sql` dijalankan, **tidak ada yang bisa masuk** (termasuk pemilik). Alur 2 langkah lama yang menerima enam digit apa pun sudah dihapus; `login-2fa.html` kini hanya mengalihkan ke `login.html`. Unggah postingan tetap memakai token GitHub di browser pemilik, bukan sesi pengguna.
 3. **WYSIWYG & upload media** — editor lama masih `textarea` dan berlabel pratinjau; unggah foto nyata ada di `posting.html`, tetapi belum ada rich text atau pengelola aset.
 4. **Alur persetujuan persisten** — tabel alur hanya contoh; tombol "Kirim review" belum mengubah data/status di server maupun menyimpan riwayat.
 5. **Verifikasi pembayaran otomatis** — donasi memakai QRIS statis → bukti wajib → konfirmasi WhatsApp/email → kode terima kasih manual. QRIS statis tidak punya webhook, jadi donasi tidak bisa terkonfirmasi otomatis. Skema Supabase untuk approval + masa aktif 1 bulan sudah disiapkan di `supabase-setup.sql`, tetapi belum dipasang karena URL dan anon key belum diisi di `assets/js/supabase-config.js`. Pencarian juga masih filter array lokal.

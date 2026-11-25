@@ -811,35 +811,43 @@ function initForms() {
   }));
 }
 
-/* ---------- Admin: autentikasi ---------- */
+/* ---------- Admin: autentikasi sungguhan lewat Supabase Auth ---------- */
 function initAuth() {
   const login = document.querySelector('#form-login');
-  if (login) login.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = login.email.value.trim();
-    const err = document.querySelector('#email-error');
-    const ok = email.toLowerCase() === OWNER_EMAIL.toLowerCase();
-    err.textContent = ok ? 'Email tidak ditemukan. Periksa kembali alamat email Anda.' : 'Hanya akun pemilik Faisal yang dapat mengakses CMS.';
-    err.classList.toggle('hidden', ok);
-    if (!ok) return;
-    if (!login.password.value.trim()) return toast('Kata sandi wajib diisi.');
-    localStorage.setItem('faisal-account', email);
-    location.href = 'login-2fa.html';
-  });
-  const otp = document.querySelector('#otp-row');
-  if (otp) {
-    const inputs = [...otp.querySelectorAll('input')];
-    inputs.forEach((inp, i) => inp.addEventListener('input', () => {
-      inp.value = inp.value.replace(/\D/g, '').slice(0, 1);
-      if (inp.value && i < inputs.length - 1) inputs[i + 1].focus();
-    }));
-    document.querySelector('#verifikasi')?.addEventListener('click', () => {
-      if (inputs.some((i) => !i.value)) return toast('Lengkapi enam digit kode.');
-      location.href = 'dasbor.html';
-    });
-    document.querySelector('#kirim-ulang')?.addEventListener('click', (e) => {
+  if (login) {
+    const pesan = document.querySelector('#login-error');
+    const gagal = (teks) => {
+      if (pesan) {
+        pesan.textContent = teks;
+        pesan.classList.remove('hidden');
+      } else toast(teks);
+    };
+    login.addEventListener('submit', async (e) => {
       e.preventDefault();
-      toast('Kode baru telah dikirim.');
+      pesan?.classList.add('hidden');
+      const email = login.email.value.trim();
+      const sandi = login.password.value;
+      const ingat = Boolean(login.querySelector('[name="ingat"]')?.checked);
+      if (email.toLowerCase() !== OWNER_EMAIL.toLowerCase()) {
+        return gagal('Hanya akun pemilik Faisal yang dapat mengakses CMS.');
+      }
+      if (!sandi) return gagal('Kata sandi wajib diisi.');
+      if (!FD.siap()) {
+        return gagal('Supabase belum terhubung. Isi Project URL dan anon key di assets/js/supabase-config.js terlebih dahulu.');
+      }
+      const tombol = login.querySelector('button[type="submit"]');
+      if (tombol) { tombol.disabled = true; tombol.textContent = 'Memeriksa kata sandi…'; }
+      try {
+        await FD.masukPemilik(email, sandi, ingat);
+        if (!await FD.sesiPemilik()) throw new Error('Sesi pemilik tidak dapat diverifikasi. Coba lagi.');
+        localStorage.removeItem('faisal-account');
+        location.href = 'dasbor.html';
+      } catch (err) {
+        FD.keluarPemilik();
+        gagal('Masuk gagal: ' + err.message);
+      } finally {
+        if (tombol) { tombol.disabled = false; tombol.textContent = 'Masuk ke ruang redaksi →'; }
+      }
     });
   }
   const lupa = document.querySelector('#form-lupa');
@@ -1155,17 +1163,17 @@ function initAdminProfile() {
   sidebar.insertBefore(profil, sidebar.querySelector('nav'));
 }
 
-/* ---------- Pembatas akses CMS (bukan pengganti autentikasi server) ---------- */
-function initAdminGuard() {
+/* ---------- Pembatas akses CMS: sesi diverifikasi ke Supabase, bukan penanda lokal ---------- */
+async function initAdminGuard() {
   if (document.body.dataset.admin !== '1') return;
   const halaman = location.pathname.split('/').pop();
-  const publicAuth = ['login.html', 'lupa-password.html'].includes(halaman);
-  const masuk = (localStorage.getItem('faisal-account') || '').toLowerCase() === OWNER_EMAIL.toLowerCase();
-  if (!publicAuth && !masuk) {
-    location.replace('login.html');
-    return;
-  }
-  if (halaman === 'login-2fa.html' && !masuk) location.replace('login.html');
+  if (halaman === 'login-2fa.html') { location.replace('login.html'); return; }
+  if (['login.html', 'lupa-password.html'].includes(halaman)) return;
+  document.body.classList.add('guard-checking');
+  try {
+    if (!await FD.sesiPemilik()) { location.replace('login.html'); return; }
+  } catch { location.replace('login.html'); return; }
+  document.body.classList.remove('guard-checking');
 }
 
 /* ---------- Sidebar admin yang bisa diciutkan ---------- */
@@ -1202,15 +1210,15 @@ function initArticleFilters() {
 }
 
 /* ---------- Moderasi komentar di dasbor admin ---------- */
-function initModerasi() {
+async function initModerasi() {
   const masuk = document.querySelector('[data-masuk-pemilik]');
   if (!masuk || !FD) return;
   const status = document.querySelector('[data-status-pemilik]');
   const daftar = document.querySelector('[data-daftar-moderasi]');
   const keluar = document.querySelector('[data-keluar-pemilik]');
 
-  function perbaruiStatus() {
-    const aktif = FD.statusPemilik();
+  async function perbaruiStatus() {
+    const aktif = Boolean(await FD.sesiPemilik());
     masuk.classList.toggle('hidden', aktif);
     keluar?.classList.toggle('hidden', !aktif);
     if (!status) return;
@@ -1252,20 +1260,25 @@ function initModerasi() {
     const email = masuk.querySelector('[data-email-pemilik]').value;
     const sandi = masuk.querySelector('[data-sandi-pemilik]').value;
     try {
-      await FD.masukPemilik(email, sandi);
+      await FD.masukPemilik(email, sandi, false);
+      if (!await FD.sesiPemilik()) throw new Error('Sesi pemilik tidak dapat diverifikasi.');
       masuk.reset();
-      perbaruiStatus();
+      await perbaruiStatus();
       await muatDaftar();
       toast('Berhasil masuk sebagai pemilik.');
-    } catch (err) { toast('Masuk gagal: ' + err.message); }
+    } catch (err) {
+      FD.keluarPemilik();
+      toast('Masuk gagal: ' + err.message);
+      await perbaruiStatus();
+    }
   });
-  keluar?.addEventListener('click', () => {
+  keluar?.addEventListener('click', async () => {
     FD.keluarPemilik();
-    perbaruiStatus();
-    muatDaftar();
+    await perbaruiStatus();
+    await muatDaftar();
     toast('Sesi pemilik diakhiri.');
   });
-  perbaruiStatus();
+  await perbaruiStatus();
   muatDaftar();
 }
 

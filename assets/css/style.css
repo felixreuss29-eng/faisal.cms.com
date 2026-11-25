@@ -382,6 +382,8 @@ th { font-size: 10px; text-transform: uppercase; letter-spacing: .04em; color: v
 .auth-links { display: flex; justify-content: space-between; gap: 12px; margin: 18px 0; font-size: 11px; }
 .auth-links a { color: var(--admin-accent); font-weight: 600; }
 .secure-note { font-size: 10px; color: var(--muted); }
+/* Sembunyikan isi admin selama sesi masih diverifikasi ke Supabase. */
+body.guard-checking main, body.guard-checking .admin-shell { visibility: hidden; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1100px) {
