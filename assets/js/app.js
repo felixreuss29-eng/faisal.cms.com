@@ -266,26 +266,35 @@ function labelPembaruan() {
   document.querySelectorAll('[data-news-updated]').forEach((el) => {
     if (!BERITA.generatedAt) return;
     const t = new Date(BERITA.generatedAt);
-    el.textContent = `Diperbarui otomatis ${formatTanggal(t)}, ${formatJam(t)} WIB · Sumber: ${BERITA.sourceName || 'ANTARA News'}`;
+    el.textContent = `Diperbarui otomatis ${formatTanggal(t)}, ${formatJam(t)} WIB · Sumber: Faisal & ${BERITA.sourceName || 'ANTARA News'}`;
   });
+}
+function kartuTerkiniHTML(a) {
+  return a._sumber === 'pemilik' ? cardHTML(a) : beritaCardHTML(a, false);
+}
+function gabunganTerkini() {
+  const dariPemilik = postinganTerbaru().map((a) => ({ ...a, _sumber: 'pemilik' }));
+  const dariAntara = (BERITA.articles || []).slice(0, 6).map((a) => ({ ...a, _sumber: 'antara' }));
+  return [...dariPemilik, ...dariAntara];
 }
 function renderBeritaHarian() {
   const host = document.querySelector('#daftar-berita-harian');
   if (!host) return;
-  if (!BERITA.articles.length) {
-    host.innerHTML = '<div class="empty-state"><h3>Berita belum tersedia</h3><p>Jalankan <code>node scripts/update-news.mjs</code> atau tunggu pembaruan harian oleh GitHub Actions.</p></div>';
+  const semua = gabunganTerkini();
+  if (!semua.length) {
+    host.innerHTML = '<div class="empty-state"><h3>Berita belum tersedia</h3><p>Unggah berita melalui <strong>Tulis Postingan</strong> di CMS atau tunggu pembaruan harian dari ANTARA News.</p></div>';
     return;
   }
-  host.innerHTML = `<div class="grid-3">${BERITA.articles.slice(0, 6).map((a) => beritaCardHTML(a, false)).join('')}</div>`;
+  host.innerHTML = `<div class="grid-3">${semua.map(kartuTerkiniHTML).join('')}</div>`;
   labelPembaruan();
   updateDynamicTime();
 }
 function renderBeritaPage() {
   const host = document.querySelector('#berita-root');
   if (!host) return;
-  const semua = BERITA.articles;
+  const semua = gabunganTerkini();
   if (!semua.length) {
-    host.innerHTML = '<div class="empty-state"><h3>Berita belum tersedia</h3><p>Data harian dibuat oleh <code>scripts/update-news.mjs</code>.</p></div>';
+    host.innerHTML = '<div class="empty-state"><h3>Berita belum tersedia</h3><p>Unggah berita melalui CMS atau tunggu pembaruan harian dari ANTARA News.</p></div>';
     return;
   }
   const kategori = [...new Set(semua.map((a) => a.category))];
@@ -296,8 +305,8 @@ function renderBeritaPage() {
       ${kategori.map((k) => `<button class="chip" type="button" data-berita-filter="${esc(k)}">${esc(k)}</button>`).join('')}
     </div>
     <p class="result-meta" data-news-updated></p>
-    <div class="grid-3" id="grid-berita">${semua.map((a) => beritaCardHTML(a)).join('')}</div>
-    <p class="meta" style="margin-top:20px">Seluruh judul dan foto bersumber dari <a href="https://www.antaranews.com" target="_blank" rel="noopener noreferrer">ANTARA News</a>. Klik judul untuk membaca di situs sumber.</p>`;
+    <div class="grid-3" id="grid-berita">${semua.map(kartuTerkiniHTML).join('')}</div>
+    <p class="meta" style="margin-top:20px">Berita dari pemilik memuat tautan artikel internal. Berita ANTARA membuka artikel di <a href="https://www.antaranews.com" target="_blank" rel="noopener noreferrer">situs sumber</a>.</p>`;
   labelPembaruan();
   updateDynamicTime();
   host.querySelectorAll('[data-berita-filter]').forEach((b) => b.addEventListener('click', () => {
@@ -306,7 +315,7 @@ function renderBeritaPage() {
     const pilih = b.dataset.beritaFilter;
     host.querySelector('#grid-berita').innerHTML = semua
       .filter((a) => pilih === 'Semua' || a.category === pilih)
-      .map((a) => beritaCardHTML(a)).join('');
+      .map(kartuTerkiniHTML).join('');
     updateDynamicTime();
   }));
 }
@@ -323,16 +332,18 @@ function renderBeritaKategori() {
 }
 function perbaruiTicker() {
   const el = document.querySelector('[data-ticker]');
-  if (!el || !BERITA.articles.length) return;
+  if (!el) return;
   const potong = (s) => s.length > 72 ? s.slice(0, 69).replace(/\s+\S*$/, '') + '…' : s;
-  // Utamakan topik yang sedang ramai; jika tidak ada, pakai tiga berita terbaru.
+  // Unggahan pemilik didahulukan, lalu topik ramai dari ANTARA.
   const kataViral = ['cpns', 'pongkor', 'km 50', 'hoaks', 'badak', 'pilkada', 'pemilu', 'inflasi', 'slank', 'pon'];
   const pilihan = kataViral
-    .map((k) => BERITA.articles.find((a) => a.title.toLowerCase().includes(k)))
+    .map((k) => (BERITA.articles || []).find((a) => a.title.toLowerCase().includes(k)))
     .filter(Boolean)
     .slice(0, 3);
-  const daftar = pilihan.length ? pilihan : BERITA.articles.slice(0, 3);
-  el.textContent = daftar.map((a) => potong(a.title)).join(' · ');
+  const antara = (pilihan.length ? pilihan : (BERITA.articles || []).slice(0, 3)).map((a) => a.title);
+  const daftar = [...postinganTerbaru().slice(0, 2).map((a) => a.title), ...antara].slice(0, 4);
+  if (!daftar.length) return;
+  el.textContent = daftar.map(potong).join(' · ');
 }
 async function muatBerita() {
   try {
@@ -343,9 +354,6 @@ async function muatBerita() {
   } catch (e) {
     console.warn('Berita harian tidak dapat dimuat:', e.message);
   }
-  perbaruiTicker();
-  renderBeritaHarian();
-  renderBeritaPage();
   renderBeritaKategori();
   renderCategory();
   renderSearch();
@@ -356,7 +364,7 @@ function postinganTerbaru() {
   return POSTINGAN.slice().sort((a, b) => new Date(b.published || 0) - new Date(a.published || 0));
 }
 function renderPostingan() {
-  const kosong = '<div class="empty-state"><h3>Belum ada berita dari pemilik</h3><p>Gunakan menu <strong>Tulis Postingan</strong> di CMS untuk mengunggah berita. Setiap berita yang terbit otomatis tampil di beranda.</p></div>';
+  const kosong = '<div class="empty-state"><h3>Belum ada berita dari pemilik</h3><p>Gunakan menu <strong>Tulis Postingan</strong> di CMS. Setiap berita yang terbit otomatis tampil di <strong>Berita Terkini</strong> dan di bagian ini.</p></div>';
   const isi = POSTINGAN.length ? `<div class="grid-3">${postinganTerbaru().map(cardHTML).join('')}</div>` : kosong;
   const beranda = document.querySelector('#daftar-postingan');
   if (beranda) beranda.innerHTML = isi;
@@ -1122,9 +1130,14 @@ document.addEventListener('DOMContentLoaded', () => {
   initAdminSidebar();
   initArticleFilters();
   if (document.body.dataset.admin !== '1') {
-    muatBerita();
-    muatPostingan();
     muatAkses();
+    // Berita terkini menggabungkan unggahan pemilik dan RSS ANTARA,
+    // jadi keduanya harus selesai dimuat sebelum dirender.
+    Promise.all([muatBerita(), muatPostingan()]).then(() => {
+      perbaruiTicker();
+      renderBeritaHarian();
+      renderBeritaPage();
+    });
   }
   startClock();
   document.querySelectorAll('[data-theme-toggle]').forEach((b) => b.addEventListener('click', toggleTheme));
