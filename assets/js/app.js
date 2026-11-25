@@ -445,7 +445,7 @@ function renderHome() {
     </div>`;
 
   const latest = document.querySelector('#latest');
-  if (latest) latest.innerHTML = `<div class="grid-3">${(postingan.length ? postingan : ARTICLES).map(cardHTML).join('')}</div>`;
+  if (latest) latest.innerHTML = `<div class="grid-3">${ARTICLES.map(cardHTML).join('')}</div>`;
 
   const politikUtama = ARTICLES[0];
   document.querySelector('#politik').innerHTML = `
