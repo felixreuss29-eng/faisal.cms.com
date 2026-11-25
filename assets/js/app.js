@@ -374,7 +374,6 @@ async function muatPostingan() {
     console.warn('Postingan admin tidak dapat dimuat:', e.message);
   }
   renderPostingan();
-  renderHome();
   if (document.querySelector('#article-root')) renderArticle();
   renderCategory();
   renderSearch();
@@ -417,28 +416,21 @@ function iklanHTML(kelas) {
 function renderHome() {
   const hero = document.querySelector('#hero');
   if (!hero) return;
-  // Beranda mengutamakan berita yang diunggah pemilik melalui CMS.
-  const postingan = postinganTerbaru();
-  const utama = postingan[0] || ARTICLES[0];
-  const lain = postingan.length ? postingan.slice(1, 3) : ARTICLES.slice(1, 3);
-  const penulisUtama = namaPenulis(utama);
+  const [utama, ...lain] = ARTICLES;
   hero.innerHTML = `
     ${iklanHTML('ad-leaderboard')}
     <div class="hero-grid" style="margin-top:24px">
       <article class="hero-main">
-        <a href="artikel.html?id=${utama.id}"><img src="${gambarArtikel(utama)}" alt="${esc(utama.alt || 'Ilustrasi: ' + utama.title)}" /></a>
+        <a href="artikel.html?id=${utama.id}"><img src="${img(utama.image)}" alt="Ilustrasi: ${esc(utama.title)}" /></a>
         <div class="hero-overlay">
           <span class="kicker">${esc(utama.category)}</span>
           <h2><a href="artikel.html?id=${utama.id}">${esc(utama.title)}</a></h2>
-          <div class="hero-meta">
-            <span class="meta">${esc(penulisUtama)} · <span data-relative="${utama.published}">${waktuRelatif(utama.published)}</span></span>
-            ${tombolIkuti(penulisUtama, 'btn-follow follow-overlay')}
-          </div>
+          <div class="meta">${esc(utama.author.name)} · <span data-relative="${utama.published}">${waktuRelatif(utama.published)}</span></div>
         </div>
       </article>
       <div class="featured">
-        ${lain.map((a) => `<article class="featured-item">
-          <a href="artikel.html?id=${a.id}"><img src="${gambarArtikel(a)}" alt="${esc(a.alt || 'Ilustrasi: ' + a.title)}" loading="lazy" /></a>
+        ${lain.slice(0, 2).map((a) => `<article class="featured-item">
+          <a href="artikel.html?id=${a.id}"><img src="${img(a.image)}" alt="Ilustrasi: ${esc(a.title)}" loading="lazy" /></a>
           <div><span class="kicker">${esc(a.category)}</span><h3><a href="artikel.html?id=${a.id}">${esc(a.title)}</a></h3><span class="meta" data-relative="${a.published}">${waktuRelatif(a.published)}</span></div>
         </article>`).join('')}
       </div>
