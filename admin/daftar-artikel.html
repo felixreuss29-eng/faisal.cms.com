@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/css/style.css?v=13" />
+  <link rel="stylesheet" href="../assets/css/style.css?v=14" />
 </head>
 <body data-admin="1">
   <div class="admin-shell">
@@ -26,12 +26,12 @@
         <div class="filter-bar" style="border:0;padding-top:0"><button class="chip active" type="button" data-status-filter="Semua">Semua</button><button class="chip" type="button" data-status-filter="Draf">Draf</button><button class="chip" type="button" data-status-filter="Review">Review</button><button class="chip" type="button" data-status-filter="Disetujui">Disetujui</button><button class="chip" type="button" data-status-filter="Terbit">Terbit</button><button class="chip" type="button" data-status-filter="Ditolak">Ditolak</button></div>
         <section class="admin-card" style="margin-top:0">
           <table>
-            <thead><tr><th>Judul</th><th>Kategori</th><th>Penulis</th><th>Status</th><th>Diperbarui</th><th></th></tr></thead>
+            <thead><tr><th scope="col">Judul</th><th scope="col">Kategori</th><th scope="col">Penulis</th><th scope="col">Status</th><th scope="col">Dilihat</th><th scope="col">Diperbarui</th><th scope="col"><span class="sr-only">Aksi</span></th></tr></thead>
             <tbody>
-              <tr data-status="Terbit"><td>KPU Tetapkan Jadwal Pilkada 2027, Ini Rangkaian Tahapannya</td><td>Politik</td><td>Faisal Akbar</td><td><span class="badge published">Terbit</span></td><td><span data-relative="2026-11-25T09:12:00+07:00"></span></td><td><a class="kicker" href="editor.html">Ubah</a></td></tr>
-              <tr data-status="Review"><td>Inflasi November Turun ke 2,8 Persen</td><td>Ekonomi</td><td>Rina Puspita</td><td><span class="badge review">Review</span></td><td><span data-relative="2026-11-25T07:40:00+07:00"></span></td><td><a class="kicker" href="editor.html">Ubah</a></td></tr>
-              <tr data-status="Disetujui"><td>Timnas Indonesia Taklukkan Jepang 2-0</td><td>Olahraga</td><td>Faisal Akbar</td><td><span class="badge approved">Disetujui</span></td><td><span data-relative="2026-11-25T05:20:00+07:00"></span></td><td><a class="kicker" href="editor.html">Ubah</a></td></tr>
-              <tr data-status="Draf"><td>MK Gelar Sidang Sengketa Hasil Pilkada</td><td>Hukum</td><td>Faisal Akbar</td><td><span class="badge draft">Draf</span></td><td><span data-relative="2026-11-25T04:10:00+07:00"></span></td><td><a class="kicker" href="editor.html">Ubah</a></td></tr>
+              <tr data-status="Terbit"><td>KPU Tetapkan Jadwal Pilkada 2027, Ini Rangkaian Tahapannya</td><td>Politik</td><td>Faisal Akbar</td><td><span class="badge published">Terbit</span></td><td><span class="meta" data-view="pilkada-2027">—</span></td><td><span data-relative="2026-11-25T09:12:00+07:00"></span></td><td><a class="kicker" href="editor.html">Ubah</a></td></tr>
+              <tr data-status="Review"><td>Inflasi November Turun ke 2,8 Persen</td><td>Ekonomi</td><td>Faisal Akbar</td><td><span class="badge review">Review</span></td><td><span class="meta" data-view="inflasi-november">—</span></td><td><span data-relative="2026-11-25T07:40:00+07:00"></span></td><td><a class="kicker" href="editor.html">Ubah</a></td></tr>
+              <tr data-status="Disetujui"><td>Timnas Indonesia Taklukkan Jepang 2-0</td><td>Olahraga</td><td>Faisal Akbar</td><td><span class="badge approved">Disetujui</span></td><td><span class="meta" data-view="timnas-jepang">—</span></td><td><span data-relative="2026-11-25T05:20:00+07:00"></span></td><td><a class="kicker" href="editor.html">Ubah</a></td></tr>
+              <tr data-status="Draf"><td>MK Gelar Sidang Sengketa Hasil Pilkada</td><td>Hukum</td><td>Faisal Akbar</td><td><span class="badge draft">Draf</span></td><td><span class="meta" data-view="mk-sengketa">—</span></td><td><span data-relative="2026-11-25T04:10:00+07:00"></span></td><td><a class="kicker" href="editor.html">Ubah</a></td></tr>
             </tbody>
           </table>
         </section>
@@ -39,6 +39,8 @@
     </div>
   </div>
   <div class="toast" role="status" aria-live="polite"></div>
-  <script src="../assets/js/data.js?v=13"></script><script src="../assets/js/app.js?v=13"></script>
+  <script src="../assets/js/supabase-config.js?v=14"></script>
+  <script src="../assets/js/supabase.js?v=14"></script>
+  <script src="../assets/js/data.js?v=14"></script><script src="../assets/js/app.js?v=14"></script>
 </body>
 </html>

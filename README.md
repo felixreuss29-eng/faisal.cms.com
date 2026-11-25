@@ -29,6 +29,7 @@ assets/js/posts.json    Postingan yang diunggah dari admin CMS
 assets/js/access.json   Sidik jari (hash SHA-256) kode terima kasih donasi
 assets/js/app.js        Perilaku: jam, waktu relatif, tema, toast, form, cookie, push
 assets/js/i18n.js       Pilihan bahasa + terjemahan otomatis seluruh teks halaman
+assets/js/supabase.js   Komentar bersama, moderasi pemilik, dan statistik kunjungan (REST)
 assets/img/*.jpg        Foto berita lokal (menggantikan placeholder gunung)
 assets/img/berita/*.jpg Foto berita harian yang diunduh otomatis
 assets/img/pemilik-profil.jpg  Foto profil pemilik di CMS & tentang kami
@@ -111,6 +112,27 @@ Buka `admin/posting.html` → menu **Tulis Postingan** di sidebar CMS.
 
 Kode bisa diganti kapan saja lewat halaman admin; pembaca perlu memasukkan kode baru setelah deploy selesai. Saat kode yang benar dimasukkan, pengajuan dengan status “Menunggu verifikasi” pada **perangkat yang sama** otomatis ditandai “Terverifikasi” beserta jamnya; status ini hanya catatan lokal, bukan data server. Ini pembatasan sisi klien, bukan pengganti autentikasi server.
 
+## Menghubungkan komentar & statistik kunjungan (Supabase)
+
+Komentar dan angka kunjungan baru sama di semua perangkat setelah Supabase dihubungkan:
+
+1. Buat project di https://supabase.com/dashboard (pilih region terdekat, misalnya Singapore).
+2. Buka **SQL Editor → New query**, salin seluruh isi `supabase-setup.sql`, lalu **Run**. File ini membuat tabel langganan, komentar (`faisal_komentar`), kunjungan (`faisal_statistik`), kebijakan RLS, dan fungsi `faisal_ringkasan_statistik`.
+3. Buka **Authentication → Users → Add user → Create new user**, pakai email `felixreuss29@gmail.com`, isi kata sandi, lalu centang **Auto Confirm User** (atau konfirmasi lewat email). Email ini harus sama dengan kebijakan pemilik di SQL.
+4. Buka **Project Settings → API**, salin **Project URL** dan **anon public key**. Isi keduanya di `assets/js/supabase-config.js`:
+
+   ```js
+   window.FAISAL_SUPABASE = {
+     url: 'https://xxxx.supabase.co',
+     anonKey: 'eyJhbGciOi...'
+   };
+   ```
+
+   **Jangan** memasukkan `service_role key` ke repo; kunci itu hanya untuk server. `anon key` memang boleh dipublikasikan.
+5. Commit dan push. Setelah deploy, buka dasbor admin → **Moderasi komentar** → masukkan kata sandi Supabase pemilik untuk menghapus komentar. Angka di dasbor dan "Dilihat N kali" langsung memakai data Supabase.
+
+Sebelum langkah 4 selesai, situs tetap berfungsi dengan catatan "Supabase belum terhubung": komentar dan kunjungan tersimpan lokal di browser masing-masing.
+
 ## Hal yang sudah berfungsi
 
 - Waktu nyata: tanggal, jam WIB (`Asia/Jakarta`) dan waktu relatif dihitung ulang tiap 30 detik dari `Date` dan `Intl.DateTimeFormat('id-ID')`.
@@ -121,7 +143,8 @@ Kode bisa diganti kapan saja lewat halaman admin; pembaca perlu memasukkan kode 
 - State UI: skeleton tidak dipakai karena konten langsung tersedia; empty state (pencarian), error (email/OTP), sukses (reset sandi), toast, cookie banner, pop-up izin push, validasi form.
 - Status admin tidak hanya warna: setiap badge punya teks (Draf, Review, Revisi/Ditolak, Disetujui, Terbit) dan ikon titik. Sidebar CMS bisa diciutkan; filter status di daftar artikel berfungsi.
 - Halaman `statis.html` berisi Pedoman Media Siber, identitas redaksi, hak jawab, kebijakan privasi, karir, iklan, cookie, dan peta situs.
-- Komentar artikel tidak memakai data contoh: keadaan awalnya kosong, lalu tersimpan di browser pengirim (`faisal-komentar-<id>`); tombol bagikan WA/email/salin tautan berfungsi nyata.
+- Komentar artikel tampil untuk semua pengunjung lewat Supabase (`faisal_komentar`), lengkap dengan nama, waktu WIB, dan tombol hapus untuk pemilik yang sudah masuk dengan akun Supabase. Jika Supabase belum terhubung, komentar jatuh ke penyimpanan lokal (`faisal-komentar-<id>`) dan diberi catatan demikian; tombol bagikan WA/email/salin tautan tetap berfungsi nyata.
+- Statistik kunjungan: satu pengunjung dihitung sekali per hari per halaman (`faisal_statistik`, pengenal acak di browser). Dasbor menampilkan pengunjung hari ini, total pengunjung unik, jumlah tampilan artikel, kunjungan terbaru, dan panel moderasi; kartu berita serta halaman artikel menampilkan "Dilihat N kali".
 - Gambar lokal bertema berita, tidak lagi placeholder gunung; foto berita harian diunduh otomatis dan disimpan di repository.
 - Berita harian: RSS ANTARA → `news.json` → beranda/`berita.html`/kategori/pencarian, dengan jam publikasi WIB dan tautan ke sumber.
 - Unggah postingan dari CMS: form admin → GitHub Contents API → `posts.json` + foto → tampil di beranda, `berita.html`, pencarian, dan halaman artikel.
@@ -138,7 +161,7 @@ Kode bisa diganti kapan saja lewat halaman admin; pembaca perlu memasukkan kode 
 3. **WYSIWYG & upload media** — editor lama masih `textarea` dan berlabel pratinjau; unggah foto nyata ada di `posting.html`, tetapi belum ada rich text atau pengelola aset.
 4. **Alur persetujuan persisten** — tabel alur hanya contoh; tombol "Kirim review" belum mengubah data/status di server maupun menyimpan riwayat.
 5. **Verifikasi pembayaran otomatis** — donasi memakai QRIS statis → bukti wajib → konfirmasi WhatsApp/email → kode terima kasih manual. QRIS statis tidak punya webhook, jadi donasi tidak bisa terkonfirmasi otomatis. Skema Supabase untuk approval + masa aktif 1 bulan sudah disiapkan di `supabase-setup.sql`, tetapi belum dipasang karena URL dan anon key belum diisi di `assets/js/supabase-config.js`. Pencarian juga masih filter array lokal.
-6. **Moderasi komentar** — komentar tersimpan di browser pengirim, bukan di server bersama; belum ada anti-spam atau panel moderasi.
+6. **Komentar & statistik bersama** — kode dan SQL sudah siap, tetapi `assets/js/supabase-config.js` masih kosong dan `supabase-setup.sql` belum dijalankan. Sebelum dihubungkan, komentar dan angka kunjungan hanya tersimpan di perangkat masing-masing. Panel moderasi juga baru bisa menghapus komentar setelah akun pemilik Supabase dibuat. Belum ada anti-spam otomatis selain batas panjang teks/nama.
 7. **SEO & metadata lengkap** — `robots.txt` sudah ada, tetapi belum ada canonical URL, Open Graph/Twitter card, JSON-LD, dan sitemap.xml (URL final deploy belum diketahui).
 8. **Analitik & iklan** — slot iklan masih placeholder; belum ada integrasi ads/analytics.
 9. **QA lanjutan** — audit Lighthouse otomatis sudah dijalankan (aksesibilitas, best practices, SEO = 100 pada halaman utama, artikel, kategori, dan dasbor; light & dark). Namun uji pembaca layar manual dan tinjauan visual manusia pada 1440/768/390 belum dilakukan.

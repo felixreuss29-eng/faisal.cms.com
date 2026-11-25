@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/css/style.css?v=13" />
+  <link rel="stylesheet" href="../assets/css/style.css?v=14" />
 </head>
 <body data-admin="1">
   <div class="admin-shell">
@@ -27,28 +27,47 @@
       <main class="admin-content">
         <nav class="breadcrumb" aria-label="Breadcrumb">Admin › Dasbor</nav>
         <div class="stat-grid">
-          <div class="stat-card"><span>Terbit bulan ini</span><strong>48</strong><small>↑ 12% dari bulan lalu</small></div>
-          <div class="stat-card"><span>Menunggu review</span><strong>6</strong><small>2 mendesak</small></div>
-          <div class="stat-card"><span>Pembaca hari ini</span><strong>24.810</strong><small>↑ 8,4% dari kemarin</small></div>
-          <div class="stat-card"><span>Komentar baru</span><strong>37</strong><small>5 perlu moderasi</small></div>
+          <div class="stat-card"><span>Pengunjung hari ini</span><strong data-stat="pengunjungHariIni">—</strong><small>Pengunjung unik (WIB)</small></div>
+          <div class="stat-card"><span>Total pengunjung unik</span><strong data-stat="pengunjungTotal">—</strong><small>Sejak pencatatan aktif</small></div>
+          <div class="stat-card"><span>Tampilan artikel</span><strong data-stat="tampilanArtikelTotal">—</strong><small>Unik per hari per artikel</small></div>
+          <div class="stat-card"><span>Komentar pembaca</span><strong data-stat="komentar">—</strong><small>Tampil untuk semua pembaca</small></div>
         </div>
-        <p class="meta">Angka di atas adalah contoh tampilan. Unggahan nyata dilakukan lewat <a href="posting.html">Tulis Postingan</a>.</p>
+        <p class="meta" data-stat-catatan>Memuat statistik…</p>
         <section class="admin-card">
           <h2>Aktivitas terbaru</h2>
           <table>
-            <thead><tr><th>Judul</th><th>Penulis</th><th>Status</th><th>Diperbarui</th></tr></thead>
+            <thead><tr><th scope="col">Judul</th><th scope="col">Penulis</th><th scope="col">Status</th><th scope="col">Diperbarui</th></tr></thead>
             <tbody>
               <tr><td>KPU Tetapkan Jadwal Pilkada 2027, Ini Rangkaian Tahapannya</td><td>Faisal Akbar</td><td><span class="badge published">Terbit</span></td><td><span data-relative="2026-11-25T09:12:00+07:00"></span></td></tr>
-              <tr><td>Inflasi November Turun ke 2,8 Persen</td><td>Rina Puspita</td><td><span class="badge review">Review</span></td><td><span data-relative="2026-11-25T07:40:00+07:00"></span></td></tr>
+              <tr><td>Inflasi November Turun ke 2,8 Persen</td><td>Faisal Akbar</td><td><span class="badge review">Review</span></td><td><span data-relative="2026-11-25T07:40:00+07:00"></span></td></tr>
               <tr><td>Timnas Indonesia Taklukkan Jepang 2-0</td><td>Faisal Akbar</td><td><span class="badge approved">Disetujui</span></td><td><span data-relative="2026-11-25T05:20:00+07:00"></span></td></tr>
               <tr><td>MK Gelar Sidang Sengketa Hasil Pilkada</td><td>Faisal Akbar</td><td><span class="badge draft">Draf</span></td><td><span data-relative="2026-11-25T04:10:00+07:00"></span></td></tr>
             </tbody>
           </table>
         </section>
+        <section class="admin-card">
+          <h2>Kunjungan terbaru</h2>
+          <div data-kunjungan-terbaru><p class="meta">Memuat…</p></div>
+        </section>
+        <section class="admin-card">
+          <h2>Moderasi komentar</h2>
+          <p class="meta" data-status-pemilik>Memuat status…</p>
+          <form class="admin-auth-form" data-masuk-pemilik>
+            <label class="sr-only" for="email-pemilik">Email Supabase pemilik</label>
+            <input id="email-pemilik" type="email" value="felixreuss29@gmail.com" data-email-pemilik autocomplete="username" required />
+            <label class="sr-only" for="sandi-pemilik">Kata sandi Supabase pemilik</label>
+            <input id="sandi-pemilik" type="password" data-sandi-pemilik placeholder="Kata sandi Supabase" autocomplete="current-password" required />
+            <button class="btn btn-primary" type="submit">Masuk sebagai pemilik</button>
+          </form>
+          <button class="btn btn-outline hidden" type="button" data-keluar-pemilik>Keluar sesi pemilik</button>
+          <div data-daftar-moderasi style="margin-top:12px"><p class="meta">Memuat komentar…</p></div>
+        </section>
       </main>
     </div>
   </div>
   <div class="toast" role="status" aria-live="polite"></div>
-  <script src="../assets/js/data.js?v=13"></script><script src="../assets/js/app.js?v=13"></script>
+  <script src="../assets/js/supabase-config.js?v=14"></script>
+  <script src="../assets/js/supabase.js?v=14"></script>
+  <script src="../assets/js/data.js?v=14"></script><script src="../assets/js/app.js?v=14"></script>
 </body>
 </html>

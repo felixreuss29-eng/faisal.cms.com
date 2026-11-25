@@ -5,6 +5,7 @@
 const WPM = 200;
 const TZ = 'Asia/Jakarta';
 const OWNER_EMAIL = 'felixreuss29@gmail.com';
+const FD = window.FaisalData;
 const img = (name) => `assets/img/${name}`;
 /* ---------- Alamat bersih (tanpa .html di address bar) ---------- */
 function rapikanUrl() {
@@ -285,6 +286,45 @@ function labelPembaruan() {
     el.textContent = `Diperbarui otomatis ${formatTanggal(t)}, ${formatJam(t)} WIB · Sumber: Faisal & ${BERITA.sourceName || 'ANTARA News'}`;
   });
 }
+/* ---------- Jumlah tampilan & statistik kunjungan ---------- */
+async function perbaruiAngka() {
+  if (!FD) return;
+  try {
+    const ringkas = await FD.ringkasan();
+    const peta = ringkas.tampilanArtikel || {};
+    document.querySelectorAll('[data-view]').forEach((el) => {
+      const jumlah = Number(peta[el.dataset.view] || 0);
+      el.textContent = `Dilihat ${jumlah} kali`;
+    });
+    document.querySelectorAll('[data-stat]').forEach((el) => {
+      const nilai = ringkas[el.dataset.stat];
+      if (nilai !== undefined) el.textContent = String(nilai);
+    });
+    const wadah = document.querySelector('[data-kunjungan-terbaru]');
+    if (wadah) {
+      const daftar = ringkas.terbaru || [];
+      wadah.innerHTML = daftar.length
+        ? daftar.map((k) => `<div class="kunjungan-item"><span>${esc(k.jenis === 'artikel' ? 'Artikel: ' + k.halaman : 'Kunjungan situs')}</span><span class="meta" data-relative="${esc(k.waktu)}">${waktuRelatif(k.waktu)}</span></div>`).join('')
+        : '<p class="meta">Belum ada kunjungan tercatat.</p>';
+      updateDynamicTime();
+    }
+    const catatan = document.querySelector('[data-stat-catatan]');
+    if (catatan) catatan.textContent = ringkas.lokal
+      ? 'Angka masih tersimpan di perangkat ini. Hubungkan Supabase agar pengunjung dan komentar sama di semua perangkat.'
+      : 'Angka dihitung dari pengunjung unik per hari (WIB) dan komentar yang tampil untuk semua pembaca.';
+  } catch (e) {
+    const catatan = document.querySelector('[data-stat-catatan]');
+    if (catatan) catatan.textContent = 'Statistik belum dapat dimuat: ' + e.message;
+  }
+}
+function catatKunjunganSekali() {
+  if (!FD || document.body.dataset.admin === '1') return;
+  FD.catatKunjungan('situs', 'situs').catch(() => {});
+  if (document.querySelector('#article-root')) {
+    const id = new URLSearchParams(location.search).get('id') || 'pilkada-2027';
+    FD.catatKunjungan(id, 'artikel').catch(() => {});
+  }
+}
 function kartuTerkiniHTML(a) {
   return a._sumber === 'pemilik' ? cardHTML(a) : beritaCardHTML(a, false);
 }
@@ -435,6 +475,7 @@ function cardHTML(a) {
     ${a.excerpt ? `<p class="meta card-excerpt">${esc(a.excerpt)}</p>` : ''}
     <div class="card-meta">
       <span class="meta" data-relative="${a.published}">${waktuRelatif(a.published)}</span>
+      <span class="meta" data-view="${esc(a.id)}">Dilihat …</span>
       ${tombolIkuti(penulis, 'btn-follow follow-kicker')}
     </div>
   </article>`;
@@ -540,7 +581,7 @@ function renderArticle() {
             <img src="${img(a.author.photo)}" alt="Foto ${esc(penulis)}" />
             <div class="byline-penulis"><strong>${esc(penulis)}</strong><span class="meta">${esc(peran)}</span></div>
             ${tombolIkuti(penulis)}
-            <div class="byline-waktu meta"><span data-relative="${a.published}">${waktuRelatif(a.published)}</span> · <b data-reading="${a.id}">${readingMinutes(a.body)} menit baca</b></div>
+            <div class="byline-waktu meta"><span data-relative="${a.published}">${waktuRelatif(a.published)}</span> · <span data-view="${esc(a.id)}">Dilihat …</span> · <b data-reading="${a.id}">${readingMinutes(a.body)} menit baca</b></div>
             <div class="share"><span>Bagikan</span><a href="#" data-bagikan="wa" aria-label="WA — bagikan ke WhatsApp">WA</a><a href="#" data-bagikan="email" aria-label="Email — bagikan lewat email">Email</a><a href="#" data-bagikan="link" aria-label="Link — salin tautan artikel">Link</a></div>
           </div>
         </header>
@@ -564,9 +605,16 @@ function renderArticle() {
         <div class="correction"><strong>Catatan redaksi</strong><br />Jadwal dan tahapan mengikuti kalender resmi penyelenggara pemilu, diperbarui pada <span data-clock></span>.</div>
         <div class="author-bio"><img src="${img(a.author.photo)}" alt="Foto ${esc(penulis)}" /><div><h3>${esc(penulis)}</h3><div class="meta">${esc(peran)} · Faisal</div><p class="meta">${esc(bioTeks)}</p></div>${tombolIkuti(penulis)}</div>
         <section class="comments"><h3 class="komentar-judul">Komentar</h3>
-          <div class="comment-form"><label class="sr-only" for="komentar">Komentar</label><textarea id="komentar" placeholder="Bagikan pandangan Anda tentang artikel ini…"></textarea><div class="row"><button class="btn btn-primary" type="button" data-kirim-komentar>Kirim</button></div></div>
+          <p class="meta" data-komentar-status>Komentar tampil untuk semua pembaca dan dapat dimoderasi pemilik.</p>
+          <div class="comment-form">
+            <label class="sr-only" for="nama-komentar">Nama</label>
+            <input id="nama-komentar" type="text" placeholder="Nama Anda" maxlength="40" autocomplete="name" />
+            <label class="sr-only" for="komentar">Komentar</label>
+            <textarea id="komentar" placeholder="Bagikan pandangan Anda tentang artikel ini…" maxlength="1000"></textarea>
+            <div class="row"><button class="btn btn-primary" type="button" data-kirim-komentar>Kirim komentar</button></div>
+          </div>
           <div id="daftar-komentar">
-            <div class="empty-state" id="komentar-kosong"><h4>Belum ada komentar</h4><p>Jadilah yang pertama berbagi pandangan. Komentar tersimpan di perangkat Anda.</p></div>
+            <div class="empty-state" id="komentar-kosong"><h4>Belum ada komentar</h4><p>Jadilah yang pertama berbagi pandangan di artikel ini.</p></div>
           </div>
         </section>
       </div>
@@ -611,39 +659,59 @@ function renderArticle() {
       ? 'Akses terbuka. Status pengajuan pada perangkat ini sudah terverifikasi.'
       : 'Terima kasih. Akses terbuka pada perangkat ini.');
   });
-  const kunciKomentar = 'faisal-komentar-' + (params.get('id') || 'default');
-  const bacaKomentar = () => { try { return JSON.parse(localStorage.getItem(kunciKomentar) || '[]'); } catch { return []; } };
-  const isiKomentar = (k) => `<img src="${img('author4.jpg')}" alt="Foto Anda" /><div><h4>Anda · <span class="meta" data-relative="${k.waktu}">${waktuRelatif(k.waktu)}</span></h4><p>${esc(k.teks)}</p><button class="kicker komentar-aksi" type="button" data-toast="Balasan belum tersedia">Balas</button> <a class="kicker" href="statis#hak-jawab">Laporkan</a></div>`;
-  const perbaruiKomentar = () => {
-    const daftar = bacaKomentar();
-    host.querySelector('.komentar-judul').textContent = `Komentar (${daftar.length})`;
-    host.querySelector('#komentar-kosong')?.classList.toggle('hidden', daftar.length > 0);
-    host.querySelectorAll('#daftar-komentar .comment[data-saya]').forEach((n) => n.remove());
-    const wadah = host.querySelector('#daftar-komentar');
-    daftar.slice().reverse().forEach((k) => {
+  const artikelId = params.get('id') || a.id;
+  const wadahKomentar = host.querySelector('#daftar-komentar');
+  const kosongKomentar = host.querySelector('#komentar-kosong');
+  const judulKomentar = host.querySelector('.komentar-judul');
+  const statusKomentar = host.querySelector('[data-komentar-status]');
+  const inputNama = host.querySelector('#nama-komentar');
+  if (FD) inputNama.value = FD.namaTersimpan();
+
+  const tampilkanKomentar = (daftar) => {
+    judulKomentar.textContent = `Komentar (${daftar.length})`;
+    kosongKomentar?.classList.toggle('hidden', daftar.length > 0);
+    wadahKomentar.querySelectorAll('.comment').forEach((n) => n.remove());
+    daftar.forEach((k) => {
+      const inisial = String(k.nama || 'P').trim().charAt(0).toUpperCase();
       const node = document.createElement('div');
       node.className = 'comment';
-      node.dataset.saya = '1';
-      node.innerHTML = isiKomentar(k);
-      wadah.prepend(node);
+      node.innerHTML = `<span class="comment-avatar" data-no-translate aria-hidden="true">${esc(inisial)}</span><div><h4>${esc(k.nama || 'Pembaca')} · <span class="meta" data-relative="${esc(k.waktu)}">${waktuRelatif(k.waktu)}</span></h4><p>${esc(k.teks)}</p><a class="kicker" href="statis#hak-jawab">Laporkan</a>${FD && FD.statusPemilik() ? ` <button class="kicker komentar-aksi" type="button" data-hapus-komentar="${esc(k.id)}">Hapus</button>` : ''}</div>`;
+      wadahKomentar.appendChild(node);
     });
-    updateDynamicTime();
-    host.querySelectorAll('.comment[data-saya] [data-toast]').forEach((el) => el.addEventListener('click', (e) => {
-      e.preventDefault();
-      toast(el.dataset.toast);
+    wadahKomentar.querySelectorAll('[data-hapus-komentar]').forEach((b) => b.addEventListener('click', async () => {
+      if (!confirm('Hapus komentar ini?')) return;
+      try {
+        await FD.hapusKomentar(b.dataset.hapusKomentar);
+        await muatKomentar();
+        toast('Komentar dihapus.');
+      } catch (e) { toast('Gagal menghapus: ' + e.message); }
     }));
+    updateDynamicTime();
   };
-  perbaruiKomentar();
-  host.querySelector('[data-kirim-komentar]').addEventListener('click', () => {
+  async function muatKomentar() {
+    if (!FD) return;
+    try {
+      const daftar = await FD.komentar(artikelId);
+      tampilkanKomentar(daftar);
+      if (statusKomentar) statusKomentar.textContent = FD.siap()
+        ? 'Komentar tampil untuk semua pembaca dan dapat dimoderasi pemilik.'
+        : 'Supabase belum terhubung; komentar baru tersimpan di perangkat ini.';
+    } catch (e) {
+      judulKomentar.textContent = 'Komentar';
+      if (statusKomentar) statusKomentar.textContent = 'Komentar belum dapat dimuat: ' + e.message;
+    }
+  }
+  muatKomentar();
+  host.querySelector('[data-kirim-komentar]').addEventListener('click', async () => {
     const ta = host.querySelector('#komentar');
     const teks = ta.value.trim();
-    if (!teks) return toast('Komentar tidak boleh kosong.');
-    const daftar = bacaKomentar();
-    daftar.push({ teks, waktu: new Date().toISOString() });
-    localStorage.setItem(kunciKomentar, JSON.stringify(daftar));
-    ta.value = '';
-    perbaruiKomentar();
-    toast('Komentar tersimpan di perangkat ini.');
+    if (!FD) return;
+    try {
+      await FD.kirimKomentar(artikelId, inputNama.value, teks);
+      ta.value = '';
+      await muatKomentar();
+      toast(FD.siap() ? 'Komentar terkirim dan tampil untuk semua pembaca.' : 'Komentar tersimpan di perangkat ini.');
+    } catch (e) { toast('Gagal mengirim komentar: ' + e.message); }
   });
 }
 
@@ -1133,6 +1201,74 @@ function initArticleFilters() {
   }));
 }
 
+/* ---------- Moderasi komentar di dasbor admin ---------- */
+function initModerasi() {
+  const masuk = document.querySelector('[data-masuk-pemilik]');
+  if (!masuk || !FD) return;
+  const status = document.querySelector('[data-status-pemilik]');
+  const daftar = document.querySelector('[data-daftar-moderasi]');
+  const keluar = document.querySelector('[data-keluar-pemilik]');
+
+  function perbaruiStatus() {
+    const aktif = FD.statusPemilik();
+    masuk.classList.toggle('hidden', aktif);
+    keluar?.classList.toggle('hidden', !aktif);
+    if (!status) return;
+    status.textContent = aktif
+      ? 'Anda masuk sebagai pemilik. Komentar dapat dihapus dari sini.'
+      : FD.siap()
+        ? 'Masuk dengan akun Supabase pemilik untuk menghapus komentar yang tidak pantas.'
+        : 'Supabase belum terhubung. Isi URL dan anon key di assets/js/supabase-config.js, lalu jalankan supabase-setup.sql di Supabase.';
+  }
+  async function muatDaftar() {
+    if (!daftar) return;
+    try {
+      const komentar = await FD.daftarKomentar();
+      const jumlah = document.querySelector('[data-stat="komentar"]');
+      if (jumlah) jumlah.textContent = String(komentar.length);
+      if (!komentar.length) {
+        daftar.innerHTML = '<p class="meta">Belum ada komentar pembaca.</p>';
+        return;
+      }
+      daftar.innerHTML = komentar.map((k) => `<div class="moderasi-item">
+        <div><strong>${esc(k.nama)}</strong> <span class="meta">· ${esc(k.artikel_id)} · <span data-relative="${esc(k.waktu)}">${waktuRelatif(k.waktu)}</span></span><p>${esc(k.teks)}</p></div>
+        ${FD.statusPemilik() ? `<button class="btn btn-outline" type="button" data-hapus-komentar="${esc(k.id)}">Hapus</button>` : ''}
+      </div>`).join('');
+      updateDynamicTime();
+      daftar.querySelectorAll('[data-hapus-komentar]').forEach((b) => b.addEventListener('click', async () => {
+        if (!confirm('Hapus komentar ini? Tindakan ini tidak dapat dibatalkan.')) return;
+        try {
+          await FD.hapusKomentar(b.dataset.hapusKomentar);
+          await muatDaftar();
+          toast('Komentar dihapus.');
+        } catch (e) { toast('Gagal menghapus: ' + e.message); }
+      }));
+    } catch (e) {
+      daftar.innerHTML = '<p class="meta">Gagal memuat komentar: ' + esc(e.message) + '</p>';
+    }
+  }
+  masuk.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = masuk.querySelector('[data-email-pemilik]').value;
+    const sandi = masuk.querySelector('[data-sandi-pemilik]').value;
+    try {
+      await FD.masukPemilik(email, sandi);
+      masuk.reset();
+      perbaruiStatus();
+      await muatDaftar();
+      toast('Berhasil masuk sebagai pemilik.');
+    } catch (err) { toast('Masuk gagal: ' + err.message); }
+  });
+  keluar?.addEventListener('click', () => {
+    FD.keluarPemilik();
+    perbaruiStatus();
+    muatDaftar();
+    toast('Sesi pemilik diakhiri.');
+  });
+  perbaruiStatus();
+  muatDaftar();
+}
+
 /* ---------- Inisialisasi ---------- */
 document.addEventListener('DOMContentLoaded', () => {
   initAdminGuard();
@@ -1153,7 +1289,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initAdminProfile();
   initAdminSidebar();
   initArticleFilters();
+  initModerasi();
   if (typeof window.initBahasa === 'function') window.initBahasa();
+  perbaruiAngka();
+  catatKunjunganSekali();
   if (document.body.dataset.admin !== '1') {
     muatAkses();
     // Berita terkini menggabungkan unggahan pemilik dan RSS ANTARA,
@@ -1162,6 +1301,7 @@ document.addEventListener('DOMContentLoaded', () => {
       perbaruiTicker();
       renderBeritaHarian();
       renderBeritaPage();
+      perbaruiAngka();
     });
   }
   startClock();
