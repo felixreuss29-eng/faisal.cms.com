@@ -418,7 +418,7 @@ function renderHome() {
   if (!hero) return;
   hero.innerHTML = `
     ${iklanHTML('ad-leaderboard')}
-    <section class="home-about" aria-labelledby="judul-tentang-web">
+    <section class="home-about home-about-tanpa-foto" aria-labelledby="judul-tentang-web">
       <div class="home-about-copy">
         <span class="kicker">Kenali Faisal</span>
         <h2 id="judul-tentang-web">Berita yang jelas, sumber yang terang.</h2>
@@ -447,10 +447,6 @@ function renderHome() {
           <a class="btn btn-outline" href="mailto:${OWNER_EMAIL}">Hubungi redaksi →</a>
         </div>
       </div>
-      <figure class="home-about-photo">
-        <img src="${img('pemilik-hero-jas.jpg')}?v=4" alt="Foto Faisal Akbar, pemilik dan pemimpin redaksi Faisal, mengenakan jas" />
-        <figcaption><strong>Faisal Akbar</strong><span>Pemilik &amp; Pemimpin Redaksi</span></figcaption>
-      </figure>
     </section>`;
 
   const latest = document.querySelector('#latest');

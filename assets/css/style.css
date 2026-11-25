@@ -167,22 +167,18 @@ main { padding-bottom: 64px; }
 .follow-overlay { min-height: 44px; padding: 0 12px; background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.55); color: #fff; }
 .follow-overlay[aria-pressed="true"] { background: rgba(255,255,255,.9); border-color: #fff; color: #0b1220; }
 
-.home-about { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(280px, .65fr); gap: 24px; align-items: stretch; margin-top: 24px; }
+.home-about { display: grid; grid-template-columns: minmax(0, 1fr); margin-top: 24px; }
+.home-about-tanpa-foto .home-about-copy { max-width: 1040px; }
 .home-about-copy { padding: 28px 30px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
 .home-about-copy h2 { font-family: var(--font-display); font-size: clamp(28px, 3vw, 40px); line-height: 1.18; margin: 8px 0 10px; }
 .home-about-lead { font-size: 14px; line-height: 1.7; color: var(--text); margin: 0 0 18px; }
 .home-about-list { display: grid; gap: 12px; margin: 0 0 22px; }
-.home-about-item { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 12px; align-items: start; }
-.home-about-num { font-family: var(--font-display); font-size: 18px; font-weight: 700; line-height: 1.2; color: var(--accent); padding-right: 10px; border-right: 1px solid var(--border); }
-.home-about-item h3 { font-size: 12px; font-weight: 700; margin: 0 0 2px; }
-.home-about-item p { font-size: 12px; line-height: 1.65; color: var(--muted); margin: 0; }
+.home-about-item { display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 14px; align-items: start; }
+.home-about-num { font-family: var(--font-display); font-size: 22px; font-weight: 700; line-height: 1.2; color: var(--accent); padding-right: 12px; border-right: 1px solid var(--border); }
+.home-about-item h3 { font-size: 13px; font-weight: 700; margin: 0 0 2px; }
+.home-about-item p { font-size: 13px; line-height: 1.65; color: var(--muted); margin: 0; }
 .home-about-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .home-about-actions .btn { min-height: 44px; }
-.home-about-photo { position: relative; margin: 0; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); min-height: 100%; }
-.home-about-photo img { width: 100%; height: 100%; min-height: 380px; object-fit: cover; object-position: 50% 38%; }
-.home-about-photo figcaption { position: absolute; inset: auto 0 0; display: flex; flex-direction: column; padding: 18px 20px; background: linear-gradient(transparent, rgba(11,18,32,.92)); color: #fff; }
-.home-about-photo figcaption strong { font-family: var(--font-display); font-size: 18px; }
-.home-about-photo figcaption span { font-size: 10px; color: #e2e8f0; }
 
 .split { display: grid; grid-template-columns: minmax(0, 500px) minmax(0, 1fr); gap: 32px; }
 .split .lead img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 4px; }
@@ -388,8 +384,6 @@ th { font-size: 10px; text-transform: uppercase; letter-spacing: .04em; color: v
 @media (max-width: 1100px) {
   .site-nav { display: none; }
   .hero-grid, .split, .two-col, .media-grid, .article-layout { grid-template-columns: minmax(0, 1fr); }
-  .home-about { grid-template-columns: minmax(0, 1fr); }
-  .home-about-photo img { min-height: 320px; max-height: 420px; }
   .grid-3, .opinion-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .site-footer .footer-grid { grid-template-columns: repeat(2, 1fr); }
   .stat-grid { grid-template-columns: repeat(2, 1fr); }
@@ -418,11 +412,9 @@ th { font-size: 10px; text-transform: uppercase; letter-spacing: .04em; color: v
   .author-bio { align-items: flex-start; }
   .author-bio > .btn-follow { width: 100%; }
   .hero-meta { gap: 8px; }
-  .home-about { gap: 14px; margin-top: 16px; }
+  .home-about { margin-top: 16px; }
   .home-about-copy { padding: 20px 18px; }
-  .home-about-photo { order: -1; }
-  .home-about-photo img { min-height: 280px; max-height: 320px; object-position: 50% 30%; }
-  .home-about-item { grid-template-columns: 32px minmax(0, 1fr); gap: 10px; }
+  .home-about-item { grid-template-columns: 36px minmax(0, 1fr); gap: 10px; }
   .home-about-actions .btn { flex: 1 1 100%; }
   .card-meta { align-items: flex-start; }
   .inline-form { flex-direction: column; }
