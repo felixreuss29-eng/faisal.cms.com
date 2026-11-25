@@ -134,7 +134,7 @@ function renderHeader(active = 'Beranda') {
     <div class="ticker">
       <div class="wrap" style="display:flex;align-items:center;gap:14px;width:100%">
         <span class="ticker-label">REAKSI</span>
-        <span class="ticker-text">DPR sahkan RUU Pemilu, ini enam poin perubahannya · KPU tetapkan jadwal Pilkada 2027 · Inflasi turun ke 2,8 persen</span>
+        <span class="ticker-text" data-ticker>Topik terkini sedang dimuat…</span>
       </div>
     </div>`;
   host.querySelector('[data-search-form]').addEventListener('submit', (e) => {
@@ -278,6 +278,16 @@ function renderBeritaKategori() {
   labelPembaruan();
   updateDynamicTime();
 }
+function perbaruiTicker() {
+  const el = document.querySelector('[data-ticker]');
+  if (!el || !BERITA.articles.length) return;
+  const potong = (s) => s.length > 72 ? s.slice(0, 69).replace(/\s+\S*$/, '') + '…' : s;
+  // Utamakan topik yang sedang ramai; jika tidak ada, pakai tiga berita terbaru.
+  const ramai = /cpns|pongkor|km 50|hoaks|pilkada|pemilu|inflasi|badak|slank|pon/i;
+  const pilihan = BERITA.articles.filter((a) => ramai.test(a.title)).slice(0, 3);
+  const daftar = pilihan.length ? pilihan : BERITA.articles.slice(0, 3);
+  el.textContent = daftar.map((a) => potong(a.title)).join(' · ');
+}
 async function muatBerita() {
   try {
     const res = await fetch('assets/js/news.json', { cache: 'no-store' });
@@ -287,6 +297,7 @@ async function muatBerita() {
   } catch (e) {
     console.warn('Berita harian tidak dapat dimuat:', e.message);
   }
+  perbaruiTicker();
   renderBeritaHarian();
   renderBeritaPage();
   renderBeritaKategori();
