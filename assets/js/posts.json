@@ -1,3 +1,32 @@
 ﻿{
-  "posts": []
+  "posts": [
+    {
+      "id": "post-ronaldo-987",
+      "title": "Ronaldo Cetak Gol ke-987, Al Nassr Tundukkan Al Sadd 2-1 di Liga Champions Asia Elite",
+      "category": "Olahraga",
+      "excerpt": "Cristiano Ronaldo mencetak gol ke-987 dalam kariernya saat Al Nassr mengalahkan Al Sadd 2-1 di AFC Champions League Elite. Joao Felix menambah gol kemenangan.",
+      "image": "hero.jpg",
+      "alt": "Cristiano Ronaldo, kapten Al Nassr, merayakan gol ke gawang Al Sadd di Al-Awwal Park",
+      "author": {
+        "name": "Faisal Akbar",
+        "role": "Pemilik & Redaktur Utama",
+        "photo": "pemilik-profil.jpg"
+      },
+      "published": "2026-11-25T14:30:00.000Z",
+      "body": [
+        {
+          "type": "p",
+          "text": "RIYADH — Cristiano Ronaldo kembali menjadi penentu bagi Al Nassr. Ia mencetak satu gol saat timnya menang 2-1 atas Al Sadd di Liga Champions Asia Elite, sehingga total golnya sepanjang karier menjadi 987. Laga di Al-Awwal Park, Riyadh, digelar Selasa (24/11/2026) waktu setempat atau Rabu dini hari WIB."
+        },
+        {
+          "type": "p",
+          "text": "Ronaldo membuka skor di awal pertandingan. Gol pembuka itu lahir lewat titik penalti. Namun, keunggulan itu tidak bertahan lama. Al Sadd menyamakan kedudukan lewat Mohammed Waad. Ronaldo sempat mencetak gol kedua sebelum jeda, tetapi gol itu dianulir setelah VAR memutuskan ia berada dalam posisi offside."
+        },
+        {
+          "type": "p",
+          "text": "Joao Felix kemudian menambah gol kemenangan bagi Al Nassr. Hasil ini menambah poin tim dalam lanjutan kompetisi dan menjadi catatan tersendiri bagi Ronaldo, yang kini mengumpulkan 987 gol sepanjang karier profesionalnya."
+        }
+      ]
+    }
+  ]
 }
