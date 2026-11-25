@@ -1059,7 +1059,7 @@ function initAdminProfile() {
   const profil = document.createElement('div');
   profil.className = 'admin-profile';
   profil.innerHTML = `
-    <img src="../assets/img/pemilik-profil-jas.jpg" alt="Foto profil pemilik Faisal" />
+    <img src="../assets/img/pemilik-profil-rapi.jpg" alt="Foto profil pemilik Faisal" />
     <div><strong>Faisal Akbar</strong><span>Pemilik & Pemimpin Redaksi</span><span>felixreuss29@gmail.com</span></div>`;
   sidebar.insertBefore(profil, sidebar.querySelector('nav'));
 }

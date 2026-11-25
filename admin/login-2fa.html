@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/css/style.css?v=6" />
+  <link rel="stylesheet" href="../assets/css/style.css?v=7" />
 </head>
 <body data-admin="1">
   <main class="auth-page">
@@ -26,7 +26,7 @@
         <h2>Verifikasi dua langkah</h2>
         <p class="subtitle">Masukkan kode 6 digit dari aplikasi autentikasi pada perangkat Anda.</p>
         <div class="step-bars"><i class="on"></i><i class="on"></i></div>
-        <div class="panel" style="display:flex;gap:12px;align-items:center;padding:12px"><img src="../assets/img/pemilik-profil-jas.jpg" alt="Foto profil Faisal Akbar" style="width:32px;height:32px;border-radius:50%;object-fit:cover" /><div style="flex:1"><strong id="akun-email" style="font-size:13px">felixreuss29@gmail.com</strong><div class="meta">Redaktur · Hak akses penuh</div></div><a class="kicker" href="login.html">Ganti akun</a></div>
+        <div class="panel" style="display:flex;gap:12px;align-items:center;padding:12px"><img src="../assets/img/pemilik-profil-rapi.jpg" alt="Foto profil Faisal Akbar" style="width:32px;height:32px;border-radius:50%;object-fit:cover" /><div style="flex:1"><strong id="akun-email" style="font-size:13px">felixreuss29@gmail.com</strong><div class="meta">Redaktur · Hak akses penuh</div></div><a class="kicker" href="login.html">Ganti akun</a></div>
         <div class="form-field" style="margin-top:20px"><label>Kode verifikasi</label>
           <div class="otp-row" id="otp-row">
             <input inputmode="numeric" maxlength="1" aria-label="Digit 1" /><input inputmode="numeric" maxlength="1" aria-label="Digit 2" /><input inputmode="numeric" maxlength="1" aria-label="Digit 3" /><input inputmode="numeric" maxlength="1" aria-label="Digit 4" /><input inputmode="numeric" maxlength="1" aria-label="Digit 5" /><input inputmode="numeric" maxlength="1" aria-label="Digit 6" />
@@ -42,6 +42,6 @@
   </main>
   <div class="toast" role="status" aria-live="polite"></div>
   <script>document.getElementById('akun-email').textContent = localStorage.getItem('faisal-account') || 'felixreuss29@gmail.com';</script>
-  <script src="../assets/js/data.js?v=6"></script><script src="../assets/js/app.js?v=6"></script>
+  <script src="../assets/js/data.js?v=7"></script><script src="../assets/js/app.js?v=7"></script>
 </body>
 </html>
