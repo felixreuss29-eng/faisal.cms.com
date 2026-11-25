@@ -345,12 +345,27 @@ function rankedHTML(list) {
 }
 
 /* ---------- Beranda ---------- */
+function iklanHTML(kelas) {
+  return `<div class="ad-label">Iklan</div>
+    <div class="ad-banner ${kelas}" role="group" aria-label="Promosi media sosial Faisal">
+      <span class="ad-shimmer" aria-hidden="true"></span>
+      <span class="ad-copy">
+        <span class="ad-kicker">IKUTI FAISAL</span>
+        <strong class="ad-judul">Kabar langsung dari redaksi</strong>
+        <span class="ad-detail">Instagram <b>@faisalakbar0423</b> · TikTok <b>@felixreuss</b></span>
+      </span>
+      <span class="ad-links">
+        <a class="btn" href="https://www.instagram.com/faisalakbar0423/" target="_blank" rel="noopener noreferrer" aria-label="Buka Instagram Faisal">Instagram ↗</a>
+        <a class="btn" href="https://www.tiktok.com/@felixreuss" target="_blank" rel="noopener noreferrer" aria-label="Buka TikTok Faisal">TikTok ↗</a>
+      </span>
+    </div>`;
+}
 function renderHome() {
   const hero = document.querySelector('#hero');
   if (!hero) return;
   const [utama, ...lain] = ARTICLES;
   hero.innerHTML = `
-    <div class="ad-label">Iklan</div><div class="ad-slot ad-leaderboard">728 × 90 — Leaderboard</div>
+    ${iklanHTML('ad-leaderboard')}
     <div class="hero-grid" style="margin-top:24px">
       <article class="hero-main">
         <a href="artikel.html?id=${utama.id}"><img src="${img(utama.image)}" alt="Ilustrasi: ${esc(utama.title)}" /></a>
@@ -454,7 +469,7 @@ function renderArticle() {
         <div class="sidebar-section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title" style="font-size:20px">Artikel Terkait</h2></div>
           ${ARTICLES.filter((x) => x.id !== a.id).slice(0, 4).map((x) => `<div class="sidebar-item"><a href="artikel.html?id=${x.id}"><img src="${img(x.image)}" alt="Thumbnail ${esc(x.title)}" loading="lazy" /></a><div><span class="kicker">${esc(x.category)}</span><h3><a href="artikel.html?id=${x.id}">${esc(x.title)}</a></h3><span class="meta" data-relative="${x.published}">${waktuRelatif(x.published)}</span></div></div>`).join('')}
         </div>
-        <div class="ad-label">Iklan</div><div class="ad-slot sidebar-ad">300 × 250 — Sidebar</div>
+        ${iklanHTML('ad-sidebar')}
         <div class="sidebar-section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title" style="font-size:20px">Terpopuler</h2></div>${rankedHTML(POPULAR)}</div>
         <div class="panel" style="background:var(--accent-soft);border-color:var(--accent-line)"><h2 class="panel-title" style="font-size:18px">Rangkuman harian redaksi</h2><p class="meta">Berita penting pilihan redaksi, setiap pagi di email Anda.</p><form data-newsletter><input type="email" placeholder="Alamat email" required aria-label="Alamat email" /><button class="btn btn-primary" type="submit">Daftar</button></form></div>
       </aside>

@@ -103,6 +103,30 @@ button { cursor: pointer; }
 .ad-slot { display: grid; place-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 2px; color: var(--muted); font-size: 11px; }
 .ad-leaderboard { width: min(100%, 728px); height: 90px; margin: 24px auto 8px; }
 .ad-label { text-align: center; font-size: 9px; color: var(--muted); margin-bottom: 8px; }
+.ad-banner { position: relative; display: flex; align-items: center; gap: 16px; overflow: hidden; width: min(100%, 728px); min-height: 90px; margin: 24px auto 8px; padding: 14px 18px; border: 1px solid #1e40af; border-radius: 8px; background: linear-gradient(110deg, #0f2547 0%, #1e3a8a 45%, #0f2547 100%); background-size: 200% 100%; animation: adFlow 9s linear infinite; color: #fff; }
+@keyframes adFlow { from { background-position: 0% 50%; } to { background-position: 200% 50%; } }
+.ad-banner .ad-shimmer { position: absolute; inset: 0; background: linear-gradient(100deg, transparent 35%, rgba(255,255,255,.16) 50%, transparent 65%); transform: translateX(-110%); animation: adShimmer 6s ease-in-out infinite; pointer-events: none; }
+@keyframes adShimmer { 0%, 55%, 100% { transform: translateX(-110%); } 80% { transform: translateX(110%); } }
+.ad-banner .ad-copy { position: relative; display: flex; flex-direction: column; gap: 3px; flex: 1 1 auto; min-width: 0; }
+.ad-kicker { font-size: 9px; font-weight: 700; letter-spacing: .14em; color: #93c5fd; }
+.ad-judul { font-family: var(--font-display); font-size: 18px; line-height: 1.2; }
+.ad-detail { font-size: 11px; color: #e2e8f0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ad-detail b { color: #fff; }
+.ad-banner .ad-links { position: relative; display: flex; gap: 8px; flex: 0 0 auto; }
+.ad-banner .ad-links .btn { min-height: 44px; padding: 0 14px; font-size: 11px; border-color: rgba(255,255,255,.6); color: #fff; }
+.ad-banner .ad-links .btn:first-child { background: #fff; color: #12224a; border-color: #fff; }
+.ad-banner .ad-links .btn:focus-visible { outline: 3px solid #facc15; outline-offset: 2px; }
+.ad-banner.ad-sidebar { width: 300px; max-width: 100%; min-height: 250px; margin: 8px auto 32px; flex-direction: column; align-items: flex-start; justify-content: space-between; padding: 18px; }
+.ad-banner.ad-sidebar .ad-links { flex-direction: column; width: 100%; }
+.ad-banner.ad-sidebar .ad-detail { white-space: normal; }
+@media (max-width: 760px) {
+  .ad-banner.ad-leaderboard { min-height: 120px; flex-direction: column; align-items: flex-start; gap: 10px; }
+  .ad-banner.ad-leaderboard .ad-links { width: 100%; }
+  .ad-banner.ad-leaderboard .ad-links .btn { flex: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ad-banner, .ad-banner .ad-shimmer { animation: none; }
+}
 
 /* ---------- Sections ---------- */
 main { padding-bottom: 64px; }
