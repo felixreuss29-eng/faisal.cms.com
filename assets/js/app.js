@@ -356,7 +356,7 @@ function iklanHTML(kelas) {
       </span>
       <span class="ad-links">
         <a class="btn" href="https://www.instagram.com/faisalakbar0423/" target="_blank" rel="noopener noreferrer" aria-label="Buka Instagram Faisal">Instagram ↗</a>
-        <a class="btn" href="https://www.tiktok.com/@felixreuss" target="_blank" rel="noopener noreferrer" aria-label="Buka TikTok Faisal">TikTok ↗</a>
+        <a class="btn" href="https://www.tiktok.com/@wangtaouzi0411" target="_blank" rel="noopener noreferrer" aria-label="Buka TikTok Faisal (@wangtaouzi0411)">TikTok ↗</a>
       </span>
     </div>`;
 }

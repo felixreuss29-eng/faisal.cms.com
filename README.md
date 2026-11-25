@@ -149,6 +149,6 @@ Lihat `HAK-CIPTA.md`. Repo ini memakai **All Rights Reserved** (tanpa file `LICE
 
 ## Catatan
 
-Email pemilik yang dipakai untuk konfirmasi langganan dan akun admin: `felixreuss29@gmail.com`. WhatsApp pemilik: `081286484770`. Pembayaran langganan: QRIS statis di `assets/img/qris.jpg` (Store baju faisal, NMID IDI 026596688139). Instagram: `@faisalakbar0423`. Nama yang ditampilkan di profil admin: Faisal Akbar.
+Email pemilik yang dipakai untuk konfirmasi langganan dan akun admin: `felixreuss29@gmail.com`. WhatsApp pemilik: `081286484770`. Pembayaran langganan: QRIS statis di `assets/img/qris.jpg` (Store baju faisal, NMID IDI 026596688139). Instagram: `@faisalakbar0423`. TikTok: `@wangtaouzi0411` (nama tampil `felix reuss`). Nama yang ditampilkan di profil admin: Faisal Akbar.
 
 Karena sitem ini statis di GitHub Pages, pesan konfirmasi dibuka di aplikasi WhatsApp/email pengguna dan dikirim oleh mereka sendiri. Tidak ada pembayaran yang diproses otomatis oleh website.
