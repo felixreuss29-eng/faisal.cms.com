@@ -1,5 +1,29 @@
-﻿{
+{
   "posts": [
+    {
+      "id": "post-1795616137978",
+      "title": "Ronaldo Cetak Gol ke-987, Al Nassr Tundukkan Al Sadd 2-1 di Liga Champions Asia Elite.",
+      "category": "Olahraga",
+      "excerpt": "Cristiano Ronaldo mencetak gol ke-987 dalam kariernya saat Al Nassr mengalahkan Al Sadd 2-1 di AFC Champions League Elite. Joao Felix menambah gol kemenangan setelah Al Sadd kehilangan satu pemain.",
+      "image": "upload/post-1795616137978.webp",
+      "alt": "Cristiano Ronaldo, kapten Al Nassr, merayakan gol ke gawang Al Sadd di Al-Awwal Park, Riyadh.",
+      "author": {
+        "name": "Faisal Akbar",
+        "role": "Pemilik & Redaktur Utama",
+        "photo": "pemilik-profil.jpg"
+      },
+      "published": "2026-11-25T14:15:40.724Z",
+      "body": [
+        {
+          "type": "p",
+          "text": "RIYADH – Cristiano Ronaldo kembali menjadi penentu bagi Al Nassr. Ia mencetak satu gol saat timnya menang 2-1 atas Al Sadd di Liga Champions Asia Elite, sehingga total golnya sepanjang karier menjadi 987. Laga di Al-Awwal Park, Riyadh, digelar Selasa (24/11/2026) waktu setempat, atau Rabu dini hari WIB.\nRonaldo membuka skor di awal pertandingan. Gol pembuka itu lahir lewat titik penalti. Namun, keunggulan itu tidak bertahan lama. Al Sadd menyamakan kedudukan lewat Mohammed Waad. Ronaldo sempat mencetak gol kedua sebelum jeda, tetapi gol itu dianulir setelah VAR menyatakan ia berada dalam posisi offside.\nSituasi berubah menjelang turun minum. Waad diganjar kartu merah pada masa tambahan babak pertama, sehingga Al Sadd bermain dengan 10 pemain. Memasuki babak kedua, Joao Felix membawa Al Nassr kembali unggul dan menjadi gol terakhir di laga tersebut.\nBagi Ronaldo, gol ini menambah catatan golnya musim ini. Ia kini mengoleksi 11 gol dari 14 pertandingan, dan hanya butuh 13 gol lagi untuk mencapai 1.000 gol sepanjang karier.\nKemenangan ini juga memperbaiki posisi Al Nassr di fase liga. Mereka mengumpulkan sembilan poin dari empat laga dan masih memiliki satu laga tunda melawan Al Wasl. Kemenangan ini menjadi pelipur setelah kekalahan dari Al Ahli di Liga Pro Saudi sebelumnya."
+        },
+        {
+          "type": "p",
+          "text": "Penulis: Redaksi faisal.cms.com\nDirangkum dari CNN Indonesia, ANTARA, dan JawaPos."
+        }
+      ]
+    },
     {
       "id": "post-ronaldo-987",
       "title": "Ronaldo Cetak Gol ke-987, Al Nassr Tundukkan Al Sadd 2-1 di Liga Champions Asia Elite",
