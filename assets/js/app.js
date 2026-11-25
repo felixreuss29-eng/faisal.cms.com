@@ -131,11 +131,11 @@ function initFollow() {
 }
 
 /* ---------- Header & footer ---------- */
-const NAV = ['Beranda', 'Berita Terkini', 'Politik', 'Nasional', 'Ekonomi', 'Olahraga', 'Hukum', 'Opini', 'Teknologi'];
+const NAV = ['Beranda', 'Berita Terkini', 'Politik', 'Nasional', 'Ekonomi', 'Olahraga', 'Hukum', 'Teknologi'];
 const NAV_HREF = {
   'Beranda': 'index.html', 'Berita Terkini': 'berita.html', 'Politik': 'kategori.html?k=Politik',
   'Nasional': 'kategori.html?k=Nasional', 'Ekonomi': 'kategori.html?k=Ekonomi', 'Olahraga': 'kategori.html?k=Olahraga',
-  'Hukum': 'kategori.html?k=Hukum', 'Opini': 'kategori.html?k=Opini', 'Teknologi': 'kategori.html?k=Teknologi'
+  'Hukum': 'kategori.html?k=Hukum', 'Teknologi': 'kategori.html?k=Teknologi'
 };
 function renderHeader(active = 'Beranda') {
   const host = document.querySelector('[data-site-header]');
@@ -430,7 +430,7 @@ function renderHome() {
       <div class="home-about-copy">
         <span class="kicker">Kenali Faisal</span>
         <h2 id="judul-tentang-web">Berita yang jelas, sumber yang terang.</h2>
-        <p class="home-about-lead">Faisal adalah portal berita Indonesia yang menyajikan kabar politik, ekonomi, olahraga, hukum, opini, dan cek fakta.</p>
+        <p class="home-about-lead">Faisal adalah portal berita Indonesia yang menyajikan kabar politik, ekonomi, olahraga, dan hukum.</p>
         <div class="home-about-list">
           <article class="home-about-item">
             <span class="home-about-num" aria-hidden="true">I</span>
@@ -467,23 +467,8 @@ function renderHome() {
       <div>${rankedHTML(['Komisi II Minta Aturan Turunan Segera Ditetapkan', 'Pengamat: Stabilitas Aturan Jadi Kunci Pemilu 2027', 'KPU Buka Pendaftaran Tenaga Ad Hoc Pemilu', 'Warga Mulai Cek Daftar Pemilih di Kanal Daring'])}</div>
     </div>`;
 
-  document.querySelector('#populer-fakta').innerHTML = `
-    <div class="two-col">
-      <section class="panel"><h2 class="panel-title">Terpopuler</h2>
-        ${POPULAR.map((t, i) => `<div class="pop-row"><span class="num">${String(i + 1).padStart(2, '0')}</span><img src="${img(['news4.jpg', 'politik1.jpg', 'politik2.jpg', 'olahraga1.jpg', 'ekonomi1.jpg'][i])}" alt="Thumb ${i + 1}" loading="lazy" /><h3>${esc(t)}</h3></div>`).join('')}
-      </section>
-      <section class="panel panel-teal"><h2 class="panel-title">Cek Fakta</h2>
-        ${[['Hoaks: KPU Umumkan Pemenang Pilkada 2027', 'Palsu'], ['Video Pejabat Terima Suap adalah Manipulasi', 'Palsu'], ['Angka Inflasi 2,8 Persen Sesuai Data BPS', 'Fakta']].map(([t, s]) => `<div class="fact-row"><span class="fact-icon ${s === 'Fakta' ? 'true' : 'false'}" aria-label="${s}">${s === 'Fakta' ? '✓' : '✕'}</span><div><h3>${esc(t)}</h3><span class="meta">${s} · <span data-relative="${ARTICLES[0].published}">${waktuRelatif(ARTICLES[0].published)}</span></span></div></div>`).join('')}
-      </section>
-    </div>`;
-
-  document.querySelector('#opini').innerHTML = `<div class="opinion-grid">${OPINIONS.map((o) => `<article class="opinion-card"><div class="opinion-head"><img src="${img(o.author.photo)}" alt="Foto ${esc(o.author.name)}" loading="lazy" /><div><span class="kicker">Opini</span><div class="meta">${esc(o.author.name)} · ${esc(peranPenulis(o))}</div></div>${tombolIkuti(o.author.name, 'btn-follow follow-kicker')}</div><h3>${esc(o.title)}</h3><a class="kicker" href="statis.html">Baca opini →</a></article>`).join('')}</div>`;
-
-  document.querySelector('#media').innerHTML = `
-    <div class="media-grid">
-      <div class="video-box"><img src="${img('video1.jpg')}" alt="Ringkasan sidang sengketa pilkada" /><button class="play-btn" type="button" data-toast="Memutar video…">▶</button><div class="media-caption">Ringkasan Sidang Perdana Sengketa Pilkada</div></div>
-      <div>${[['Peta Sebaran Kursi DPR Hasil Pemilu 2024', 'infografis.jpg'], ['Alur Penghitungan Suara Pilkada', 'galeri1.jpg']].map(([t, f]) => `<div class="infographic"><img src="${img(f)}" alt="Infografis: ${esc(t)}" loading="lazy" /><div><span class="kicker kicker-teal">Infografis</span><h3>${esc(t)}</h3><span class="meta">25 Nov 2026</span></div></div>`).join('')}</div>
-    </div>`;
+  document.querySelector('#populer-list').innerHTML = `
+    <div class="populer-grid">${POPULAR.map((t, i) => `<div class="pop-row"><span class="num">${String(i + 1).padStart(2, '0')}</span><img src="${img(['news4.jpg', 'politik1.jpg', 'politik2.jpg', 'olahraga1.jpg', 'ekonomi1.jpg'][i])}" alt="Thumb ${i + 1}" loading="lazy" /><h3>${esc(t)}</h3></div>`).join('')}</div>`;
 }
 
 /* ---------- Artikel ---------- */
@@ -628,7 +613,7 @@ function renderArticle() {
 function renderCategory() {
   const host = document.querySelector('#category-root');
   if (!host) return;
-  const daftarKategori = ['Politik', 'Nasional', 'Ekonomi', 'Olahraga', 'Hukum', 'Opini', 'Teknologi'];
+  const daftarKategori = ['Politik', 'Nasional', 'Ekonomi', 'Olahraga', 'Hukum', 'Teknologi'];
   const pilihan = new URLSearchParams(location.search).get('k');
   const kategori = daftarKategori.includes(pilihan) ? pilihan : 'Politik';
   document.title = kategori + ' — Faisal';

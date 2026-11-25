@@ -1,9 +1,6 @@
 /* Konten contoh. Di situs nyata, ini diganti oleh API/CMS. */
 const AUTHORS = {
-  andi: { name: 'Andi Wijaya', role: 'Redaktur Politik', photo: 'author1.jpg', email: 'andi@faisal.id' },
-  siti: { name: 'Siti Rahma', role: 'Kolumnis', photo: 'author1.jpg' },
-  budi: { name: 'Budi Santoso', role: 'Analis Politik', photo: 'author2.jpg' },
-  rina: { name: 'Rina Puspita', role: 'Redaksi Cek Fakta', photo: 'author3.jpg' }
+  andi: { name: 'Andi Wijaya', role: 'Redaktur Politik', photo: 'author1.jpg', email: 'andi@faisal.id' }
 };
 
 const ARTICLES = [
@@ -74,12 +71,6 @@ const ARTICLES = [
       { type: 'p', text: 'Sidang ini menjadi yang pertama menggunakan batas waktu 14 hari kerja sesuai ketentuan yang berlaku. Panitera menyebut sistem pendaftaran berkas daring sudah digunakan sejak pekan lalu.' }
     ]
   }
-];
-
-const OPINIONS = [
-  { title: 'Demokrasi di Tangan Warga', author: AUTHORS.siti, image: 'opini1.jpg' },
-  { title: 'Menjaga Netralitas Aparatur Negara', author: AUTHORS.budi, image: 'author2.jpg' },
-  { title: 'Cek Fakta: Hoaks yang Beredar Menjelang Pilkada', author: AUTHORS.rina, image: 'opini2.jpg' }
 ];
 
 const POPULAR = [
