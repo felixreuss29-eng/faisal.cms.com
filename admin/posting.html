@@ -269,7 +269,20 @@
         const { c, h } = kepala();
         const r = await fetch('https://api.github.com/repos/' + c.owner + '/' + c.repo, { headers: h });
         if (!r.ok) throw new Error(pesanGagal(await r.json().catch(() => ({}))));
-        teksStatus('Terhubung ke ' + c.owner + '/' + c.repo + ' pada cabang ' + c.branch + '.');
+        const scopes = r.headers.get('x-oauth-scopes') || '';
+        let izin = '';
+        if (scopes) {
+          izin = /(^|,)\s*(repo|public_repo)\s*(,|$)/.test(scopes)
+            ? ' Izin tulis: OK (scope: ' + scopes + ').'
+            : ' PERINGATAN: token klasik ini belum punya scope repo/public_repo (scope: ' + scopes + '), jadi unggah pasti gagal 403. Centang "repo" lalu perbarui token.';
+        } else if (c.token.indexOf('github_pat_') === 0) {
+          izin = ' PERINGATAN: token fine-grained terdeteksi. Pastikan Repository permissions → Contents = Read and write (bukan Read-only) pada ' + c.repo + '.';
+        } else if (c.token.indexOf('ghp_') === 0) {
+          izin = ' Token klasik terdeteksi. Pastikan saat dibuat centang "repo" (GitHub tidak mengirim daftar scope ke browser).';
+        } else {
+          izin = ' PERINGATAN: awalan token tidak dikenali. Pakai token klasik ghp_ dengan scope repo.';
+        }
+        teksStatus('Terhubung ke ' + c.owner + '/' + c.repo + ' pada cabang ' + c.branch + '.' + izin);
         toast('Koneksi GitHub berhasil.');
       } catch (err) { teksStatus(err.message); }
     });
