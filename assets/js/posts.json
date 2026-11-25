@@ -1,6 +1,54 @@
 {
   "posts": [
     {
+      "id": "post-1795627244371",
+      "title": "Indonesia dan Korea Selatan Perkuat Kerja Sama Pengembangan Teknologi AI",
+      "category": "Teknologi",
+      "excerpt": "Indonesia dan Korea Selatan menjajaki penguatan kerja sama di bidang kecerdasan buatan (AI). Kolaborasi ini diharapkan mendorong inovasi digital, meningkatkan kualitas sumber daya manusia, serta memperkuat pengembangan teknologi di Indonesia.",
+      "image": "upload/post-1795627244371.png",
+      "alt": "Ilustrasi kerja sama Indonesia dan Korea Selatan dalam pengembangan kecerdasan buatan atau Artificial Intelligence (AI).",
+      "author": {
+        "name": "Faisal Akbar",
+        "role": "Pemilik & Pemimpin Redaksi",
+        "photo": "pemilik-profil-rapi.jpg"
+      },
+      "published": "2026-11-25T17:20:48.412Z",
+      "body": [
+        {
+          "type": "p",
+          "text": "Indonesia dan Korea Selatan Perkuat Kerja Sama Pengembangan Teknologi AI."
+        },
+        {
+          "type": "p",
+          "text": "Indonesia dan Korea Selatan menjajaki peluang kerja sama dalam pengembangan teknologi kecerdasan buatan atau Artificial Intelligence (AI). Kerja sama ini menjadi bagian dari upaya memperkuat hubungan kedua negara di bidang teknologi dan inovasi digital."
+        },
+        {
+          "type": "p",
+          "text": "Pengembangan AI dinilai memiliki potensi besar dalam mendukung berbagai sektor, mulai dari industri, pendidikan, pelayanan publik, hingga keamanan siber. Melalui kolaborasi ini, kedua negara berpeluang saling bertukar pengetahuan dan pengalaman dalam menciptakan teknologi yang bermanfaat bagi masyarakat."
+        },
+        {
+          "type": "p",
+          "text": "Indonesia juga memiliki kesempatan untuk meningkatkan kemampuan sumber daya manusia di bidang teknologi digital. Hal ini penting agar Indonesia tidak hanya menjadi pengguna teknologi, tetapi juga mampu mengembangkan inovasi sendiri."
+        },
+        {
+          "type": "p",
+          "text": "Kerja sama dengan Korea Selatan diharapkan dapat membuka peluang pengembangan riset, peningkatan keterampilan tenaga ahli, serta pemanfaatan kecerdasan buatan untuk mendukung pertumbuhan ekonomi digital."
+        },
+        {
+          "type": "p",
+          "text": "Perkembangan ini menunjukkan bahwa kolaborasi internasional memiliki peran penting dalam menghadapi perubahan teknologi global."
+        },
+        {
+          "type": "p",
+          "text": "Sumber referensi: TVRI News dan The Jakarta Post."
+        },
+        {
+          "type": "p",
+          "text": "Redaksi : Faisal CMS."
+        }
+      ]
+    },
+    {
       "id": "post-1795616137978",
       "title": "Ronaldo Cetak Gol ke-987, Al Nassr Tundukkan Al Sadd 2-1 di Liga Champions Asia Elite.",
       "category": "Olahraga",
