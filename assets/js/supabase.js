@@ -10,6 +10,7 @@
   const KUNCI_SESI = 'faisal-sesi-pemilik';
   const KUNCI_KOMENTAR = 'faisal-komentar-';
   const KUNCI_STATISTIK = 'faisal-statistik-lokal';
+  const KUNCI_STATISTIK_TERKIRIM = 'faisal-statistik-terkirim';
   const KUNCI_NAMA = 'faisal-nama-komentar';
   const PEMILIK = 'felixreuss29@gmail.com';
 
@@ -24,11 +25,11 @@
   }
   function header(token) {
     const c = konfigurasi();
-    return {
-      apikey: c.key,
-      Authorization: 'Bearer ' + (token || c.key),
-      'Content-Type': 'application/json'
-    };
+    // Kunci publishable/anon memang bukan JWT, jadi hanya dikirim lewat apikey.
+    // Authorization: Bearer dipakai khusus untuk token sesi pengguna pemilik.
+    const kepala = { apikey: c.key, 'Content-Type': 'application/json' };
+    if (token) kepala.Authorization = 'Bearer ' + token;
+    return kepala;
   }
   function sinyal() {
     if (typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout === 'function') {
@@ -124,11 +125,25 @@
       tulisLokal(KUNCI_STATISTIK, daftar.slice(-500));
       return;
     }
-    await minta('/rest/v1/faisal_statistik', {
-      method: 'POST',
-      prefer: 'resolution=ignore-duplicates,return=minimal',
-      body: { pengunjung: idPengunjung(), hari: hariWIB(), halaman: namaHalaman, jenis: tipe }
-    });
+    // Catatan: `resolution=ignore-duplicates` butuh hak SELECT untuk
+    // memeriksa baris lama, sedangkan anon sengaja tidak punya hak itu.
+    // Jadi duplikat dicegah lokal, lalu kode 409 tetap ditelan bila terjadi.
+    const kunci = [idPengunjung(), hariWIB(), tipe, namaHalaman].join('|');
+    const terkirim = bacaLokal(KUNCI_STATISTIK_TERKIRIM, []);
+    if (terkirim.includes(kunci)) return;
+    try {
+      await minta('/rest/v1/faisal_statistik', {
+        method: 'POST',
+        prefer: 'return=minimal',
+        body: { pengunjung: idPengunjung(), hari: hariWIB(), halaman: namaHalaman, jenis: tipe }
+      });
+    } catch (e) {
+      if (!/duplicate key|23505|unique constraint/i.test(e.message)) throw e;
+    }
+    if (!terkirim.includes(kunci)) {
+      terkirim.push(kunci);
+      tulisLokal(KUNCI_STATISTIK_TERKIRIM, terkirim.slice(-200));
+    }
   }
 
   function ringkasanLokal() {

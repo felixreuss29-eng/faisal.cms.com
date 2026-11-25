@@ -119,16 +119,16 @@ Komentar dan angka kunjungan baru sama di semua perangkat setelah Supabase dihub
 1. Buat project di https://supabase.com/dashboard (pilih region terdekat, misalnya Singapore).
 2. Buka **SQL Editor → New query**, salin seluruh isi `supabase-setup.sql`, lalu **Run**. File ini membuat tabel langganan, komentar (`faisal_komentar`), kunjungan (`faisal_statistik`), kebijakan RLS, dan fungsi `faisal_ringkasan_statistik`.
 3. Buka **Authentication → Users → Add user → Create new user**, pakai email `felixreuss29@gmail.com`, isi kata sandi, lalu centang **Auto Confirm User** (atau konfirmasi lewat email). Email ini harus sama dengan kebijakan pemilik di SQL.
-4. Buka **Project Settings → API**, salin **Project URL** dan **anon public key**. Isi keduanya di `assets/js/supabase-config.js`:
+4. Buka **Project Settings → API Keys**, salin **Project URL** dan **Publishable key** (`sb_publishable_...`). Isi keduanya di `assets/js/supabase-config.js`:
 
    ```js
    window.FAISAL_SUPABASE = {
      url: 'https://xxxx.supabase.co',
-     anonKey: 'eyJhbGciOi...'
+     anonKey: 'sb_publishable_...'
    };
    ```
 
-   **Jangan** memasukkan `service_role key` ke repo; kunci itu hanya untuk server. `anon key` memang boleh dipublikasikan.
+   **Jangan** memasukkan `service_role` / `secret key` ke repo; kunci itu hanya untuk server. `Publishable key` memang boleh dipublikasikan dan akan dipakai browser sebagai `apikey`. Kunci `anon` lama (diawali `eyJ`) juga masih berfungsi sampai awal 2027.
 5. Commit dan push. Setelah deploy, buka `admin/login.html`, masukkan email + kata sandi Supabase pemilik, lalu **Masuk ke ruang redaksi**. Buka dasbor admin → **Moderasi komentar** untuk menghapus komentar. Angka di dasbor dan "Dilihat N kali" langsung memakai data Supabase. Sesi dicek ulang ke Supabase setiap kali membuka halaman admin; centang **Ingat sesi** menyimpannya di perangkat itu; tanpa centangan, sesi berhenti saat browser ditutup.
 
 Sebelum langkah 4 selesai, halaman publik tetap berfungsi dengan catatan "Supabase belum terhubung": komentar dan kunjungan tersimpan lokal di browser masing-masing. **Halaman admin tidak bisa dimasuki siapa pun** sampai konfigurasi dan user pemilik tersedia.
@@ -160,7 +160,7 @@ Sebelum langkah 4 selesai, halaman publik tetap berfungsi dengan catatan "Supaba
 2. **Autentikasi nyata** — kata sandi login dan sesi admin diverifikasi Supabase Auth; email selain `felixreuss29@gmail.com`, kata sandi salah, dan penanda buatan di browser ditolak. Sebelum `assets/js/supabase-config.js` diisi dan `supabase-setup.sql` dijalankan, **tidak ada yang bisa masuk** (termasuk pemilik). Alur 2 langkah lama yang menerima enam digit apa pun sudah dihapus; `login-2fa.html` kini hanya mengalihkan ke `login.html`. Unggah postingan tetap memakai token GitHub di browser pemilik, bukan sesi pengguna.
 3. **WYSIWYG & upload media** — editor lama masih `textarea` dan berlabel pratinjau; unggah foto nyata ada di `posting.html`, tetapi belum ada rich text atau pengelola aset.
 4. **Alur persetujuan persisten** — tabel alur hanya contoh; tombol "Kirim review" belum mengubah data/status di server maupun menyimpan riwayat.
-5. **Verifikasi pembayaran otomatis** — donasi memakai QRIS statis → bukti wajib → konfirmasi WhatsApp/email → kode terima kasih manual. QRIS statis tidak punya webhook, jadi donasi tidak bisa terkonfirmasi otomatis. Skema Supabase untuk approval + masa aktif 1 bulan sudah disiapkan di `supabase-setup.sql`, tetapi belum dipasang karena URL dan anon key belum diisi di `assets/js/supabase-config.js`. Pencarian juga masih filter array lokal.
+5. **Verifikasi pembayaran otomatis** — donasi memakai QRIS statis → bukti wajib → konfirmasi WhatsApp/email → kode terima kasih manual. QRIS statis tidak punya webhook, jadi donasi tidak bisa terkonfirmasi otomatis. Skema Supabase untuk approval + masa aktif 1 bulan sudah disiapkan di `supabase-setup.sql`, tetapi belum dipasang karena URL dan publishable key belum diisi di `assets/js/supabase-config.js`. Pencarian juga masih filter array lokal.
 6. **Komentar & statistik bersama** — kode dan SQL sudah siap, tetapi `assets/js/supabase-config.js` masih kosong dan `supabase-setup.sql` belum dijalankan. Sebelum dihubungkan, komentar dan angka kunjungan hanya tersimpan di perangkat masing-masing. Panel moderasi juga baru bisa menghapus komentar setelah akun pemilik Supabase dibuat. Belum ada anti-spam otomatis selain batas panjang teks/nama.
 7. **SEO & metadata lengkap** — `robots.txt` sudah ada, tetapi belum ada canonical URL, Open Graph/Twitter card, JSON-LD, dan sitemap.xml (URL final deploy belum diketahui).
 8. **Analitik & iklan** — slot iklan masih placeholder; belum ada integrasi ads/analytics.
