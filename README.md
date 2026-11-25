@@ -96,6 +96,7 @@ Buka `admin/posting.html` → menu **Tulis Postingan** di sidebar CMS.
 3. Isi judul, kategori, ringkasan, foto (opsional, ada pratinjau), teks alternatif, dan isi postingan.
 4. Klik **Unggah & terbitkan**. Website akan menyimpan foto ke `assets/img/upload/` dan menambah data ke `assets/js/posts.json` lewat GitHub Contents API.
 5. Tunggu 1–3 menit sampai GitHub Pages selesai deploy. Postingan muncul di beranda, `berita.html`, hasil pencarian, dan `artikel.html?id=…`.
+6. Untuk menghapus, buka bagian **Kelola postingan** pada halaman yang sama → **Muat daftar postingan** → **Hapus** pada judul yang dimaksud → konfirmasi. Postingan dan fotonya dihapus dari repository lewat GitHub Contents API.
 
 **Keamanan:** token disimpan di `localStorage` browser perangkat ini. Pakai hanya di perangkat pemilik, jangan di komputer bersama, dan cabut token di GitHub bila perlu. Ini bukan sistem login produksi — hanya cara praktis satu pemilik mengirim konten ke repository statis.
 
