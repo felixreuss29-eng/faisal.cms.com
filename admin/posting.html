@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/css/style.css?v=8" />
+  <link rel="stylesheet" href="../assets/css/style.css?v=9" />
 </head>
 <body data-admin="1">
   <div class="admin-shell">
@@ -19,14 +19,14 @@
         <a href="daftar-artikel.html">▤ Artikel</a>
         <a href="editor.html">✎ Editor</a>
         <a class="active" href="posting.html">↑ Tulis Postingan</a>
-        <a href="../index.html">← Lihat situs</a>
+        <a href="../">← Lihat situs</a>
       </nav>
     </aside>
     <div class="admin-main">
-      <header class="admin-topbar"><button class="icon-btn" type="button" data-sidebar-toggle aria-label="Ciutkan sidebar" aria-expanded="true">☰</button><h1>Tulis Postingan</h1><div class="spacer"></div><span class="meta" data-clock></span><a class="btn btn-outline" href="../berita.html" target="_blank" rel="noopener noreferrer">Lihat situs ↗</a></header>
+      <header class="admin-topbar"><button class="icon-btn" type="button" data-sidebar-toggle aria-label="Ciutkan sidebar" aria-expanded="true">☰</button><h1>Tulis Postingan</h1><div class="spacer"></div><span class="meta" data-clock></span><a class="btn btn-outline" href="../berita"" target="_blank" rel="noopener noreferrer">Lihat situs ↗</a></header>
       <main class="admin-content">
         <nav class="breadcrumb" aria-label="Breadcrumb">Admin › Tulis Postingan</nav>
-        <div class="panel" style="margin-bottom:18px"><p class="meta"><strong>Cara cepat:</strong> ① Isi <em>Personal Access Token</em> di bawah → <b>Simpan pengaturan</b> → <b>Cek koneksi</b>. ② Isi judul, kategori, ringkasan, foto (opsional), dan isi berita. ③ Klik <b>Unggah &amp; terbitkan</b>, tunggu 1–3 menit, lalu cek di <a href="../berita.html" target="_blank" rel="noopener noreferrer">halaman Berita ↗</a>.</p></div>
+        <div class="panel" style="margin-bottom:18px"><p class="meta"><strong>Cara cepat:</strong> ① Isi <em>Personal Access Token</em> di bawah → <b>Simpan pengaturan</b> → <b>Cek koneksi</b>. ② Isi judul, kategori, ringkasan, foto (opsional), dan isi berita. ③ Klik <b>Unggah &amp; terbitkan</b>, tunggu 1–3 menit, lalu cek di <a href="../berita"" target="_blank" rel="noopener noreferrer">halaman Berita ↗</a>.</p></div>
         <div class="two-col">
           <section class="admin-card">
             <h2>1. Hubungkan ke GitHub</h2>
@@ -85,8 +85,8 @@
     </div>
   </div>
   <div class="toast" role="status" aria-live="polite"></div>
-  <script src="../assets/js/data.js?v=8"></script>
-  <script src="../assets/js/app.js?v=8"></script>
+  <script src="../assets/js/data.js?v=9"></script>
+  <script src="../assets/js/app.js?v=9"></script>
   <script>
   (function () {
     const KUNCI = 'faisal-github';
@@ -210,7 +210,7 @@
         };
         await tulisFile('assets/js/posts.json', await base64DariBytes(new TextEncoder().encode(JSON.stringify({ posts: [baru, ...daftar] }, null, 2))), 'Tambah postingan: ' + judul, lama && lama.sha);
         box.classList.remove('hidden');
-        box.innerHTML = '<h3>Postingan berhasil diunggah</h3><p><strong>' + judul + '</strong> sudah masuk ke repository <code>' + c.owner + '/' + c.repo + '</code>.</p><p><a class="btn btn-primary" href="../artikel.html?id=' + id + '" target="_blank" rel="noopener noreferrer">Lihat postingan</a></p><p class="meta">GitHub Pages perlu 1–3 menit untuk mempublish ulang. Jika halaman belum berubah, tunggu sebentar lalu muat ulang.</p>';
+        box.innerHTML = '<h3>Postingan berhasil diunggah</h3><p><strong>' + judul + '</strong> sudah masuk ke repository <code>' + c.owner + '/' + c.repo + '</code>.</p><p><a class="btn btn-primary" href="../artikel"?id=' + id + '" target="_blank" rel="noopener noreferrer">Lihat postingan</a></p><p class="meta">GitHub Pages perlu 1–3 menit untuk mempublish ulang. Jika halaman belum berubah, tunggu sebentar lalu muat ulang.</p>';
         el('form-posting').reset();
         el('post-preview').hidden = true;
         toast('Postingan berhasil diunggah.');

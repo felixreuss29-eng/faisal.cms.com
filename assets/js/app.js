@@ -6,6 +6,16 @@ const WPM = 200;
 const TZ = 'Asia/Jakarta';
 const OWNER_EMAIL = 'felixreuss29@gmail.com';
 const img = (name) => `assets/img/${name}`;
+/* ---------- Alamat bersih (tanpa .html di address bar) ---------- */
+function rapikanUrl() {
+  if (location.protocol === 'file:' || location.pathname.includes('/admin/')) return;
+  const p = location.pathname;
+  let bersih = null;
+  if (p.endsWith('/index.html')) bersih = p.slice(0, -'index.html'.length);
+  else if (p.endsWith('.html')) bersih = p.slice(0, -5);
+  if (bersih && bersih !== p) history.replaceState(history.state, '', bersih + location.search + location.hash);
+}
+rapikanUrl();
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 async function hashTeks(teks) {
   const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(teks));
@@ -133,9 +143,9 @@ function initFollow() {
 /* ---------- Header & footer ---------- */
 const NAV = ['Beranda', 'Berita Terkini', 'Politik', 'Nasional', 'Ekonomi', 'Olahraga', 'Hukum', 'Teknologi'];
 const NAV_HREF = {
-  'Beranda': 'index.html', 'Berita Terkini': 'berita.html', 'Politik': 'kategori.html?k=Politik',
-  'Nasional': 'kategori.html?k=Nasional', 'Ekonomi': 'kategori.html?k=Ekonomi', 'Olahraga': 'kategori.html?k=Olahraga',
-  'Hukum': 'kategori.html?k=Hukum', 'Teknologi': 'kategori.html?k=Teknologi'
+  'Beranda': './', 'Berita Terkini': 'berita', 'Politik': 'kategori?k=Politik',
+  'Nasional': 'kategori?k=Nasional', 'Ekonomi': 'kategori?k=Ekonomi', 'Olahraga': 'kategori?k=Olahraga',
+  'Hukum': 'kategori?k=Hukum', 'Teknologi': 'kategori?k=Teknologi'
 };
 function renderHeader(active = 'Beranda') {
   const host = document.querySelector('[data-site-header]');
@@ -145,14 +155,14 @@ function renderHeader(active = 'Beranda') {
       <div class="wrap">
         <span data-clock></span>
         <div class="utility-links">
-          <a href="tentang.html">Tentang Kami</a><a href="statis.html">Pedoman Media Siber</a><a href="statis.html">Redaksi</a>
-          <a href="statis.html">Karir</a><a href="statis.html">Iklan</a>
+          <a href="tentang">Tentang Kami</a><a href="statis">Pedoman Media Siber</a><a href="statis">Redaksi</a>
+          <a href="statis">Karir</a><a href="statis">Iklan</a>
         </div>
       </div>
     </div>
     <div class="masthead">
       <div class="wrap">
-        <a class="brand" href="index.html"><span class="brand-name">Faisal</span><span class="brand-tag">BERITA INDEPENDEN &amp; TERPERCAYA</span></a>
+        <a class="brand" href="./"><span class="brand-name">Faisal</span><span class="brand-tag">BERITA INDEPENDEN &amp; TERPERCAYA</span></a>
         <nav class="site-nav" aria-label="Navigasi utama">
           ${NAV.map((n) => `<a href="${NAV_HREF[n]}" ${n === active ? 'aria-current="page"' : ''}>${n}</a>`).join('')}
         </nav>
@@ -162,14 +172,14 @@ function renderHeader(active = 'Beranda') {
             <input id="site-search" type="search" placeholder="Cari berita…" />
           </form>
           <button class="icon-btn" type="button" data-theme-toggle aria-label="Aktifkan mode gelap">☾</button>
-          <a class="btn btn-primary" href="langganan.html">Langganan</a>
+          <a class="btn btn-primary" href="langganan">Langganan</a>
           <button class="icon-btn menu-toggle" type="button" data-menu-toggle aria-label="Buka menu" aria-expanded="false">☰</button>
         </div>
       </div>
     </div>
     <nav class="mobile-nav hidden" aria-label="Navigasi mobile">
       ${NAV.map((n) => `<a href="${NAV_HREF[n]}">${n}</a>`).join('')}
-      <a href="langganan.html">Langganan</a><a href="login.html">Masuk CMS</a>
+      <a href="langganan">Langganan</a><a href="admin/login.html">Masuk CMS</a>
     </nav>
     <div class="ticker">
       <div class="wrap" style="display:flex;align-items:center;gap:14px;width:100%">
@@ -180,7 +190,7 @@ function renderHeader(active = 'Beranda') {
   host.querySelector('[data-search-form]').addEventListener('submit', (e) => {
     e.preventDefault();
     const q = host.querySelector('#site-search').value.trim();
-    location.href = `pencarian.html${q ? '?q=' + encodeURIComponent(q) : ''}`;
+    location.href = `pencarian${q ? '?q=' + encodeURIComponent(q) : ''}`;
   });
   host.querySelector('[data-menu-toggle]').addEventListener('click', (e) => {
     const menu = host.querySelector('.mobile-nav');
@@ -199,10 +209,10 @@ function renderFooter() {
     ['Ikuti Kami', ['Instagram @faisalakbar0423']]
   ];
   const tautan = {
-    'Tentang Kami': 'tentang.html', 'Berita Terkini': 'berita.html', 'Langganan': 'langganan.html',
+    'Tentang Kami': 'tentang', 'Berita Terkini': 'berita', 'Langganan': 'langganan',
     'Instagram @faisalakbar0423': 'https://www.instagram.com/faisalakbar0423/'
   };
-  const hrefFooter = (label) => tautan[label] || 'statis.html';
+  const hrefFooter = (label) => tautan[label] || 'statis';
   const eksternal = (label) => (tautan[label] || '').startsWith('http');
   host.innerHTML = `
     <footer class="site-footer">
@@ -324,7 +334,7 @@ function renderBeritaKategori() {
   if (!host || !BERITA.articles.length) return;
   const pilihan = BERITA.articles.filter((a) => a.category === 'Politik');
   const tampil = (pilihan.length ? pilihan : BERITA.articles).slice(0, 3);
-  host.innerHTML = `<div class="section-head"><span class="section-mark"></span><h2 class="section-title">Berita terkini dari ANTARA</h2><a class="section-more" href="berita.html">Lihat semua →</a></div>
+  host.innerHTML = `<div class="section-head"><span class="section-mark"></span><h2 class="section-title">Berita terkini dari ANTARA</h2><a class="section-more" href="berita">Lihat semua →</a></div>
     <p class="meta" data-news-updated></p>
     <div class="grid-3">${tampil.map((a) => beritaCardHTML(a, false)).join('')}</div>`;
   labelPembaruan();
@@ -391,9 +401,9 @@ async function muatPostingan() {
 function cardHTML(a) {
   const penulis = namaPenulis(a);
   return `<article class="card">
-    <a href="artikel.html?id=${a.id}"><img src="${gambarArtikel(a)}" alt="${esc(a.alt || 'Ilustrasi: ' + a.title)}" loading="lazy" /></a>
+    <a href="artikel?id=${a.id}"><img src="${gambarArtikel(a)}" alt="${esc(a.alt || 'Ilustrasi: ' + a.title)}" loading="lazy" /></a>
     <div class="card-tags"><span class="kicker">${esc(a.category)}</span> <span class="sumber-label">${esc(penulis)}</span></div>
-    <h3><a href="artikel.html?id=${a.id}">${esc(a.title)}</a></h3>
+    <h3><a href="artikel?id=${a.id}">${esc(a.title)}</a></h3>
     ${a.excerpt ? `<p class="meta card-excerpt">${esc(a.excerpt)}</p>` : ''}
     <div class="card-meta">
       <span class="meta" data-relative="${a.published}">${waktuRelatif(a.published)}</span>
@@ -450,8 +460,8 @@ function renderHome() {
           </article>
         </div>
         <div class="home-about-actions">
-          <a class="btn btn-primary" href="tentang.html">Profil lengkap →</a>
-          <a class="btn btn-outline" href="berita.html">Baca berita →</a>
+          <a class="btn btn-primary" href="tentang">Profil lengkap →</a>
+          <a class="btn btn-outline" href="berita">Baca berita →</a>
           <a class="btn btn-outline" href="mailto:${OWNER_EMAIL}">Hubungi redaksi →</a>
         </div>
       </div>
@@ -463,7 +473,7 @@ function renderHome() {
   const politikUtama = ARTICLES[0];
   document.querySelector('#politik').innerHTML = `
     <div class="split">
-      <article class="lead"><a href="artikel.html?id=${politikUtama.id}"><img src="${img('politik3.jpg')}" alt="Ilustrasi suasana rapat politik" /></a><span class="kicker">Politik</span><h3><a href="artikel.html?id=${politikUtama.id}">${esc(politikUtama.title)}</a></h3></article>
+      <article class="lead"><a href="artikel?id=${politikUtama.id}"><img src="${img('politik3.jpg')}" alt="Ilustrasi suasana rapat politik" /></a><span class="kicker">Politik</span><h3><a href="artikel?id=${politikUtama.id}">${esc(politikUtama.title)}</a></h3></article>
       <div>${rankedHTML(['Komisi II Minta Aturan Turunan Segera Ditetapkan', 'Pengamat: Stabilitas Aturan Jadi Kunci Pemilu 2027', 'KPU Buka Pendaftaran Tenaga Ad Hoc Pemilu', 'Warga Mulai Cek Daftar Pemilih di Kanal Daring'])}</div>
     </div>`;
 
@@ -491,7 +501,7 @@ function renderArticle() {
     return `<p>${esc(b.text)}</p>`;
   }).join('');
   host.innerHTML = `
-    <div class="breadcrumb"><a href="index.html">Beranda</a> › <a href="kategori.html?k=${encodeURIComponent(a.category)}">${esc(a.category)}</a> › ${esc(a.title)}</div>
+    <div class="breadcrumb"><a href="./">Beranda</a> › <a href="kategori?k=${encodeURIComponent(a.category)}">${esc(a.category)}</a> › ${esc(a.title)}</div>
     <div class="article-layout">
       <div>
         <header class="article-head">
@@ -511,7 +521,7 @@ function renderArticle() {
         <section class="paywall" style="margin-top:32px">
           <span class="kicker">Langganan</span><h3>Artikel ini hanya untuk pelanggan</h3>
           <p>Dukung jurnalisme independen dan baca seluruh artikel tanpa batas. Mulai dari Rp 10.000 per bulan.</p>
-          <div class="paywall-actions"><a class="btn btn-primary" href="langganan.html">Lihat Paket Langganan</a></div>
+          <div class="paywall-actions"><a class="btn btn-primary" href="langganan">Lihat Paket Langganan</a></div>
           <p class="meta" style="margin-top:14px">Sudah bayar via QRIS dan mengirim bukti? Masukkan kode akses yang dikirim pemilik setelah bukti dicek.</p>
           <form class="akses-form" data-akses-form>
             <label class="sr-only" for="kode-akses">Kode akses langganan</label>
@@ -520,7 +530,7 @@ function renderArticle() {
           </form>
           <span class="error hidden" data-akses-error>Kode tidak valid. Periksa kembali pesan dari pemilik.</span>
           <p class="meta" data-akses-status aria-live="polite"></p>
-          <p class="meta">Belum berlangganan? <a href="langganan.html#form-konfirmasi">Kirim bukti pembayaran di sini.</a> Bantuan: <a href="https://wa.me/6281286484770">081286484770</a> · <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a></p>
+          <p class="meta">Belum berlangganan? <a href="langganan#form-konfirmasi">Kirim bukti pembayaran di sini.</a> Bantuan: <a href="https://wa.me/6281286484770">081286484770</a> · <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a></p>
         </section>
         <div class="tags"><span class="tag">#Pilkada2027</span><span class="tag">#KPU</span><span class="tag">#Pemilih</span><span class="tag">#Demokrasi</span></div>
         <div class="correction"><strong>Catatan redaksi</strong><br />Jadwal dan tahapan mengikuti kalender resmi penyelenggara pemilu, diperbarui pada <span data-clock></span>.</div>
@@ -534,7 +544,7 @@ function renderArticle() {
       </div>
       <aside>
         <div class="sidebar-section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title" style="font-size:20px">Artikel Terkait</h2></div>
-          ${ARTICLES.filter((x) => x.id !== a.id).slice(0, 4).map((x) => `<div class="sidebar-item"><a href="artikel.html?id=${x.id}"><img src="${img(x.image)}" alt="Thumbnail ${esc(x.title)}" loading="lazy" /></a><div><span class="kicker">${esc(x.category)}</span><h3><a href="artikel.html?id=${x.id}">${esc(x.title)}</a></h3><span class="meta" data-relative="${x.published}">${waktuRelatif(x.published)}</span></div></div>`).join('')}
+          ${ARTICLES.filter((x) => x.id !== a.id).slice(0, 4).map((x) => `<div class="sidebar-item"><a href="artikel?id=${x.id}"><img src="${img(x.image)}" alt="Thumbnail ${esc(x.title)}" loading="lazy" /></a><div><span class="kicker">${esc(x.category)}</span><h3><a href="artikel?id=${x.id}">${esc(x.title)}</a></h3><span class="meta" data-relative="${x.published}">${waktuRelatif(x.published)}</span></div></div>`).join('')}
         </div>
         ${iklanHTML('ad-sidebar')}
         <div class="sidebar-section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title" style="font-size:20px">Terpopuler</h2></div>${rankedHTML(POPULAR)}</div>
@@ -575,7 +585,7 @@ function renderArticle() {
   });
   const kunciKomentar = 'faisal-komentar-' + (params.get('id') || 'default');
   const bacaKomentar = () => { try { return JSON.parse(localStorage.getItem(kunciKomentar) || '[]'); } catch { return []; } };
-  const isiKomentar = (k) => `<img src="${img('author4.jpg')}" alt="Foto Anda" /><div><h4>Anda · <span class="meta" data-relative="${k.waktu}">${waktuRelatif(k.waktu)}</span></h4><p>${esc(k.teks)}</p><button class="kicker komentar-aksi" type="button" data-toast="Balasan belum tersedia">Balas</button> <a class="kicker" href="statis.html#hak-jawab">Laporkan</a></div>`;
+  const isiKomentar = (k) => `<img src="${img('author4.jpg')}" alt="Foto Anda" /><div><h4>Anda · <span class="meta" data-relative="${k.waktu}">${waktuRelatif(k.waktu)}</span></h4><p>${esc(k.teks)}</p><button class="kicker komentar-aksi" type="button" data-toast="Balasan belum tersedia">Balas</button> <a class="kicker" href="statis#hak-jawab">Laporkan</a></div>`;
   const perbaruiKomentar = () => {
     const daftar = bacaKomentar();
     host.querySelector('.komentar-judul').textContent = `Komentar (${daftar.length})`;
@@ -626,12 +636,12 @@ function renderCategory() {
   const semua = [...lokal, ...berita];
   const utama = semua[0] || ARTICLES[0];
   const gambarUtama = utama.image && utama.image.startsWith('assets/') ? utama.image : img(utama.image || 'hero.jpg');
-  const tautanUtama = utama.link || `artikel.html?id=${utama.id}`;
+  const tautanUtama = utama.link || `artikel?id=${utama.id}`;
   const kartu = [...lokal.map(cardHTML), ...berita.map((a) => beritaCardHTML(a, true))];
   host.innerHTML = `
     <section class="category-band"><div class="wrap"><span class="kicker">Kategori</span><h1>${esc(kategori)}</h1><p>Berita dan analisis ${esc(kategori.toLowerCase())} dari redaksi Faisal.</p></div></section>
     <div class="wrap">
-      <div class="filter-bar">${daftarKategori.map((k) => `<a class="chip ${k === kategori ? 'active' : ''}" href="kategori.html?k=${encodeURIComponent(k)}">${k}</a>`).join('')}</div>
+      <div class="filter-bar">${daftarKategori.map((k) => `<a class="chip ${k === kategori ? 'active' : ''}" href="kategori?k=${encodeURIComponent(k)}">${k}</a>`).join('')}</div>
       <div class="section"><h2 class="sr-only">Sorotan ${esc(kategori)}</h2><div class="split">
         <article class="lead"><a href="${tautanUtama}"><img src="${gambarUtama}" alt="Berita utama ${esc(kategori)}" /></a><span class="kicker">Utama</span><h3><a href="${tautanUtama}">${esc(utama.title)}</a></h3></article>
         <div>${rankedHTML(semua.slice(1, 4).map((a) => a.title), kategori)}</div>
@@ -657,7 +667,7 @@ function renderSearch() {
     <div class="wrap" style="padding-top:32px">
       <h1 style="font-family:var(--font-display);font-size:32px;margin:0">Pencarian</h1>
       <p class="result-meta">${q ? `${jumlah} hasil untuk “${esc(q)}”` : 'Masukkan kata kunci pada kolom pencarian di atas.'}</p>
-      ${q && !jumlah ? `<div class="empty-state"><h3>Tidak ada hasil</h3><p>Coba kata kunci lain atau lihat berita terkini.</p><a class="btn btn-outline" href="berita.html">Lihat berita terkini</a></div>` : `
+      ${q && !jumlah ? `<div class="empty-state"><h3>Tidak ada hasil</h3><p>Coba kata kunci lain atau lihat berita terkini.</p><a class="btn btn-outline" href="berita">Lihat berita terkini</a></div>` : `
         ${hasilAdmin.length ? `<section class="section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title">Postingan admin</h2></div><div class="grid-3">${hasilAdmin.map(cardHTML).join('')}</div></section>` : ''}
         ${hasilBerita.length ? `<section class="section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title">Berita terkini · ANTARA News</h2></div><div class="grid-3">${hasilBerita.map((a) => beritaCardHTML(a, false)).join('')}</div></section>` : ''}
         ${hasil.length ? `<section class="section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title">Arsip redaksi</h2></div><div class="grid-3">${hasil.map(cardHTML).join('')}</div></section>` : ''}`}
