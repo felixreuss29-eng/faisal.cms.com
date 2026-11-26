@@ -1,6 +1,53 @@
 {
   "posts": [
     {
+      "id": "post-1795701465163",
+      "title": "Rupiah Cetak Rekor Terlemah Sepanjang Sejarah, Sempat Tembus Rp18.400 per Dolar AS",
+      "category": "Ekonomi",
+      "excerpt": "Rupiah kembali mencetak rekor terlemah sepanjang sejarah. Setelah ditutup di Rp18.332 pada Rabu, rupiah sempat menembus Rp18.400 per dolar AS pada Kamis. Bank Indonesia menyebut ketidakpastian status indeks MSCI dan kebutuhan valas korporasi sebagai pemicu.",
+      "image": "upload/post-1795701465163.jpg",
+      "alt": "Grafis nilai tukar rupiah terhadap dolar AS yang menyentuh rekor terlemah sepanjang sejarah pada 26 November 2026.",
+      "sumberRujukan": "Bisnis.com, Tempo.co, dan Koran Manado.",
+      "kreditFoto": "faisal",
+      "author": {
+        "name": "Faisal Akbar",
+        "role": "Pemilik & Pemimpin Redaksi",
+        "photo": "pemilik-profil-rapi.jpg"
+      },
+      "published": "2026-11-26T13:57:48.579Z",
+      "updated": "2026-11-26T13:57:48.579Z",
+      "body": [
+        {
+          "type": "p",
+          "text": "JAKARTA – Nilai tukar rupiah terus tertekan dan mencatat rekor terlemah sepanjang sejarah. Rupiah sempat menembus Rp18.400 per dolar AS pada Kamis, 26 November, level terlemah yang pernah tercatat.\nKronologi pelemahan"
+        },
+        {
+          "type": "p",
+          "text": "Pelemahan berlangsung dua hari berturut-turut. Pada Rabu (25/11), menurut data Bloomberg, rupiah spot ditutup di Rp18.332 per dolar AS, melemah 0,56 persen dari penutupan sebelumnya di Rp18.230. Posisi itu merupakan rekor terendah sepanjang masa. Pada pembukaan perdagangan Kamis (26/11), rupiah melemah 13 poin ke Rp18.345, lalu menembus Rp18.390 per dolar AS. Berdasarkan laporan Bisnis.com, rupiah ditutup di Rp18.362 per dolar AS pada hari yang sama.\nSecara tahunan, tekanannya cukup besar. Gubernur BI Destry Damayanti menyebut rupiah sudah melemah 9,54 persen sejak awal tahun hingga 23 November 2026.\nApa penyebabnya?"
+        },
+        {
+          "type": "p",
+          "text": "Beberapa faktor disebut berperan:"
+        },
+        {
+          "type": "p",
+          "text": "Ketidakpastian status Indonesia di indeks MSCI. MSCI mempertahankan usulan perubahan status Indonesia dari emerging market menjadi standalone market, dan membantah laporan bahwa mereka bersedia mempertimbangkan opsi lain setelah bicara dengan Presiden Prabowo. MSCI adalah penyedia indeks saham global yang menjadi acuan banyak investor internasional.\nKebutuhan valuta asing korporasi. BI menyebut kekhawatiran soal potensi perubahan klasifikasi MSCI dan meningkatnya permintaan valas perusahaan ikut menekan rupiah.\nPenguatan dolar AS dan ekspektasi suku bunga The Fed. Tekanan juga berasal dari penguatan dolar dan ekspektasi kenaikan suku bunga AS.\nKekhawatiran investor soal kondisi fiskal dan politik. Ekonom CORE Indonesia menyebut investor juga mencemaskan dinamika politik dan kondisi fiskal Indonesia.\nKetegangan geopolitik. Investor juga merespons ketegangan di Selat Hormuz.\nLangkah Bank Indonesia"
+        },
+        {
+          "type": "p",
+          "text": "BI menyatakan terus memperkuat koordinasi dan komunikasi dengan korporasi dan pelaku pasar demi menjaga stabilitas rupiah. BI juga melakukan intervensi di pasar valas domestik dan luar negeri serta memastikan kecukupan likuiditas valas di perbankan. Pada November 2026, BI menaikkan suku bunga acuan 25 basis poin menjadi 6 persen.\nApa artinya bagi masyarakat?"
+        },
+        {
+          "type": "p",
+          "text": "Rupiah yang melemah membuat barang impor dan kebutuhan berbahan baku impor cenderung lebih mahal. Dampaknya ke harga tiap barang berbeda-beda dan belum tentu langsung terasa."
+        },
+        {
+          "type": "p",
+          "text": "Pergerakan rupiah dipengaruhi banyak faktor yang bisa berubah cepat. Redaksi akan memperbarui berita ini jika ada perkembangan."
+        }
+      ]
+    },
+    {
       "id": "post-1795697499652",
       "title": "Junta Myanmar Menolak Patuhi Putusan ICJ soal Genosida Rohingya",
       "category": "Internasional",
