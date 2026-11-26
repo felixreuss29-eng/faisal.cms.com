@@ -382,32 +382,34 @@ function renderHeader(active = 'Beranda') {
     </div>
     <div class="masthead">
       <div class="wrap">
-        <a class="brand" href="./"><span class="brand-name">Faisal</span><span class="brand-tag">BERITA INDEPENDEN &amp; TERPERCAYA</span></a>
+        <div class="masthead-top">
+          <a class="brand" href="./"><span class="brand-name">Faisal</span><span class="brand-tag">BERITA INDEPENDEN &amp; TERPERCAYA</span></a>
+          <div class="header-actions">
+            <form class="search-box" data-search-form>
+              <label class="sr-only" for="site-search">Cari berita</label>
+              <input id="site-search" type="search" placeholder="Cari berita…" />
+            </form>
+            <div class="language-wrap" data-no-translate>
+              <label class="sr-only" for="pilih-bahasa">Pilih bahasa</label>
+              <select id="pilih-bahasa" class="language-select" data-bahasa aria-label="Pilih bahasa" title="Pilih bahasa. Terjemahan otomatis; teks asli tetap bahasa Indonesia."></select>
+            </div>
+            <div class="notif-wrap">
+              <button class="icon-btn notif-btn" type="button" data-notif-toggle aria-pressed="false" aria-label="Aktifkan notifikasi berita" title="Aktifkan notifikasi berita">
+                <span class="notif-lonceng" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                  <span class="notif-silang"></span><span class="notif-titik"></span>
+                </span>
+              </button>
+              <button class="icon-btn notif-riwayat-btn" type="button" data-notif-riwayat aria-expanded="false" aria-controls="riwayat-notifikasi" aria-label="Lihat riwayat notifikasi terbaru" title="Riwayat notifikasi terbaru"><span aria-hidden="true">◷</span></button>
+            </div>
+            <button class="icon-btn" type="button" data-theme-toggle aria-label="Aktifkan mode gelap">☾</button>
+            <a class="btn btn-primary" href="donasi">Dukungan</a>
+            <button class="icon-btn menu-toggle" type="button" data-menu-toggle aria-label="Buka menu" aria-expanded="false">☰</button>
+          </div>
+        </div>
         <nav class="site-nav" aria-label="Navigasi utama">
           ${NAV.map((n) => `<a href="${NAV_HREF[n]}" ${n === active ? 'aria-current="page"' : ''}>${n}</a>`).join('')}
         </nav>
-        <div class="header-actions">
-          <form class="search-box" data-search-form>
-            <label class="sr-only" for="site-search">Cari berita</label>
-            <input id="site-search" type="search" placeholder="Cari berita…" />
-          </form>
-          <div class="language-wrap" data-no-translate>
-            <label class="sr-only" for="pilih-bahasa">Pilih bahasa</label>
-            <select id="pilih-bahasa" class="language-select" data-bahasa aria-label="Pilih bahasa" title="Pilih bahasa. Terjemahan otomatis; teks asli tetap bahasa Indonesia."></select>
-          </div>
-          <div class="notif-wrap">
-            <button class="icon-btn notif-btn" type="button" data-notif-toggle aria-pressed="false" aria-label="Aktifkan notifikasi berita" title="Aktifkan notifikasi berita">
-              <span class="notif-lonceng" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-                <span class="notif-silang"></span><span class="notif-titik"></span>
-              </span>
-            </button>
-            <button class="icon-btn notif-riwayat-btn" type="button" data-notif-riwayat aria-expanded="false" aria-controls="riwayat-notifikasi" aria-label="Lihat riwayat notifikasi terbaru" title="Riwayat notifikasi terbaru"><span aria-hidden="true">◷</span></button>
-          </div>
-          <button class="icon-btn" type="button" data-theme-toggle aria-label="Aktifkan mode gelap">☾</button>
-          <a class="btn btn-primary" href="donasi">Dukungan</a>
-          <button class="icon-btn menu-toggle" type="button" data-menu-toggle aria-label="Buka menu" aria-expanded="false">☰</button>
-        </div>
       </div>
     </div>
     <nav class="mobile-nav hidden" aria-label="Navigasi mobile">
@@ -433,6 +435,56 @@ function renderHeader(active = 'Beranda') {
   });
   updateThemeButton();
 }
+
+function rapikanNav() {
+  const nav = document.querySelector('.site-nav');
+  if (!nav || getComputedStyle(nav).display === 'none') return;
+  let wadah = nav.querySelector('.nav-lainnya');
+  if (!wadah) {
+    wadah = document.createElement('div');
+    wadah.className = 'nav-lainnya';
+    wadah.hidden = true;
+    wadah.innerHTML = '<button class="nav-lainnya-btn" type="button" aria-expanded="false" aria-controls="nav-lainnya-menu">Lainnya ▾</button><div class="nav-lainnya-menu" id="nav-lainnya-menu" hidden></div>';
+    nav.appendChild(wadah);
+    const tombol = wadah.querySelector('button');
+    const menu = wadah.querySelector('.nav-lainnya-menu');
+    tombol.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const buka = menu.hidden;
+      menu.hidden = !buka;
+      tombol.setAttribute('aria-expanded', String(buka));
+    });
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.nav-lainnya')) {
+        menu.hidden = true;
+        tombol.setAttribute('aria-expanded', 'false');
+      }
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !menu.hidden) {
+        menu.hidden = true;
+        tombol.setAttribute('aria-expanded', 'false');
+        tombol.focus();
+      }
+    });
+  }
+  const menu = wadah.querySelector('.nav-lainnya-menu');
+  Array.from(menu.querySelectorAll('a')).forEach((a) => nav.insertBefore(a, wadah));
+  wadah.hidden = false;
+  let geser = 0;
+  while (nav.scrollWidth > nav.clientWidth + 1 && geser < NAV.length) {
+    const tautan = Array.from(nav.children).filter((el) => el.tagName === 'A');
+    if (!tautan.length) break;
+    menu.insertBefore(tautan[tautan.length - 1], menu.firstChild);
+    geser++;
+  }
+  wadah.hidden = menu.children.length === 0;
+  if (wadah.hidden) {
+    menu.hidden = true;
+    wadah.querySelector('button').setAttribute('aria-expanded', 'false');
+  }
+}
+
 function renderFooter() {
   const host = document.querySelector('[data-site-footer]');
   if (!host) return;
@@ -1173,6 +1225,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initAdminGuard();
   initTheme();
   renderHeader(document.body.dataset.page || 'Beranda');
+  rapikanNav();
+  window.addEventListener('resize', rapikanNav);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(rapikanNav);
   initTickerToggle();
   renderFooter();
   pasangRiwayatNotifikasi();
