@@ -184,7 +184,7 @@ function renderHeader(active = 'Beranda') {
     </div>
     <nav class="mobile-nav hidden" aria-label="Navigasi mobile">
       ${NAV.map((n) => `<a href="${NAV_HREF[n]}">${n}</a>`).join('')}
-      <a href="donasi">Donasi</a><a href="admin/login.html">Masuk CMS</a>
+      <a href="donasi">Donasi</a>
     </nav>
     <div class="ticker" aria-label="Berita berjalan">
       <div class="wrap" style="display:flex;align-items:center;gap:14px;width:100%">
