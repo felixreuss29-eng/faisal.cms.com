@@ -12,6 +12,8 @@
   const KUNCI_STATISTIK = 'faisal-statistik-lokal';
   const KUNCI_STATISTIK_TERKIRIM = 'faisal-statistik-terkirim';
   const KUNCI_NAMA = 'faisal-nama-komentar';
+  const KUNCI_IKUTI = 'faisal-ikuti-';
+  const KUNCI_PUSH = 'faisal-push';
   const PEMILIK = 'felixreuss29@gmail.com';
 
   function konfigurasi() {
@@ -241,6 +243,108 @@
     });
   }
 
+  /* ---------- Pengikut penulis ---------- */
+  function validPenulis(nama) {
+    const penulis = String(nama || '').trim().slice(0, 80);
+    if (!penulis) throw new Error('Nama penulis tidak valid.');
+    return penulis;
+  }
+  function statusIkuti(nama) {
+    const penulis = validPenulis(nama);
+    if (!siap()) return Promise.resolve(Boolean(bacaLokal(KUNCI_IKUTI, {})[penulis]));
+    return minta('/rpc/faisal_status_ikuti', {
+      method: 'POST',
+      body: { p_pengunjung: idPengunjung(), p_penulis: penulis }
+    }).then((hasil) => hasil === true);
+  }
+  function jumlahPengikut(nama) {
+    const penulis = validPenulis(nama);
+    if (!siap()) return Promise.resolve(Number(Boolean(bacaLokal(KUNCI_IKUTI, {})[penulis])));
+    return minta('/rpc/faisal_jumlah_pengikut', {
+      method: 'POST',
+      body: { p_penulis: penulis }
+    }).then((hasil) => Number(hasil) || 0);
+  }
+  async function simpanIkuti(nama, aktif) {
+    const penulis = validPenulis(nama);
+    const daftar = bacaLokal(KUNCI_IKUTI, {});
+    if (aktif) daftar[penulis] = 1; else delete daftar[penulis];
+    tulisLokal(KUNCI_IKUTI, daftar);
+    if (!siap()) return Number(Boolean(daftar[penulis]));
+    const hasil = await minta('/rpc/faisal_simpan_ikuti', {
+      method: 'POST',
+      body: { p_pengunjung: idPengunjung(), p_penulis: penulis, p_aktif: Boolean(aktif) }
+    });
+    return Number(hasil) || 0;
+  }
+
+  /* ---------- Notifikasi berita (Web Push) ---------- */
+  function base64UrlKeArray(b64) {
+    const teks = String(b64 || '').replace(/-/g, '+').replace(/_/g, '/');
+    const isi = atob(teks + '='.repeat((4 - teks.length % 4) % 4));
+    return Uint8Array.from(isi, (c) => c.charCodeAt(0));
+  }
+  function alamatSW() {
+    const skrip = [...document.scripts].find((s) => /app\.js/.test(s.src || ''));
+    return skrip ? new URL('../sw.js', skrip.src).href : new URL('sw.js', document.baseURI).href;
+  }
+  async function statusNotifikasi() {
+    if (!('Notification' in window)) return 'tidak-didukung';
+    if (Notification.permission === 'denied') return 'ditolak';
+    if (Notification.permission !== 'granted') return 'belum';
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return 'tidak-didukung';
+    try {
+      const reg = await navigator.serviceWorker.getRegistration(alamatSW());
+      const langganan = reg && await reg.pushManager.getSubscription();
+      return langganan ? 'aktif' : 'belum';
+    } catch { return 'belum'; }
+  }
+  async function aktifkanNotifikasi() {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
+      throw new Error('Browser ini belum mendukung notifikasi.');
+    }
+    const kunci = window.FAISAL_PUSH && window.FAISAL_PUSH.vapidPublicKey;
+    if (!kunci) throw new Error('Kunci notifikasi belum tersedia.');
+    const izin = await Notification.requestPermission();
+    if (izin !== 'granted') throw new Error('Izin notifikasi tidak diberikan.');
+    const reg = await navigator.serviceWorker.register(alamatSW());
+    await navigator.serviceWorker.ready;
+    let langganan = await reg.pushManager.getSubscription();
+    if (!langganan) {
+      langganan = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: base64UrlKeArray(kunci)
+      });
+    }
+    if (siap()) {
+      await minta('/rest/v1/faisal_push_langganan?on_conflict=pengunjung', {
+        method: 'POST',
+        prefer: 'resolution=merge-duplicates,return=minimal',
+        body: { pengunjung: idPengunjung(), langganan: langganan.toJSON() }
+      });
+    }
+    try { localStorage.setItem(KUNCI_PUSH, 'aktif'); } catch { /* abai */ }
+    return true;
+  }
+  async function matikanNotifikasi() {
+    try {
+      if ('serviceWorker' in navigator) {
+        const reg = await navigator.serviceWorker.getRegistration(alamatSW());
+        const langganan = reg && await reg.pushManager.getSubscription();
+        if (langganan) await langganan.unsubscribe();
+      }
+      if (siap()) {
+        await minta('/rpc/faisal_hapus_langganan', {
+          method: 'POST',
+          body: { p_pengunjung: idPengunjung() }
+        });
+      }
+    } finally {
+      try { localStorage.setItem(KUNCI_PUSH, 'mati'); } catch { /* abai */ }
+    }
+    return true;
+  }
+
   function bacaSesi() {
     let teks = '';
     try { teks = localStorage.getItem(KUNCI_SESI) || sessionStorage.getItem(KUNCI_SESI) || ''; }
@@ -366,9 +470,16 @@
     kirimKomentar,
     daftarKomentar,
     hapusKomentar,
+    statusIkuti,
+    jumlahPengikut,
+    simpanIkuti,
+    statusNotifikasi,
+    aktifkanNotifikasi,
+    matikanNotifikasi,
     masukPemilik,
     keluarPemilik,
     statusPemilik,
+    tokenPemilik,
     sesiPemilik,
     namaTersimpan: () => { try { return localStorage.getItem(KUNCI_NAMA) || ''; } catch { return ''; } }
   };

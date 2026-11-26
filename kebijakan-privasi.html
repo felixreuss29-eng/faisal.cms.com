@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/style.css?v=31" />
+  <link rel="stylesheet" href="assets/css/style.css?v=32" />
 </head>
 <body data-page="Kebijakan Privasi">
   <div data-site-header></div>
@@ -37,6 +37,8 @@
         <li><strong>Rangkuman harian.</strong> Untuk menerima rangkuman harian, kami hanya meminta alamat email Anda. Persetujuan wajib dicentang sebelum permintaan dikirim.</li>
         <li><strong>Komentar.</strong> Nama pilihan Anda dan teks komentar disimpan agar tampil untuk semua pembaca dan dapat dimoderasi pemilik. Jangan memasukkan data sensitif ke dalam komentar.</li>
         <li><strong>Statistik kunjungan.</strong> Kami mencatat pengenal acak yang dibuat di browser, tanggal (WIB), dan halaman yang dibuka, maksimal sekali per hari per halaman, untuk menghitung pengunjung unik. Pengenal ini bukan nama, email, nomor telepon, atau alamat IP.</li>
+        <li><strong>Pengikut penulis.</strong> Tombol “Ikuti” menyimpan pengenal acak browser dan nama penulis yang diikuti. Jumlah pengikut ditampilkan sebagai angka; daftar identitas pembaca tidak dibuka ke publik. Ikutan dapat dibatalkan dengan menekan tombol itu lagi.</li>
+        <li><strong>Notifikasi berita.</strong> Jika Anda mengizinkan, browser menyimpan langganan Web Push di Supabase agar berita baru dapat dikirim walau halaman sedang tertutup. Kami menyimpan pengenal acak dan langganan perangkat, bukan nama, email, atau nomor telepon. Notifikasi dapat dimatikan kapan saja lewat tombol di footer.</li>
         <li><strong>Dukungan sukarela.</strong> Faisal tidak mengumpulkan nama, email, nominal, catatan, atau bukti transfer untuk donasi. QRIS tersedia sebagai sarana dukungan, dan pengiriman email kepada pemilik bersifat opsional.</li>
         <li><strong>Preferensi browser.</strong> Tema, bahasa, dan jawaban banner cookie/notifikasi disimpan di <code>localStorage</code> pada perangkat Anda. Tidak ada status akses donasi yang disimpan.</li>
         <li><strong>Akun pemilik CMS.</strong> Email dan kata sandi pemilik hanya diverifikasi melalui Supabase Auth. Kata sandi tidak pernah disimpan di repositori website.</li>
@@ -45,7 +47,7 @@
 
     <section class="panel" id="tujuan" aria-labelledby="judul-tujuan">
       <h2 class="panel-title" id="judul-tujuan">2. Tujuan penggunaan data</h2>
-      <p class="meta">Data digunakan semata-mata untuk: mengirimkan rangkuman harian yang Anda minta; menampilkan dan memoderasi komentar; menghitung statistik pengunjung unik; serta menjaga keamanan akun CMS pemilik. Kami tidak menjual, menyewakan, atau membagikan data pribadi Anda kepada pihak lain untuk kepentingan komersial.</p>
+      <p class="meta">Data digunakan semata-mata untuk: mengirimkan rangkuman harian yang Anda minta; menampilkan dan memoderasi komentar; menghitung statistik pengunjung unik; menampilkan jumlah pengikut penulis; mengirim notifikasi berita yang Anda izinkan; serta menjaga keamanan akun CMS pemilik. Kami tidak menjual, menyewakan, atau membagikan data pribadi Anda kepada pihak lain untuk kepentingan komersial.</p>
     </section>
 
     <section class="panel" id="pihak-ketiga" aria-labelledby="judul-pihak">
@@ -53,7 +55,7 @@
       <p class="meta">Karena Faisal adalah situs statis di GitHub Pages, beberapa fungsi memakai layanan pihak ketiga berikut:</p>
       <ul class="step-list">
         <li><strong>GitHub Pages</strong> — menyajikan halaman website.</li>
-        <li><strong>Supabase</strong> — menyimpan komentar, statistik kunjungan, dan autentikasi pemilik. Kunci yang dipublikasikan di browser hanya publishable/anon key, bukan secret key.</li>
+        <li><strong>Supabase</strong> — menyimpan komentar, statistik kunjungan, pengikut penulis, langganan notifikasi, dan autentikasi pemilik. Kunci yang dipublikasikan di browser hanya publishable/anon key, bukan secret key.</li>
         <li><strong>Google Fonts</strong> — memuat font Inter dan Playfair Display.</li>
         <li><strong>Layanan terjemahan mesin</strong> — Google Translate dan, sebagai cadangan, MyMemory Translation API. Saat Anda memilih bahasa selain Indonesia, teks halaman dikirim ke layanan tersebut untuk diterjemahkan.</li>
         <li><strong>Aplikasi email Anda sendiri</strong> — permintaan rangkuman disiapkan sebagai pesan yang Anda kirim sendiri. Faisal belum menggunakan layanan pengirim email otomatis.</li>
@@ -63,7 +65,7 @@
 
     <section class="panel" id="hak-anda" aria-labelledby="judul-hak">
       <h2 class="panel-title" id="judul-hak">4. Hak Anda</h2>
-      <p class="meta">Anda dapat meminta penghapusan data yang kami proses, termasuk permintaan berhenti menerima rangkuman harian, dengan mengirim email ke alamat di bawah. Anda juga dapat menghapus preferensi dan riwayat lokal kapan saja melalui pengaturan browser pada perangkat Anda.</p>
+      <p class="meta">Anda dapat meminta penghapusan data yang kami proses, termasuk permintaan berhenti menerima rangkuman harian, dengan mengirim email ke alamat di bawah. Anda juga dapat membatalkan ikutan dengan menekan kembali tombol “Mengikuti”, mematikan notifikasi lewat tombol di footer, serta menghapus preferensi dan riwayat lokal kapan saja melalui pengaturan browser pada perangkat Anda.</p>
       <p class="meta">Kami akan menindaklanjuti permintaan dalam waktu wajar setelah identitas pemohon dan data yang dimaksud dapat diverifikasi.</p>
     </section>
 

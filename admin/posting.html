@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/css/style.css?v=31" />
+  <link rel="stylesheet" href="../assets/css/style.css?v=32" />
 </head>
 <body data-admin="1">
   <div class="admin-shell">
@@ -219,6 +219,29 @@
           body: el('post-isi').value.trim().split(/\n\s*\n/).filter(Boolean).map((p) => ({ type: 'p', text: p.trim() }))
         };
         await tulisFile('assets/js/posts.json', await base64DariBytes(new TextEncoder().encode(JSON.stringify({ posts: [baru, ...daftar] }, null, 2))), 'Tambah postingan: ' + judul, lama && lama.sha);
+        try {
+          const fd = window.FaisalData;
+          const cfg = window.FAISAL_SUPABASE;
+          if (fd && cfg && fd.siap() && typeof fd.tokenPemilik === 'function') {
+            const token = fd.tokenPemilik();
+            if (token) {
+              const notif = await fetch(cfg.url + '/functions/v1/kirim-notifikasi', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  apikey: cfg.anonKey,
+                  Authorization: 'Bearer ' + token
+                },
+                body: JSON.stringify({ judul, id, ringkasan: baru.excerpt })
+              });
+              if (!notif.ok) throw new Error('HTTP ' + notif.status);
+              const hasil = await notif.json();
+              box.innerHTML += '<p class="meta">Notifikasi berita dikirim ke ' + esc(String(hasil.dikirim || 0)) + ' perangkat.</p>';
+            }
+          }
+        } catch (errNotif) {
+          box.innerHTML += '<p class="meta">Berita tersimpan, tetapi notifikasi gagal: ' + esc(errNotif.message) + '</p>';
+        }
         box.classList.remove('hidden');
         box.innerHTML = '<h3>Postingan berhasil diunggah</h3><p><strong>' + judul + '</strong> sudah masuk ke repository <code>' + c.owner + '/' + c.repo + '</code>.</p><p><a class="btn btn-primary" href="../artikel?id=' + id + '" target="_blank" rel="noopener noreferrer">Lihat postingan</a></p><p class="meta">GitHub Pages perlu 1–3 menit untuk mempublish ulang. Jika halaman belum berubah, tunggu sebentar lalu muat ulang.</p>';
         el('form-posting').reset();

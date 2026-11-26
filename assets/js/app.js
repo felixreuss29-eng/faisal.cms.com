@@ -120,9 +120,13 @@ function toast(pesan) {
   el._t = setTimeout(() => el.classList.remove('show'), 2800);
 }
 
-/* ---------- Penulis & tombol ikuti ---------- */
+/* ---------- Penulis, tombol ikuti & jumlah pengikut ---------- */
+const KUNCI_IKUTI = 'faisal-ikuti-';
 function bacaIkuti() {
-  try { return JSON.parse(localStorage.getItem('faisal-follow') || '{}'); } catch { return {}; }
+  try { return JSON.parse(localStorage.getItem(KUNCI_IKUTI) || '{}'); } catch { return {}; }
+}
+function tulisIkuti(daftar) {
+  try { localStorage.setItem(KUNCI_IKUTI, JSON.stringify(daftar)); } catch { /* abai */ }
 }
 function peranPenulis(a) {
   const peran = (a && a.author && a.author.role) || 'Penulis Faisal';
@@ -135,28 +139,95 @@ function gambarArtikel(a) {
   const nama = (a && a.image) || 'hero.jpg';
   return nama.startsWith('assets/') ? nama : img(nama);
 }
-function tombolIkuti(nama, kelas = 'btn btn-outline btn-follow') {
+function tombolIkuti(nama, kelas = 'btn btn-outline btn-follow', denganJumlah = false) {
   const id = String(nama || 'Faisal').trim() || 'Faisal';
   const aktif = !!bacaIkuti()[id];
-  return `<button class="${kelas}" type="button" data-follow="${esc(id)}" aria-pressed="${aktif}" aria-label="${aktif ? 'Berhenti mengikuti ' : 'Ikuti '}${esc(id)}">${aktif ? '✓ Mengikuti' : '+ Ikuti'}</button>`;
+  const jumlah = denganJumlah
+    ? `<span class="meta follow-count" data-jumlah-ikuti="${esc(id)}">— pengikut</span>`
+    : '';
+  return `${jumlah}<button class="${kelas}" type="button" data-follow="${esc(id)}" aria-pressed="${aktif}" aria-label="${aktif ? 'Berhenti mengikuti ' : 'Ikuti '}${esc(id)}">${aktif ? '✓ Mengikuti' : '+ Ikuti'}</button>`;
+}
+function sinkronTombolIkuti(nama, aktif) {
+  document.querySelectorAll('[data-follow]').forEach((b) => {
+    if (b.dataset.follow !== nama) return;
+    b.setAttribute('aria-pressed', String(aktif));
+    b.setAttribute('aria-label', (aktif ? 'Berhenti mengikuti ' : 'Ikuti ') + nama);
+    b.textContent = aktif ? '✓ Mengikuti' : '+ Ikuti';
+  });
+}
+function perbaruiJumlahIkuti(nama, jumlah) {
+  const angka = jumlah === null || jumlah === undefined ? NaN : Number(jumlah);
+  const teks = Number.isFinite(angka) && angka >= 0 ? `${angka} pengikut` : '— pengikut';
+  document.querySelectorAll('[data-jumlah-ikuti]').forEach((el) => {
+    if (el.dataset.jumlahIkuti === nama) el.textContent = teks;
+  });
+}
+async function sinkronIkuti() {
+  if (!FD || typeof FD.statusIkuti !== 'function') return;
+  const daftarNama = [...new Set([...document.querySelectorAll('[data-follow]')]
+    .map((b) => b.dataset.follow).filter(Boolean))];
+  for (const nama of daftarNama) {
+    try {
+      const aktif = await FD.statusIkuti(nama);
+      const lokal = bacaIkuti();
+      if (Boolean(lokal[nama]) !== aktif) {
+        if (aktif) lokal[nama] = 1; else delete lokal[nama];
+        tulisIkuti(lokal);
+      }
+      sinkronTombolIkuti(nama, aktif);
+      perbaruiJumlahIkuti(nama, await FD.jumlahPengikut(nama));
+    } catch (e) {
+      perbaruiJumlahIkuti(nama, null);
+    }
+  }
 }
 function initFollow() {
-  document.addEventListener('click', (e) => {
+  document.addEventListener('click', async (e) => {
     const tombol = e.target.closest('[data-follow]');
     if (!tombol) return;
     const nama = tombol.dataset.follow;
     const daftar = bacaIkuti();
     const aktif = !daftar[nama];
-    if (aktif) daftar[nama] = 1;
-    else delete daftar[nama];
-    localStorage.setItem('faisal-follow', JSON.stringify(daftar));
-    document.querySelectorAll('[data-follow]').forEach((b) => {
-      if (b.dataset.follow !== nama) return;
-      b.setAttribute('aria-pressed', String(aktif));
-      b.setAttribute('aria-label', (aktif ? 'Berhenti mengikuti ' : 'Ikuti ') + nama);
-      b.textContent = aktif ? '✓ Mengikuti' : '+ Ikuti';
-    });
+    if (aktif) daftar[nama] = 1; else delete daftar[nama];
+    tulisIkuti(daftar);
+    sinkronTombolIkuti(nama, aktif);
     toast(aktif ? `Anda mengikuti ${nama}.` : `Anda berhenti mengikuti ${nama}.`);
+    if (!FD || typeof FD.simpanIkuti !== 'function') return;
+    try {
+      const jumlah = await FD.simpanIkuti(nama, aktif);
+      perbaruiJumlahIkuti(nama, jumlah);
+    } catch (err) {
+      toast('Ikutan tersimpan di perangkat ini saja: ' + err.message);
+    }
+  });
+  sinkronIkuti();
+}
+
+async function initNotifikasi() {
+  const tombol = document.querySelector('[data-notif-toggle]');
+  if (!tombol || !FD || typeof FD.statusNotifikasi !== 'function') return;
+  const statusAwal = await FD.statusNotifikasi();
+  tombol.dataset.notifStatus = statusAwal;
+  tombol.textContent = statusAwal === 'aktif' ? 'Matikan notifikasi berita' : 'Aktifkan notifikasi berita';
+  tombol.addEventListener('click', async () => {
+    tombol.disabled = true;
+    try {
+      if (tombol.dataset.notifStatus === 'aktif') {
+        await FD.matikanNotifikasi();
+        tombol.dataset.notifStatus = 'belum';
+        tombol.textContent = 'Aktifkan notifikasi berita';
+        toast('Notifikasi berita dimatikan.');
+      } else {
+        await FD.aktifkanNotifikasi();
+        tombol.dataset.notifStatus = 'aktif';
+        tombol.textContent = 'Matikan notifikasi berita';
+        toast('Notifikasi berita aktif.');
+      }
+    } catch (e) {
+      toast('Gagal mengatur notifikasi: ' + e.message);
+    } finally {
+      tombol.disabled = false;
+    }
   });
 }
 
@@ -256,6 +327,7 @@ function renderFooter() {
             <p style="font-size:11px;margin:12px 0 0">Berita independen dan tepercaya untuk Indonesia.</p>
             <p style="font-size:11px;margin:10px 0 0">Pemilik &amp; Pemimpin Redaksi: Faisal Akbar<br />Email: <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a><br />QRIS: tersedia di halaman dukungan</p>
             <a class="footer-translate" href="https://translate.google.com/translate?sl=id&amp;tl=en&amp;u=${encodeURIComponent(location.href)}">Terjemahkan halaman (semua bahasa)</a>
+            <button class="footer-notif" type="button" data-notif-toggle>Aktifkan notifikasi berita</button>
           </div>
           ${cols.map(([t, links]) => `<div><h3>${t}</h3><ul>${links.map((l) => `<li><a href="${hrefFooter(l)}" ${eksternal(l) ? 'target="_blank" rel="noopener noreferrer"' : ''}>${l}</a></li>`).join('')}</ul></div>`).join('')}
         </div>
@@ -557,7 +629,7 @@ function renderArticle() {
           <div class="byline">
             <img src="${img(a.author.photo)}" alt="Foto ${esc(penulis)}" />
             <div class="byline-penulis"><strong>${esc(penulis)}</strong><span class="meta">${esc(peran)}</span></div>
-            ${tombolIkuti(penulis)}
+            ${tombolIkuti(penulis, 'btn btn-outline btn-follow', true)}
             <div class="byline-waktu meta"><span data-relative="${a.published}">${waktuRelatif(a.published)}</span> · <span data-view="${esc(a.id)}">Dilihat …</span> · <b data-reading="${a.id}">${readingMinutes(a.body)} menit baca</b></div>
             <div class="share"><span>Bagikan</span><a href="#" data-bagikan="email" aria-label="Email — bagikan lewat email">Email</a><a href="#" data-bagikan="link" aria-label="Link — salin tautan artikel">Link</a></div>
           </div>
@@ -567,7 +639,7 @@ function renderArticle() {
         <div class="article-body" style="margin-top:28px">${isi}</div>
         <div class="tags"><span class="tag">#Pilkada2027</span><span class="tag">#KPU</span><span class="tag">#Pemilih</span><span class="tag">#Demokrasi</span></div>
         <div class="correction"><strong>Catatan redaksi</strong><br />Jadwal dan tahapan mengikuti kalender resmi penyelenggara pemilu, diperbarui pada <span data-clock></span>.</div>
-        <div class="author-bio"><img src="${img(a.author.photo)}" alt="Foto ${esc(penulis)}" /><div><h3>${esc(penulis)}</h3><div class="meta">${esc(peran)} · Faisal</div><p class="meta">${esc(bioTeks)}</p></div>${tombolIkuti(penulis)}</div>
+        <div class="author-bio"><img src="${img(a.author.photo)}" alt="Foto ${esc(penulis)}" /><div><h3>${esc(penulis)}</h3><div class="meta">${esc(peran)} · Faisal</div><p class="meta">${esc(bioTeks)}</p></div>${tombolIkuti(penulis, 'btn btn-outline btn-follow', true)}</div>
         <section class="comments"><h3 class="komentar-judul">Komentar</h3>
           <p class="meta" data-komentar-status>Komentar tampil untuk semua pembaca dan dapat dimoderasi pemilik.</p>
           <div class="comment-form">
@@ -727,10 +799,26 @@ function initOverlays() {
   if (!localStorage.getItem('faisal-push') && Math.random() > 0.5) {
     const el = document.createElement('aside');
     el.className = 'push-prompt';
-    el.innerHTML = `<h4>Izin notifikasi</h4><p>Terima berita penting langsung di perangkat Anda.</p><div class="overlay-actions"><button class="btn btn-primary" data-push="izin">Izinkan</button><button class="btn btn-outline" data-push="nanti">Nanti saja</button></div>`;
+    el.innerHTML = `<h4>Izin notifikasi</h4><p>Terima berita baru langsung di perangkat Anda, walau web sedang tertutup.</p><div class="overlay-actions"><button class="btn btn-primary" data-push="izin">Izinkan</button><button class="btn btn-outline" data-push="nanti">Nanti saja</button></div>`;
     document.body.appendChild(el);
-    el.querySelectorAll('[data-push]').forEach((b) => b.addEventListener('click', () => {
-      localStorage.setItem('faisal-push', b.dataset.push);
+    el.querySelectorAll('[data-push]').forEach((b) => b.addEventListener('click', async () => {
+      if (b.dataset.push === 'nanti') {
+        localStorage.setItem('faisal-push', 'nanti');
+        el.remove();
+        return;
+      }
+      b.disabled = true;
+      b.textContent = 'Mengaktifkan…';
+      try {
+        if (FD && typeof FD.aktifkanNotifikasi === 'function') await FD.aktifkanNotifikasi();
+        localStorage.setItem('faisal-push', 'aktif');
+        toast('Notifikasi berita aktif.');
+        const tombol = document.querySelector('[data-notif-toggle]');
+        if (tombol) { tombol.dataset.notifStatus = 'aktif'; tombol.textContent = 'Matikan notifikasi berita'; }
+      } catch (err) {
+        localStorage.setItem('faisal-push', 'gagal');
+        toast('Gagal mengaktifkan notifikasi: ' + err.message);
+      }
       el.remove();
     }));
   }
@@ -965,6 +1053,11 @@ async function initModerasi() {
   });
   await perbaruiStatus();
   muatDaftar();
+  const pengikut = document.querySelector('[data-stat="pengikut"]');
+  if (pengikut && FD && typeof FD.jumlahPengikut === 'function') {
+    try { pengikut.textContent = String(await FD.jumlahPengikut('Faisal Akbar')); }
+    catch (e) { pengikut.textContent = '—'; }
+  }
 }
 
 /* ---------- Inisialisasi ---------- */
@@ -981,6 +1074,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.body.dataset.page) initOverlays();
   initForms();
   initFollow();
+  initNotifikasi();
   initAuth();
   initEditor();
   initAdminProfile();
@@ -999,6 +1093,7 @@ document.addEventListener('DOMContentLoaded', () => {
       renderBeritaHarian();
       renderBeritaPage();
       perbaruiAngka();
+      sinkronIkuti();
     });
   }
   startClock();

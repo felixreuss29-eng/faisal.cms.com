@@ -124,6 +124,18 @@ Komentar dan angka kunjungan baru sama di semua perangkat setelah Supabase dihub
 
 Sebelum langkah 4 selesai, halaman publik tetap berfungsi dengan catatan "Supabase belum terhubung": komentar dan kunjungan tersimpan lokal di browser masing-masing. **Halaman admin tidak bisa dimasuki siapa pun** sampai konfigurasi dan user pemilik tersedia.
 
+### Pengikut & notifikasi berita baru
+
+Jalankan ulang seluruh `supabase-setup.sql` setelah perubahan ini agar tabel `faisal_pengikut` dan `faisal_push_langganan` beserta fungsi RPC-nya tersedia. Kode publik sudah memakai RPC; tidak ada data identitas pengikut yang dibuka lewat `SELECT`.
+
+Untuk mengaktifkan notifikasi ke perangkat pembaca:
+
+1. Pasang Supabase CLI dan login (`supabase login`), lalu hubungkan project (`supabase link --project-ref ywvdmicxhnbgzomvgman`).
+2. Kunci VAPID publik sudah ada di `assets/js/config.js`. Kunci privat ada di `supabase/functions/kirim-notifikasi/.env` (file ini **diabaikan git**). Jangan pernah memasukkan kunci privat ke repository.
+3. Set rahasia server: `supabase secrets set --env-file supabase/functions/kirim-notifikasi/.env`, lalu tambahkan `SUPABASE_ANON_KEY` dan `SUPABASE_SERVICE_ROLE_KEY` dari dashboard. `service_role` hanya dipakai Edge Function, tidak pernah dikirim ke browser.
+4. Deploy: `supabase functions deploy kirim-notifikasi`.
+5. Setiap kali pemilik menekan **Unggah & terbitkan** di CMS, Edge Function dipanggil dengan token sesi pemilik dan mengirim notifikasi ke semua langganan. Pembaca mengaktifkan notifikasi lewat pop-up atau tombol **Aktifkan notifikasi berita** di footer; iPhone perlu menambahkan web ke Home Screen dulu (Safari iOS 16.4+).
+
 ## Hal yang sudah berfungsi
 
 - Waktu nyata: tanggal, jam WIB (`Asia/Jakarta`) dan waktu relatif dihitung ulang tiap 30 detik dari `Date` dan `Intl.DateTimeFormat('id-ID')`.
@@ -135,7 +147,9 @@ Sebelum langkah 4 selesai, halaman publik tetap berfungsi dengan catatan "Supaba
 - Status admin tidak hanya warna: setiap badge punya teks (Draf, Review, Revisi/Ditolak, Disetujui, Terbit) dan ikon titik. Sidebar CMS bisa diciutkan; filter status di daftar artikel berfungsi.
 - Halaman `statis.html` berisi Pedoman Media Siber, identitas redaksi, hak jawab, kebijakan privasi, karir, iklan, cookie, dan peta situs.
 - Komentar artikel tampil untuk semua pengunjung lewat Supabase (`faisal_komentar`), lengkap dengan nama, waktu WIB, dan tombol hapus untuk pemilik yang sudah masuk dengan akun Supabase. Jika Supabase belum terhubung, komentar jatuh ke penyimpanan lokal (`faisal-komentar-<id>`) dan diberi catatan demikian; tombol bagikan email/salin tautan tetap berfungsi nyata.
-- Statistik kunjungan: satu pengunjung dihitung sekali per hari per halaman (`faisal_statistik`, pengenal acak di browser). Dasbor menampilkan pengunjung hari ini, total pengunjung unik, jumlah tampilan artikel, kunjungan terbaru, dan panel moderasi; kartu berita serta halaman artikel menampilkan "Dilihat N kali".
+- Statistik kunjungan: satu pengunjung dihitung sekali per hari per halaman (`faisal_statistik`, pengenal acak di browser). Dasbor menampilkan pengunjung hari ini, total pengunjung unik, jumlah tampilan artikel, kunjungan terbaru, jumlah pengikut, dan panel moderasi; kartu berita serta halaman artikel menampilkan "Dilihat N kali".
+- Pengikut penulis: tombol "Ikuti" tersinkron lewat Supabase (`faisal_pengikut`); jumlah pengikut tampil di artikel dan dasbor, tanpa daftar identitas pembaca.
+- Notifikasi berita: Web Push lewat `sw.js` + Edge Function `kirim-notifikasi`, dikirim otomatis setelah berita diterbitkan dari CMS. Bisa dimatikan dari footer.
 - Gambar lokal bertema berita, tidak lagi placeholder gunung. Semua kartu memakai foto lokal milik website; tidak ada placeholder khusus berita pihak ketiga.
 - Seluruh berita: tulisan redaksi di `assets/js/data.js` dan unggahan CMS di `assets/js/posts.json` → beranda/`berita.html`/kategori/pencarian/News Ticker. Tidak ada `news.json` dan tidak ada konten RSS pihak ketiga.
 - Unggah postingan dari CMS: form admin → GitHub Contents API → `posts.json` + foto → tampil di beranda, `berita.html`, pencarian, dan halaman artikel.

@@ -180,6 +180,10 @@ main { padding-bottom: 64px; }
 .btn-follow:hover { border-color: var(--accent); }
 .btn-follow[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-strong); }
 .follow-kicker { padding: 0 10px; }
+.follow-count { font-size: 11px; color: var(--muted); white-space: nowrap; }
+.footer-notif { display: block; min-height: 44px; padding: 8px 0 0; border: 0; background: transparent; color: var(--accent); font-size: 11px; text-align: left; cursor: pointer; }
+.footer-notif:hover { text-decoration: underline; }
+.footer-notif:disabled { opacity: .6; cursor: default; }
 .hero-meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .follow-overlay { min-height: 44px; padding: 0 12px; background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.55); color: #fff; }
 .follow-overlay[aria-pressed="true"] { background: rgba(255,255,255,.9); border-color: #fff; color: #0b1220; }
@@ -427,7 +431,7 @@ body.guard-checking main, body.guard-checking .admin-shell { visibility: hidden;
   .article-lead { font-size: 15px; }
   .byline { align-items: flex-start; gap: 10px; }
   .byline-penulis { min-width: 0; flex: 1 1 auto; }
-  .byline > .btn-follow, .byline-waktu { margin-left: 56px; }
+  .byline > .btn-follow, .byline > .follow-count, .byline-waktu { margin-left: 56px; }
   .byline-waktu { white-space: normal; }
   .share { width: 100%; margin-left: 0; padding-top: 8px; border-top: 1px solid var(--border-soft); flex-wrap: wrap; }
   .author-bio { align-items: flex-start; }
