@@ -63,7 +63,8 @@ const ARTICLES = [
     category: 'Hukum',
     title: 'MK Gelar Sidang Sengketa Hasil Pilkada Kabupaten',
     excerpt: 'Permohonan diperiksa dengan batas waktu 14 hari kerja sesuai aturan terbaru.',
-    image: 'news4.jpg',
+    image: 'gedung-mk.jpg',
+    alt: 'Gedung Mahkamah Konstitusi Republik Indonesia.',
     author: AUTHORS.faisal,
     published: '2026-11-25T04:10:00+07:00',
     body: [
