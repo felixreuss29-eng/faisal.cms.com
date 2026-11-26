@@ -75,9 +75,9 @@ const ARTICLES = [
 ];
 
 const POPULAR = [
+  'Prabowo Ajukan Andi Amran Sulaiman dan Sugiono sebagai Calon Wakil Presiden Pengganti Gibran',
+  'Rupiah Cetak Rekor Terlemah Sepanjang Sejarah, Sempat Tembus Rp18.400 per Dolar AS',
   'KPU Tetapkan Jadwal Pilkada 2027, Ini Rangkaian Tahapannya',
   'Sengketa Pilkada: MK Gelar Sidang Perdana',
-  'Pengamat: Stabilitas Aturan Jadi Kunci Pemilu 2027',
-  'Timnas Indonesia Menang 2-0 atas Jepang',
-  'Inflasi Turun ke 2,8 Persen di November'
+  'Pengamat: Stabilitas Aturan Jadi Kunci Pemilu 2027'
 ];

@@ -614,7 +614,7 @@ function renderHome() {
     </div>`;
 
   document.querySelector('#populer-list').innerHTML = `
-    <div class="populer-grid">${POPULAR.map((t, i) => `<div class="pop-row"><span class="num">${String(i + 1).padStart(2, '0')}</span><img src="${img(['hero.jpg', 'politik1.jpg', 'politik2.jpg', 'olahraga1.jpg', 'ekonomi1.jpg'][i])}" alt="Thumb ${i + 1}" loading="lazy" /><h3>${esc(t)}</h3></div>`).join('')}</div>`;
+    <div class="populer-grid">${POPULAR.map((t, i) => `<div class="pop-row"><span class="num">${String(i + 1).padStart(2, '0')}</span><img src="${img(['andi-amran-sugiono.jpg', 'ekonomi1.jpg', 'politik1.jpg', 'politik2.jpg', 'ekonomi2.jpg'][i])}" alt="${esc(t)}" loading="lazy" /><h3>${esc(t)}</h3></div>`).join('')}</div>`;
 }
 
 /* ---------- Artikel ---------- */
