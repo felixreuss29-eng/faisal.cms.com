@@ -127,9 +127,11 @@
           };
           let respons;
           try {
-            respons = await fetch(alamat, opsiStandar);
-          } catch (e) {
+            // Utamakan token di body: tidak memakai header Authorization,
+            // sehingga tidak bisa ditolak gateway/CORS lintas situs.
             respons = await fetch(alamat, opsiCadangan);
+          } catch (e) {
+            respons = await fetch(alamat, opsiStandar);
           }
           const hasil = await respons.json();
           if (!respons.ok) {

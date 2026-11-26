@@ -231,6 +231,14 @@
               const alamatNotif = cfg.url + '/functions/v1/kirim-notifikasi-';
               let notif;
               try {
+                // Token di body lebih dulu: menghindari masalah header
+                // Authorization lintas situs di sebagian browser.
+                notif = await fetch(alamatNotif, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json', apikey: cfg.anonKey },
+                  body: JSON.stringify(Object.assign({}, isiNotif, { token: token }))
+                });
+              } catch (e) {
                 notif = await fetch(alamatNotif, {
                   method: 'POST',
                   headers: {
@@ -239,12 +247,6 @@
                     Authorization: 'Bearer ' + token
                   },
                   body: JSON.stringify(isiNotif)
-                });
-              } catch (e) {
-                notif = await fetch(alamatNotif, {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json', apikey: cfg.anonKey },
-                  body: JSON.stringify(Object.assign({}, isiNotif, { token: token }))
                 });
               }
               if (!notif.ok) throw new Error('HTTP ' + notif.status);
