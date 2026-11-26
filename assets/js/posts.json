@@ -1,6 +1,49 @@
 {
   "posts": [
     {
+      "id": "post-1795683669556",
+      "title": "Real Madrid Pesta Gol! Hancurkan PSV Eindhoven 5-1 di Liga Champions",
+      "category": "Olahraga",
+      "excerpt": "Real Madrid berhasil meraih kemenangan telak 5-1 atas PSV Eindhoven dalam lanjutan Liga Champions 2026/2027. Kemenangan ini membuat Los Blancos mempertahankan rekor sempurna dengan lima kemenangan dari lima pertandingan.",
+      "image": "upload/post-1795683669556.webp",
+      "alt": "Pemain Real Madrid merayakan kemenangan setelah mengalahkan PSV Eindhoven dengan skor 5-1 dalam pertandingan Liga Champions.",
+      "sumberRujukan": "https://www.uefa.com/uefachampionsleague/ & https://www.bola.com/",
+      "kreditFoto": "Real Madrid",
+      "author": {
+        "name": "Faisal Akbar",
+        "role": "Pemilik & Pemimpin Redaksi",
+        "photo": "pemilik-profil-rapi.jpg"
+      },
+      "published": "2026-11-26T09:01:12.883Z",
+      "updated": "2026-11-26T09:01:12.883Z",
+      "body": [
+        {
+          "type": "p",
+          "text": "Real Madrid kembali menunjukkan kekuatannya di kompetisi Eropa. Klub asal Spanyol tersebut berhasil mengalahkan PSV Eindhoven dengan skor telak 5-1 dalam pertandingan Matchday 5 Liga Champions UEFA musim 2026/2027."
+        },
+        {
+          "type": "p",
+          "text": "Pertandingan yang berlangsung di Santiago Bernabéu pada 24 November 2026 ini sempat memberikan kejutan bagi pendukung tuan rumah. PSV berhasil unggul lebih dahulu melalui gol penalti Ivan Perišić pada menit ke-32."
+        },
+        {
+          "type": "p",
+          "text": "Namun, Real Madrid mampu bangkit pada babak kedua. Federico Valverde mencetak gol penyama kedudukan pada menit ke-50, kemudian Jude Bellingham membawa Madrid berbalik unggul pada menit ke-60."
+        },
+        {
+          "type": "p",
+          "text": "Kylian Mbappé semakin memperbesar keunggulan melalui dua gol pada menit ke-64 dan ke-84. Vinícius Júnior kemudian menutup kemenangan Madrid dengan gol pada menit ke-87."
+        },
+        {
+          "type": "p",
+          "text": "Hasil akhir 5-1 memastikan Real Madrid meraih kemenangan kelima secara beruntun di fase liga Liga Champions musim ini."
+        },
+        {
+          "type": "p",
+          "text": "Kemenangan tersebut menjadi modal penting bagi Real Madrid untuk menghadapi pertandingan berikutnya. Sementara itu, PSV harus mengevaluasi penampilan mereka setelah mengalami kekalahan besar di kandang lawan."
+        }
+      ]
+    },
+    {
       "id": "post-1795677694504",
       "title": "Kemendikdasmen Klaim 55 Ribu Lebih Sekolah Telah Direvitalisasi dalam Dua Tahun",
       "category": "Pendidikan",
