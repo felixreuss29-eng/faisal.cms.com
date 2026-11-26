@@ -137,6 +137,7 @@
           if (!respons.ok) {
             const rincian = [hasil.error || ('HTTP ' + respons.status)];
             if (hasil.tahap) rincian.push('tahap: ' + hasil.tahap);
+            if (hasil.infoKunci) rincian.push(hasil.infoKunci);
             if (hasil.detail) rincian.push(hasil.detail);
             throw new Error(rincian.join(' — '));
           }

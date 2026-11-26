@@ -13,19 +13,33 @@ const cors = {
 const json = (data: unknown, status = 200) =>
   new Response(JSON.stringify(data), { status, headers: { ...cors, 'Content-Type': 'application/json' } });
 
+// Secrets sering tersalin beserta tanda kutip, spasi, newline, padding "=",
+// atau bahkan awalan "VAPID_PRIVATE_KEY=". Normalkan sebelum dipakai web-push.
+function bersihkanKunci(nilai: string | undefined): string {
+  let s = String(nilai || '').trim();
+  s = s.replace(/^VAPID_(PUBLIC|PRIVATE)_KEY\s*=\s*/i, '');
+  s = s.replace(/^["'`]+|["'`]+$/g, '');
+  s = s.replace(/[\s\r\n]+/g, '');
+  s = s.replace(/=+$/g, '');
+  return s;
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
   if (req.method !== 'POST') return json({ error: 'Gunakan POST.' }, 405);
 
   let tahap = 'konfigurasi';
+  let infoKunci = '';
   try {
     const url = Deno.env.get('SUPABASE_URL');
     const anon = Deno.env.get('SUPABASE_ANON_KEY');
     const service = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-    const publik = Deno.env.get('VAPID_PUBLIC_KEY');
-    const privat = Deno.env.get('VAPID_PRIVATE_KEY');
+    const publik = bersihkanKunci(Deno.env.get('VAPID_PUBLIC_KEY'));
+    const privat = bersihkanKunci(Deno.env.get('VAPID_PRIVATE_KEY'));
+    infoKunci = 'publik=' + publik.length + ' privat=' + privat.length +
+      ' privatAkhir=' + privat.slice(-6);
     if (!url || !anon || !service || !publik || !privat) {
-      return json({ error: 'Konfigurasi server belum lengkap.', tahap }, 500);
+      return json({ error: 'Konfigurasi server belum lengkap.', tahap, infoKunci }, 500);
     }
 
     tahap = 'baca isi permintaan';
@@ -84,6 +98,7 @@ Deno.serve(async (req: Request) => {
     return json({
       error: String(e?.message || e),
       tahap,
+      infoKunci,
       detail: String(e?.stack || '').slice(0, 240)
     }, 500);
   }
