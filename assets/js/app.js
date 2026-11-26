@@ -957,29 +957,6 @@ function initOverlays() {
 
 /* ---------- Form umum ---------- */
 function initForms() {
-  document.querySelectorAll('[data-newsletter]').forEach((f) => f.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const input = f.querySelector('input[type="email"]');
-    const setuju = f.querySelector('[data-newsletter-setuju]');
-    if (!input.checkValidity()) return toast('Alamat email tidak valid. Contoh: nama@email.com');
-    if (!setuju) return toast('Persetujuan belum tersedia pada formulir ini.');
-    if (!setuju.checked) {
-      setuju.focus();
-      return toast('Centang persetujuan terlebih dahulu untuk menerima rangkuman.');
-    }
-    const email = input.value.trim();
-    const pesan = `Permintaan rangkuman harian Faisal\nEmail: ${email}\n\nSaya setuju email saya digunakan untuk menerima rangkuman harian sesuai Kebijakan Privasi Faisal.`;
-    const tautan = `mailto:${OWNER_EMAIL}?subject=${encodeURIComponent('Permintaan rangkuman harian Faisal')}&body=${encodeURIComponent(pesan)}`;
-    const a = document.createElement('a');
-    a.href = tautan;
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    toast('Permintaan disiapkan di aplikasi email Anda. Kirim pesannya untuk bergabung.');
-    input.value = '';
-    setuju.checked = false;
-  }));
   document.querySelectorAll('[data-toast]').forEach((el) => el.addEventListener('click', (e) => {
     e.preventDefault();
     toast(el.dataset.toast);
