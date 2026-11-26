@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/style.css?v=27" />
+  <link rel="stylesheet" href="assets/css/style.css?v=28" />
 </head>
 <body data-page="Kebijakan Privasi">
   <div data-site-header></div>
@@ -32,15 +32,15 @@
         <li><strong>Rangkuman harian.</strong> Untuk menerima rangkuman harian, kami hanya meminta alamat email Anda. Persetujuan wajib dicentang sebelum permintaan dikirim.</li>
         <li><strong>Komentar.</strong> Nama pilihan Anda dan teks komentar disimpan agar tampil untuk semua pembaca dan dapat dimoderasi pemilik. Jangan memasukkan data sensitif ke dalam komentar.</li>
         <li><strong>Statistik kunjungan.</strong> Kami mencatat pengenal acak yang dibuat di browser, tanggal (WIB), dan halaman yang dibuka, maksimal sekali per hari per halaman, untuk menghitung pengunjung unik. Pengenal ini bukan nama, email, nomor telepon, atau alamat IP.</li>
-        <li><strong>Konfirmasi donasi.</strong> Nama, email, nominal, catatan, dan bukti transfer yang Anda unggah diproses di perangkat Anda dan dikirim oleh Anda sendiri melalui aplikasi email. Kami tidak menyimpan bukti transfer di server Faisal.</li>
-        <li><strong>Preferensi browser.</strong> Tema, bahasa, jawaban banner cookie/notifikasi, dan status akses donasi disimpan di <code>localStorage</code> pada perangkat Anda.</li>
+        <li><strong>Dukungan sukarela.</strong> Faisal tidak mengumpulkan nama, email, nominal, catatan, atau bukti transfer untuk donasi. QRIS tersedia sebagai sarana dukungan, dan pengiriman email kepada pemilik bersifat opsional.</li>
+        <li><strong>Preferensi browser.</strong> Tema, bahasa, dan jawaban banner cookie/notifikasi disimpan di <code>localStorage</code> pada perangkat Anda. Tidak ada status akses donasi yang disimpan.</li>
         <li><strong>Akun pemilik CMS.</strong> Email dan kata sandi pemilik hanya diverifikasi melalui Supabase Auth. Kata sandi tidak pernah disimpan di repositori website.</li>
       </ul>
     </section>
 
     <section class="panel" id="tujuan" aria-labelledby="judul-tujuan">
       <h2 class="panel-title" id="judul-tujuan">2. Tujuan penggunaan data</h2>
-      <p class="meta">Data digunakan semata-mata untuk: mengirimkan rangkuman harian yang Anda minta; menampilkan dan memoderasi komentar; menghitung statistik pengunjung unik; memverifikasi donasi secara manual; serta menjaga keamanan akun CMS pemilik. Kami tidak menjual, menyewakan, atau membagikan data pribadi Anda kepada pihak lain untuk kepentingan komersial.</p>
+      <p class="meta">Data digunakan semata-mata untuk: mengirimkan rangkuman harian yang Anda minta; menampilkan dan memoderasi komentar; menghitung statistik pengunjung unik; serta menjaga keamanan akun CMS pemilik. Kami tidak menjual, menyewakan, atau membagikan data pribadi Anda kepada pihak lain untuk kepentingan komersial.</p>
     </section>
 
     <section class="panel" id="pihak-ketiga" aria-labelledby="judul-pihak">
@@ -51,7 +51,7 @@
         <li><strong>Supabase</strong> — menyimpan komentar, statistik kunjungan, dan autentikasi pemilik. Kunci yang dipublikasikan di browser hanya publishable/anon key, bukan secret key.</li>
         <li><strong>Google Fonts</strong> — memuat font Inter dan Playfair Display.</li>
         <li><strong>Layanan terjemahan mesin</strong> — Google Translate dan, sebagai cadangan, MyMemory Translation API. Saat Anda memilih bahasa selain Indonesia, teks halaman dikirim ke layanan tersebut untuk diterjemahkan.</li>
-        <li><strong>Aplikasi email Anda sendiri</strong> — permintaan rangkuman dan konfirmasi donasi disiapkan sebagai pesan yang Anda kirim sendiri. Faisal belum menggunakan layanan pengirim email otomatis.</li>
+        <li><strong>Aplikasi email Anda sendiri</strong> — permintaan rangkuman disiapkan sebagai pesan yang Anda kirim sendiri. Faisal belum menggunakan layanan pengirim email otomatis.</li>
       </ul>
       <p class="meta">Layanan di atas memiliki kebijakan privasi tersendiri. Penggunaan fitur tertentu berarti Anda memahami bahwa data yang diperlukan dikirim ke penyedia layanan yang bersangkutan.</p>
     </section>
@@ -73,11 +73,11 @@
 
   <div data-site-footer></div>
   <div class="toast" role="status" aria-live="polite"></div>
-  <script src="assets/js/supabase-config.js?v=27"></script>
-  <script src="assets/js/supabase.js?v=27"></script>
-  <script src="assets/js/data.js?v=27"></script>
-  <script src="assets/js/config.js?v=27"></script>
-  <script src="assets/js/i18n.js?v=27"></script>
-  <script src="assets/js/app.js?v=27"></script>
+  <script src="assets/js/supabase-config.js?v=28"></script>
+  <script src="assets/js/supabase.js?v=28"></script>
+  <script src="assets/js/data.js?v=28"></script>
+  <script src="assets/js/config.js?v=28"></script>
+  <script src="assets/js/i18n.js?v=28"></script>
+  <script src="assets/js/app.js?v=28"></script>
 </body>
 </html>

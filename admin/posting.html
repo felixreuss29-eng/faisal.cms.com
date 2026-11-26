@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/css/style.css?v=27" />
+  <link rel="stylesheet" href="../assets/css/style.css?v=28" />
 </head>
 <body data-admin="1">
   <div class="admin-shell">
@@ -72,15 +72,7 @@
         </div>
 
         <section class="admin-card" style="margin-top:18px">
-          <h2>3. Kode terima kasih untuk pendukung</h2>
-          <p class="meta">Setelah bukti transfer QRIS dicek, kirim kode ini ke pendukung lewat email. Pendukung memasukkannya di halaman artikel untuk membuka paywall. Repository hanya menyimpan sidik jari (hash) kode, bukan kode aslinya.</p>
-          <div class="form-field"><label for="akses-kode">Kode terima kasih baru</label><input id="akses-kode" type="text" autocomplete="off" placeholder="Misalnya: FAISAL-2026" value="FAISAL-2026" /></div>
-          <div class="form-actions"><button class="btn btn-primary" type="button" id="akses-simpan">Simpan kode ke website</button></div>
-          <p class="meta" id="akses-status" role="status" aria-live="polite"></p>
-        </section>
-
-        <section class="admin-card" style="margin-top:18px">
-          <h2>4. Kelola postingan</h2>
+          <h2>3. Kelola postingan</h2>
           <p class="meta">Daftar postingan yang tersimpan di <code>assets/js/posts.json</code>. Penghapusan langsung menulis ke repository dan tidak bisa dibatalkan.</p>
           <div class="form-actions"><button class="btn btn-outline" type="button" id="post-muat">Muat daftar postingan</button></div>
           <div id="daftar-posting" class="meta" style="margin-top:12px" role="status" aria-live="polite"></div>
@@ -89,12 +81,12 @@
     </div>
   </div>
   <div class="toast" role="status" aria-live="polite"></div>
-  <script src="../assets/js/supabase-config.js?v=27"></script>
-  <script src="../assets/js/config.js?v=27"></script>
-  <script src="../assets/js/supabase.js?v=27"></script>
-  <script src="../assets/js/data.js?v=27"></script>
-  <script src="../assets/js/i18n.js?v=27"></script>
-  <script src="../assets/js/app.js?v=27"></script>
+  <script src="../assets/js/supabase-config.js?v=28"></script>
+  <script src="../assets/js/config.js?v=28"></script>
+  <script src="../assets/js/supabase.js?v=28"></script>
+  <script src="../assets/js/data.js?v=28"></script>
+  <script src="../assets/js/i18n.js?v=28"></script>
+  <script src="../assets/js/app.js?v=28"></script>
   <script>
   (function () {
     const KUNCI = 'faisal-github';
@@ -305,23 +297,6 @@
       el('post-preview').hidden = false;
     });
     el('form-posting').addEventListener('submit', terbitkan);
-    el('akses-simpan').addEventListener('click', async () => {
-      const status = el('akses-status');
-      const kode = el('akses-kode').value.trim();
-      if (kode.length < 6) return status.textContent = 'Kode terima kasih minimal 6 karakter.';
-      try {
-        const hash = await hashTeks(kode);
-        const lama = await bacaFile('assets/js/access.json');
-        const isi = await base64DariBytes(new TextEncoder().encode(JSON.stringify({ hash, diubah: new Date().toISOString() }, null, 2)));
-        await tulisFile('assets/js/access.json', isi, 'Perbarui kode terima kasih donasi', lama && lama.sha);
-        localStorage.setItem('faisal-akses-kode', kode);
-        status.textContent = 'Kode tersimpan. Bagikan "' + kode + '" ke pendukung setelah bukti donasi dicek.';
-        toast('Kode terima kasih diperbarui.');
-      } catch (err) {
-        status.textContent = err.message;
-      }
-    });
-    el('akses-kode').value = localStorage.getItem('faisal-akses-kode') || 'FAISAL-2026';
     el('post-muat').addEventListener('click', muatDaftarPostingan);
     isiForm();
   })();

@@ -256,11 +256,6 @@ main { padding-bottom: 64px; }
 .pull-quote { margin: 32px 0; padding: 24px; border-left: 4px solid var(--accent); background: var(--accent-soft); }
 .pull-quote p { font-family: var(--font-display); font-size: 22px; line-height: 1.45; margin: 0 0 10px; color: var(--accent-strong); }
 .pull-quote cite { font-size: 11px; font-style: normal; color: var(--accent); }
-.paywall { border: 1px solid var(--border); border-radius: 6px; padding: 28px; box-shadow: var(--shadow); position: relative; overflow: hidden; }
-.paywall::before { content: ''; position: absolute; inset: 0 0 auto; height: 4px; background: var(--accent); }
-.paywall h3 { font-family: var(--font-display); font-size: 24px; margin: 6px 0 10px; }
-.paywall p { font-size: 13px; color: var(--muted); margin: 0 0 18px; }
-.paywall-actions { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
 .tags { display: flex; gap: 8px; flex-wrap: wrap; margin: 28px 0; }
 .tag { background: var(--surface); border-radius: 15px; padding: 5px 14px; font-size: 10px; color: var(--muted); }
 .correction { background: var(--warning-soft); border: 1px solid var(--warning); border-radius: 4px; padding: 16px; font-size: 11px; color: var(--warning); }
@@ -442,16 +437,9 @@ body.guard-checking main, body.guard-checking .admin-shell { visibility: hidden;
   .cookie-banner, .push-prompt { left: 12px; right: 12px; bottom: 12px; max-width: none; }
 }
 
-/* ---------- Donasi & pembayaran ---------- */
-.plan { transition: border-color .2s, box-shadow .2s; }
-.plan.selected { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
-.plan .harga { font-family: var(--font-display); font-size: 30px; line-height: 1.2; margin: 0 0 10px; }
+/* ---------- Dukungan sukarela & QRIS ---------- */
 .step-list { margin: 0 0 18px; padding-left: 20px; font-size: 12px; color: var(--text-soft); }
 .step-list li { margin-bottom: 8px; }
-.payment-number { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--surface); border: 1px dashed var(--border); border-radius: 8px; padding: 14px; }
-.payment-number span { display: block; font-size: 10px; color: var(--muted); }
-.payment-number strong { font-family: var(--font-display); font-size: 24px; letter-spacing: .02em; }
-.payment-number .btn { margin-left: auto; min-height: 36px; padding: 0 14px; }
 .qris-box { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; background: var(--surface); border: 1px dashed var(--border); border-radius: 8px; padding: 14px; }
 .qris-box img { display: block; width: 220px; max-width: 100%; height: auto; background: #fff; border-radius: 6px; padding: 8px; }
 .qris-box p { flex: 1 1 220px; margin: 0; line-height: 1.6; }
@@ -464,8 +452,6 @@ body.guard-checking main, body.guard-checking .admin-shell { visibility: hidden;
 .submission-result { margin-top: 20px; padding: 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); font-size: 12px; }
 .submission-result h3 { font-family: var(--font-display); font-size: 18px; margin: 0 0 8px; }
 .submission-result a { color: var(--accent); font-weight: 700; }
-.status-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-.status-row input { min-height: 44px; padding: 0 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--text); }
 .history-item { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--border); align-items: start; }
 .history-item:last-child { border-bottom: 0; }
 .history-item strong { font-size: 12px; }
@@ -473,7 +459,6 @@ body.guard-checking main, body.guard-checking .admin-shell { visibility: hidden;
 
 @media (max-width: 760px) {
   .form-grid { grid-template-columns: 1fr; }
-  .payment-number .btn { margin-left: 0; }
   .donasi-page > h1 { font-size: 30px; }
 }
 
@@ -496,13 +481,8 @@ body.guard-checking main, body.guard-checking .admin-shell { visibility: hidden;
 .komentar-aksi { background: none; border: 0; cursor: pointer; padding: 4px 0; min-height: 44px; font: inherit; }
 .post-preview { margin: 10px 0 4px; }
 .post-preview img { display: block; max-width: 320px; width: 100%; height: auto; border: 1px solid var(--border); border-radius: 8px; }
-#post-gambar, #bukti { padding: 10px; font-size: 11px; }
-.bukti-preview { margin-top: 10px; }
-.bukti-preview img { display: block; max-width: 260px; width: 100%; height: auto; border: 1px solid var(--border); border-radius: 8px; }
+#post-gambar { padding: 10px; font-size: 11px; }
 .history-item .kicker { background: none; border: 0; cursor: pointer; min-height: 44px; font: inherit; }
-.akses-form { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0 6px; }
-.akses-form input { flex: 1 1 220px; min-height: 44px; }
-.akses-form .btn { min-height: 44px; }
 
 /* ---------- Kepatuhan hukum: sumber, kredit, dan dokumen ---------- */
 .postingan-info { display: flex; flex-direction: column; gap: 4px; margin: 14px 0 0; padding: 12px 14px; border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 4px; font-size: 11px; color: var(--text-soft); line-height: 1.5; }

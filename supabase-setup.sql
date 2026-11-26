@@ -1,75 +1,10 @@
--- Faisal CMS — skema Supabase: donasi, komentar publik, dan statistik kunjungan
+-- Faisal CMS — skema Supabase: komentar publik dan statistik kunjungan
 -- Jalankan file ini di Supabase Dashboard → SQL Editor → New query → Run
-
--- 1. Tabel pengajuan langganan
-create table if not exists public.subscriptions (
-  id uuid primary key default gen_random_uuid(),
-  email text not null,
-  nama text not null,
-  wa text not null,
-  paket text not null,
-  jumlah integer not null,
-  bukti_path text,
-  status text not null default 'menunggu'
-    check (status in ('menunggu', 'aktif', 'ditolak')),
-  activated_at timestamptz,
-  expires_at timestamptz,
-  created_at timestamptz not null default now()
-);
-
-alter table public.subscriptions enable row level security;
-
--- 2. Pembaca hanya melihat pengajuannya sendiri
-drop policy if exists "pembaca lihat sendiri" on public.subscriptions;
-create policy "pembaca lihat sendiri" on public.subscriptions
-for select to authenticated
-using (email = auth.jwt() ->> 'email');
-
--- 3. Pembaca bisa mengajukan langganan
-drop policy if exists "pembaca ajukan" on public.subscriptions;
-create policy "pembaca ajukan" on public.subscriptions
-for insert to authenticated
-with check (email = auth.jwt() ->> 'email');
-
--- 4. Pemilik bisa melihat dan mengubah semua pengajuan
-drop policy if exists "pemilik kelola" on public.subscriptions;
-create policy "pemilik kelola" on public.subscriptions
-for all to authenticated
-using (auth.jwt() ->> 'email' = 'felixreuss29@gmail.com')
-with check (auth.jwt() ->> 'email' = 'felixreuss29@gmail.com');
-
--- 5. Bucket privat untuk bukti transfer
-insert into storage.buckets (id, name, public)
-values ('bukti', 'bukti', false)
-on conflict (id) do nothing;
-
--- 6. Upload bukti hanya ke folder email sendiri
-drop policy if exists "upload bukti sendiri" on storage.objects;
-create policy "upload bukti sendiri" on storage.objects
-for insert to authenticated
-with check (
-  bucket_id = 'bukti'
-  and (storage.foldername(name))[1] = auth.jwt() ->> 'email'
-);
-
--- 7. Bukti bisa dilihat oleh pemilik atau pemilik file-nya
-drop policy if exists "lihat bukti sendiri" on storage.objects;
-create policy "lihat bukti sendiri" on storage.objects
-for select to authenticated
-using (
-  bucket_id = 'bukti'
-  and (
-    (storage.foldername(name))[1] = auth.jwt() ->> 'email'
-    or auth.jwt() ->> 'email' = 'felixreuss29@gmail.com'
-  )
-);
-
--- 8. Pemilik bisa mengelola semua bukti
-drop policy if exists "pemilik kelola bukti" on storage.objects;
-create policy "pemilik kelola bukti" on storage.objects
-for all to authenticated
-using (bucket_id = 'bukti' and auth.jwt() ->> 'email' = 'felixreuss29@gmail.com')
-with check (bucket_id = 'bukti' and auth.jwt() ->> 'email' = 'felixreuss29@gmail.com');
+--
+-- Catatan: donasi adalah dukungan sukarela tanpa formulir, bukti, status,
+-- maupun riwayat. Skema lama public.subscriptions dan bucket "bukti" sengaja
+-- tidak dibuat lagi. Jika masih ada dari konfigurasi sebelumnya, hapus manual
+-- di Supabase Dashboard setelah memastikan tidak ada data yang dibutuhkan.
 
 -- ============================================================
 -- KOMENTAR PUBLIK
@@ -77,7 +12,7 @@ with check (bucket_id = 'bukti' and auth.jwt() ->> 'email' = 'felixreuss29@gmail
 -- dengan Supabase Auth boleh menghapus komentar yang tidak pantas.
 -- ============================================================
 
--- 9. Tabel komentar
+-- 1. Tabel komentar
 create table if not exists public.faisal_komentar (
   id uuid primary key default gen_random_uuid(),
   artikel_id text not null,
@@ -88,19 +23,19 @@ create table if not exists public.faisal_komentar (
 
 alter table public.faisal_komentar enable row level security;
 
--- 10. Semua orang boleh membaca komentar
+-- 2. Semua orang boleh membaca komentar
 drop policy if exists "komentar dibaca semua" on public.faisal_komentar;
 create policy "komentar dibaca semua" on public.faisal_komentar
 for select to anon, authenticated
 using (true);
 
--- 11. Semua orang boleh mengirim komentar (batasan panjang ada di tabel)
+-- 3. Semua orang boleh mengirim komentar (batasan panjang ada di tabel)
 drop policy if exists "komentar ditulis pembaca" on public.faisal_komentar;
 create policy "komentar ditulis pembaca" on public.faisal_komentar
 for insert to anon, authenticated
 with check (true);
 
--- 12. Hanya pemilik yang boleh menghapus komentar
+-- 4. Hanya pemilik yang boleh menghapus komentar
 drop policy if exists "pemilik hapus komentar" on public.faisal_komentar;
 create policy "pemilik hapus komentar" on public.faisal_komentar
 for delete to authenticated
@@ -112,7 +47,7 @@ using (auth.jwt() ->> 'email' = 'felixreuss29@gmail.com');
 -- pengunjung dibuat acak di browser, bukan nama atau alamat IP.
 -- ============================================================
 
--- 13. Tabel kunjungan unik harian
+-- 5. Tabel kunjungan unik harian
 create table if not exists public.faisal_statistik (
   id uuid primary key default gen_random_uuid(),
   pengunjung text not null,
@@ -125,7 +60,7 @@ create table if not exists public.faisal_statistik (
 
 alter table public.faisal_statistik enable row level security;
 
--- 14. Pengunjung hanya boleh mencatat kunjungannya sendiri
+-- 6. Pengunjung hanya boleh mencatat kunjungannya sendiri
 drop policy if exists "catat kunjungan" on public.faisal_statistik;
 create policy "catat kunjungan" on public.faisal_statistik
 for insert to anon, authenticated
@@ -136,7 +71,7 @@ with check (
 
 -- Tidak ada policy SELECT untuk anon: angka ringkas dibaca lewat fungsi di bawah.
 
--- 15. Ringkasan angka untuk dasbor (tanpa membuka data mentah pengunjung)
+-- 7. Ringkasan angka untuk dasbor (tanpa membuka data mentah pengunjung)
 create or replace function public.faisal_ringkasan_statistik(hari_param date)
 returns jsonb
 language sql

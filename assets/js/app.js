@@ -18,10 +18,6 @@ function rapikanUrl() {
 }
 rapikanUrl();
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-async function hashTeks(teks) {
-  const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(teks));
-  return [...new Uint8Array(hash)].map((b) => b.toString(16).padStart(2, '0')).join('');
-}
 
 /* ---------- Waktu dinamis ---------- */
 function formatTanggal(date = new Date()) {
@@ -206,14 +202,14 @@ function renderHeader(active = 'Beranda') {
             <select id="pilih-bahasa" class="language-select" data-bahasa aria-label="Pilih bahasa" title="Pilih bahasa. Terjemahan otomatis; teks asli tetap bahasa Indonesia."></select>
           </div>
           <button class="icon-btn" type="button" data-theme-toggle aria-label="Aktifkan mode gelap">☾</button>
-          <a class="btn btn-primary" href="donasi">Donasi</a>
+          <a class="btn btn-primary" href="donasi">Dukungan</a>
           <button class="icon-btn menu-toggle" type="button" data-menu-toggle aria-label="Buka menu" aria-expanded="false">☰</button>
         </div>
       </div>
     </div>
     <nav class="mobile-nav hidden" aria-label="Navigasi mobile">
       ${NAV.map((n) => `<a href="${NAV_HREF[n]}">${n}</a>`).join('')}
-      <a href="donasi">Donasi</a>
+      <a href="donasi">Dukungan</a>
     </nav>
     <div class="ticker" aria-label="Berita berjalan">
       <div class="wrap" style="display:flex;align-items:center;gap:14px;width:100%">
@@ -239,12 +235,12 @@ function renderFooter() {
   if (!host) return;
   const cols = [
     ['Perusahaan', ['Tentang Kami', 'Redaksi', 'Karir', 'Iklan']],
-    ['Layanan', ['Berita Terkini', 'Donasi', 'Newsletter', 'Arsip Berita']],
+    ['Layanan', ['Berita Terkini', 'Dukungan', 'Newsletter', 'Arsip Berita']],
     ['Hukum', ['Syarat Penggunaan', 'Kebijakan Privasi', 'Koreksi & Hak Jawab', 'Pedoman Media Siber']],
     ['Ikuti Kami', ['Instagram @faisalakbar0423']]
   ];
   const tautan = {
-    'Tentang Kami': 'tentang', 'Berita Terkini': 'berita', 'Donasi': 'donasi',
+    'Tentang Kami': 'tentang', 'Berita Terkini': 'berita', 'Dukungan': 'donasi',
     'Syarat Penggunaan': 'disclaimer', 'Kebijakan Privasi': 'kebijakan-privasi',
     'Koreksi & Hak Jawab': 'koreksi', 'Pedoman Media Siber': 'statis',
     'Instagram @faisalakbar0423': 'https://www.instagram.com/faisalakbar0423/'
@@ -258,7 +254,7 @@ function renderFooter() {
           <div>
             <span class="brand-name">Faisal</span>
             <p style="font-size:11px;margin:12px 0 0">Berita independen dan tepercaya untuk Indonesia.</p>
-            <p style="font-size:11px;margin:10px 0 0">Pemilik &amp; Pemimpin Redaksi: Faisal Akbar<br />Email: <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a><br />QRIS: tersedia di halaman donasi</p>
+            <p style="font-size:11px;margin:10px 0 0">Pemilik &amp; Pemimpin Redaksi: Faisal Akbar<br />Email: <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a><br />QRIS: tersedia di halaman dukungan</p>
             <a class="footer-translate" href="https://translate.google.com/translate?sl=id&amp;tl=en&amp;u=${encodeURIComponent(location.href)}">Terjemahkan halaman (semua bahasa)</a>
           </div>
           ${cols.map(([t, links]) => `<div><h3>${t}</h3><ul>${links.map((l) => `<li><a href="${hrefFooter(l)}" ${eksternal(l) ? 'target="_blank" rel="noopener noreferrer"' : ''}>${l}</a></li>`).join('')}</ul></div>`).join('')}
@@ -273,26 +269,6 @@ function renderFooter() {
 
 /* ---------- Konten redaksi: data contoh + unggahan CMS ---------- */
 let POSTINGAN = [];
-let AKSES = { hash: '' };
-
-async function muatAkses() {
-  try {
-    const res = await fetch('assets/js/access.json', { cache: 'no-store' });
-    if (res.ok) {
-      const data = await res.json();
-      AKSES.hash = data.hash || '';
-    }
-  } catch (e) {
-    console.warn('Data akses tidak dapat dimuat:', e.message);
-  }
-  terapkanAkses();
-}
-function terapkanAkses() {
-  const aktif = !!AKSES.hash && localStorage.getItem('faisal-akses') === AKSES.hash;
-  document.querySelectorAll('.paywall').forEach((el) => el.classList.toggle('hidden', aktif));
-  const status = document.querySelector('[data-akses-status]');
-  if (status) status.textContent = aktif ? 'Terima kasih. Dukungan Anda aktif pada perangkat ini.' : '';
-}
 
 /* Berita dari RSS pihak ketiga sudah tidak dipakai. Semua kartu dan artikel
    berasal dari data contoh redaksi atau unggahan CMS pemilik. */
@@ -583,20 +559,6 @@ function renderArticle() {
         </header>
         <figure class="article-figure"><img src="${gambarArtikel(a)}" alt="${esc(a.alt || 'Ilustrasi: ' + a.title)}" /><figcaption>${dariAdmin ? 'Foto: ' + esc(kreditFoto(a)) + '.' : 'Ilustrasi artikel. Foto: Dokumentasi Faisal.'}</figcaption></figure>
         <div class="article-body" style="margin-top:28px">${isi}</div>
-        <section class="paywall" style="margin-top:32px">
-          <span class="kicker">Dukungan Pembaca</span><h3>Artikel ini terbuka untuk pembaca yang mendukung Faisal</h3>
-          <p>Setiap dukungan membantu redaksi tetap independen dan konsisten. Sebagai ucapan terima kasih, Anda menerima kode untuk membuka seluruh artikel. Mulai dari Rp 10.000.</p>
-          <div class="paywall-actions"><a class="btn btn-primary" href="donasi">Cara berdonasi</a></div>
-          <p class="meta" style="margin-top:14px">Sudah mengirim donasi dan buktinya? Masukkan kode terima kasih yang dikirim pemilik setelah bukti dicek.</p>
-          <form class="akses-form" data-akses-form>
-            <label class="sr-only" for="kode-akses">Kode terima kasih dari pemilik</label>
-            <input id="kode-akses" type="text" placeholder="Kode terima kasih dari pemilik" autocomplete="off" required />
-            <button class="btn btn-outline" type="submit">Buka akses</button>
-          </form>
-          <span class="error hidden" data-akses-error>Kode tidak valid. Periksa kembali pesan dari pemilik.</span>
-          <p class="meta" data-akses-status aria-live="polite"></p>
-          <p class="meta">Belum berdonasi? <a href="donasi#form-konfirmasi">Kirim bukti donasi di sini.</a> Bantuan: <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a></p>
-        </section>
         <div class="tags"><span class="tag">#Pilkada2027</span><span class="tag">#KPU</span><span class="tag">#Pemilih</span><span class="tag">#Demokrasi</span></div>
         <div class="correction"><strong>Catatan redaksi</strong><br />Jadwal dan tahapan mengikuti kalender resmi penyelenggara pemilu, diperbarui pada <span data-clock></span>.</div>
         <div class="author-bio"><img src="${img(a.author.photo)}" alt="Foto ${esc(penulis)}" /><div><h3>${esc(penulis)}</h3><div class="meta">${esc(peran)} · Faisal</div><p class="meta">${esc(bioTeks)}</p></div>${tombolIkuti(penulis)}</div>
@@ -624,7 +586,6 @@ function renderArticle() {
       </aside>
     </div>`;
   if (dariAdmin) {
-    host.querySelector('.paywall')?.remove();
     host.querySelector('.correction')?.remove();
     const tags = host.querySelector('.tags');
     if (tags) tags.innerHTML = `<span class="tag">#${esc(a.category)}</span><span class="tag">#Faisal</span>`;
@@ -637,23 +598,6 @@ function renderArticle() {
     if (b.dataset.bagikan === 'email') location.href = 'mailto:?subject=' + encodeURIComponent(a.title) + '&body=' + encodeURIComponent(url);
     else navigator.clipboard.writeText(url).then(() => toast('Tautan artikel disalin.')).catch(() => toast(url));
   }));
-  host.querySelector('[data-akses-form]')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const input = host.querySelector('#kode-akses');
-    const kode = input.value.trim();
-    const galat = host.querySelector('[data-akses-error]');
-    if (!kode) return toast('Masukkan kode terima kasih dari pemilik.');
-    if (!AKSES.hash) return toast('Kode terima kasih belum disiapkan pemilik.');
-    const cocok = (await hashTeks(kode)) === AKSES.hash;
-    galat.classList.toggle('hidden', cocok);
-    if (!cocok) return;
-    localStorage.setItem('faisal-akses', AKSES.hash);
-    terapkanAkses();
-    const ditandai = tandaiTerverifikasiDenganKode();
-    toast(ditandai
-      ? 'Akses terbuka. Status pengajuan pada perangkat ini sudah terverifikasi.'
-      : 'Terima kasih. Akses terbuka pada perangkat ini.');
-  });
   const artikelId = params.get('id') || a.id;
   const wadahKomentar = host.querySelector('#daftar-komentar');
   const kosongKomentar = host.querySelector('#komentar-kosong');
@@ -877,255 +821,6 @@ function initEditor() {
   hitung();
 }
 
-/* ---------- Donasi: QRIS + konfirmasi pemilik ---------- */
-const METODE_BAYAR = 'QRIS';
-const HARGA_PAKET = { 'Dukungan Dasar': 10000, 'Dukungan Istimewa': 15000, 'Dukungan Arsip': 10000 };
-const rupiah = (n) => 'Rp ' + new Intl.NumberFormat('id-ID').format(n);
-
-function ambilPengajuan() {
-  try { return JSON.parse(localStorage.getItem('faisal-subscriptions') || '[]'); }
-  catch { return []; }
-}
-function simpanPengajuan(rec) {
-  const semua = ambilPengajuan();
-  semua.unshift(rec);
-  try {
-    localStorage.setItem('faisal-subscriptions', JSON.stringify(semua));
-  } catch {
-    semua[0] = { ...rec, bukti: '' };
-    localStorage.setItem('faisal-subscriptions', JSON.stringify(semua));
-    toast('Bukti terlalu besar untuk disimpan. Kirim bukti langsung ke pemilik.');
-  }
-  return semua;
-}
-/* Kode terima kasih hanya diberikan pemilik setelah bukti dicek, jadi memasukkan
-   kode yang benar menandai pengajuan pada perangkat ini sebagai terverifikasi. */
-function tandaiTerverifikasiDenganKode() {
-  const semua = ambilPengajuan();
-  if (!semua.length) return 0;
-  const waktu = new Date().toISOString();
-  let berubah = 0;
-  semua.forEach((r) => {
-    if (r.status === 'Menunggu verifikasi' || r.status === 'Ditolak') {
-      r.status = 'Terverifikasi';
-      r.verifiedAt = waktu;
-      berubah++;
-    }
-  });
-  if (!berubah) return 0;
-  try {
-    localStorage.setItem('faisal-subscriptions', JSON.stringify(semua));
-  } catch {
-    return 0;
-  }
-  return berubah;
-}
-function labelStatus(r) {
-  if (r.status !== 'Terverifikasi') return r.status;
-  if (!r.verifiedAt) return 'Terverifikasi';
-  const t = new Date(r.verifiedAt);
-  return `Terverifikasi · ${formatTanggal(t)}, ${formatJam(t)} WIB`;
-}
-function kelasStatus(r) {
-  return r.status === 'Terverifikasi' ? 'published' : 'review';
-}
-function kompresGambar(file) {
-  return new Promise((resolve, reject) => {
-    if (!file) return reject(new Error('Bukti donasi wajib diunggah.'));
-    if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return reject(new Error('Bukti harus berupa JPG, PNG, atau WebP.'));
-    if (file.size > 10 * 1024 * 1024) return reject(new Error('Ukuran bukti maksimal 10 MB.'));
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error('Bukti tidak dapat dibaca.'));
-    reader.onload = () => {
-      const gambar = new Image();
-      gambar.onerror = () => reject(new Error('File bukti bukan gambar yang valid.'));
-      gambar.onload = () => {
-        const skala = Math.min(1, 1200 / Math.max(gambar.width, gambar.height));
-        const canvas = document.createElement('canvas');
-        canvas.width = Math.round(gambar.width * skala);
-        canvas.height = Math.round(gambar.height * skala);
-        canvas.getContext('2d').drawImage(gambar, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL('image/jpeg', 0.72));
-      };
-      gambar.src = reader.result;
-    };
-    reader.readAsDataURL(file);
-  });
-}
-function lihatBukti(dataUrl) {
-  const dialog = document.querySelector('#dialog-bukti');
-  if (!dialog || !dataUrl) return toast('Bukti tidak tersedia pada perangkat ini.');
-  document.querySelector('#gambar-bukti').src = dataUrl;
-  dialog.showModal();
-}
-function validasiDonasi(form) {
-  const el = (nama) => form.elements.namedItem(nama);
-  const nama = (el('nama')?.value || '').trim();
-  const email = (el('email')?.value || '').trim();
-  const paket = el('paket')?.value || '';
-  const setuju = form.querySelector('#setuju').checked;
-  const fileBukti = el('bukti')?.files?.[0];
-  const buktiValid = !!fileBukti && /^image\/(jpeg|png|webp)$/.test(fileBukti.type) && fileBukti.size <= 10 * 1024 * 1024;
-  const cek = {
-    nama: nama.length >= 2,
-    email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),
-    paket: Object.hasOwn(HARGA_PAKET, paket),
-    bukti: buktiValid,
-    setuju
-  };
-  form.querySelectorAll('[data-error]').forEach((el) => el.classList.toggle('hidden', cek[el.dataset.error]));
-  const pertama = Object.keys(cek).find((k) => !cek[k]);
-  if (pertama) {
-    form.querySelector(pertama === 'setuju' ? '#setuju' : `[name="${pertama}"]`)?.focus();
-    return null;
-  }
-  return {
-    nama, email,
-    paket,
-    jumlah: HARGA_PAKET[paket],
-    catatan: (el('catatan')?.value || '').trim(),
-    buktiFile: fileBukti,
-    waktu: new Date().toISOString(),
-    status: 'Menunggu verifikasi'
-  };
-}
-function pesanDonasi(d) {
-  return [
-    'Konfirmasi donasi Faisal',
-    `Nama: ${d.nama}`,
-    `Email: ${d.email}`,
-    `Nominal dukungan: ${d.paket}`,
-    `Jumlah: ${rupiah(d.jumlah)}`,
-    `Metode: ${METODE_BAYAR}`,
-    d.catatan ? `Catatan: ${d.catatan}` : null,
-    'Bukti transfer: saya sertakan foto bukti pada pesan ini.',
-    '',
-    'Saya telah mengirim donasi melalui QRIS. Mohon periksa buktinya dan kirim kode terima kasih.'
-  ].filter((baris) => baris !== null).join('\n');
-}
-function tampilkanHasil(selector, d, tautan, kanal) {
-  const box = document.querySelector(selector);
-  if (!box) return;
-  box.classList.remove('hidden');
-  box.innerHTML = `<h3>Pengajuan tersimpan di perangkat ini</h3>
-    <p><strong>${esc(d.nama)}</strong> · ${esc(d.paket)} · ${rupiah(d.jumlah)}</p>
-    <p>Status: <span class="badge ${kelasStatus(d)}">${esc(labelStatus(d))}</span></p>
-    <p>Pesan sudah disiapkan untuk email ke ${OWNER_EMAIL}. Jika aplikasi email tidak terbuka otomatis, gunakan tautan di bawah.</p>
-    <p class="meta">${d.status === 'Terverifikasi'
-      ? 'Kode terima kasih sudah dimasukkan pada perangkat ini. Status terverifikasi berlaku untuk catatan di perangkat ini.'
-      : 'Bukti transfer tersimpan di perangkat ini. Browser tidak bisa melampirkan file otomatis, jadi kirim foto bukti yang sama secara manual lewat email. Setelah bukti dicek, pemilik akan mengirim kode terima kasih untuk membuka seluruh artikel.'}</p>
-    <div class="contact-row"><a class="btn btn-primary" href="${esc(tautan)}">Buka email</a><button class="btn btn-outline" type="button" data-lihat-bukti>Lihat bukti</button></div>`;
-  box.querySelector('[data-lihat-bukti]')?.addEventListener('click', () => lihatBukti(d.bukti));
-}
-function kirimPengajuan(d) {
-  if (localStorage.getItem('faisal-akses')) {
-    d.status = 'Terverifikasi';
-    d.verifiedAt = new Date().toISOString();
-  }
-  simpanPengajuan(d);
-  const pesan = pesanDonasi(d);
-  const tautan = `mailto:${OWNER_EMAIL}?subject=${encodeURIComponent('Konfirmasi donasi Faisal — ' + d.nama)}&body=${encodeURIComponent(pesan)}`;
-  const direct = document.querySelector('#email-direct');
-  if (direct) direct.href = tautan;
-  const a = document.createElement('a');
-  a.href = tautan;
-  a.style.display = 'none';
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  tampilkanHasil('#hasil-pengajuan', d, tautan, 'email');
-  renderRiwayatPengajuan();
-  toast('Pengajuan donasi tersimpan. Pesan dibuka untuk dikirim ke pemilik.');
-}
-function renderRiwayatPengajuan() {
-  const host = document.querySelector('#daftar-pengajuan');
-  if (!host) return;
-  const semua = ambilPengajuan();
-  if (!semua.length) {
-    host.innerHTML = '<p class="meta">Belum ada pengajuan dari perangkat ini. Isi formulir di atas untuk memulai.</p>';
-    return;
-  }
-  host.innerHTML = semua.map((r, i) => `<div class="history-item">
-    <div><strong>${esc(r.nama)}</strong><span class="meta">${esc(r.email)} · ${esc(r.paket)} · ${rupiah(r.jumlah)}</span><span class="meta">Diajukan ${formatTanggal(new Date(r.waktu))}, ${formatJam(new Date(r.waktu))} WIB</span><span class="meta">Bukti: ${r.bukti ? 'sudah diunggah' : 'belum tersedia'}</span></div>
-    <span class="badge ${kelasStatus(r)}">${esc(labelStatus(r))}</span>
-    ${r.bukti ? `<button class="kicker" type="button" data-lihat-bukti-index="${i}">Lihat bukti</button>` : ''}
-  </div>`).join('');
-  host.querySelectorAll('[data-lihat-bukti-index]').forEach((b) => b.addEventListener('click', () => lihatBukti(semua[Number(b.dataset.lihatBuktiIndex)].bukti)));
-}
-function cekStatusDonasi() {
-  const input = document.querySelector('#cek-email');
-  const box = document.querySelector('#hasil-status');
-  if (!input || !box) return;
-  const email = input.value.trim();
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return toast('Masukkan alamat email yang valid.');
-  const cocok = ambilPengajuan().find((r) => r.email.toLowerCase() === email.toLowerCase());
-  box.classList.remove('hidden');
-  if (!cocok) {
-    box.innerHTML = '<h3>Tidak ada pengajuan</h3><p>Email ini belum terdaftar pada perangkat ini. Kirim konfirmasi melalui email pemilik.</p>';
-    return;
-  }
-  box.innerHTML = `<h3>Status pengajuan</h3>
-    <p><strong>${esc(cocok.nama)}</strong> · ${esc(cocok.paket)} · ${rupiah(cocok.jumlah)}</p>
-    <p>Status: <span class="badge ${kelasStatus(cocok)}">${esc(labelStatus(cocok))}</span></p>
-    <p class="meta">Diajukan ${formatTanggal(new Date(cocok.waktu))}, ${formatJam(new Date(cocok.waktu))} WIB. Konfirmasi akhir dikirim ke ${esc(cocok.email)}.</p>
-    <p class="meta">Bukti transfer: ${cocok.bukti ? (cocok.status === 'Terverifikasi' ? 'sudah diunggah dan sudah cocok dengan kode terima kasih yang dimasukkan' : 'sudah diunggah dan perlu dicek pemilik') : 'belum tersedia'}.</p>`;
-}
-function initDonasi() {
-  const form = document.querySelector('#form-konfirmasi');
-  if (!form) return;
-  const select = document.querySelector('#paket-pilihan');
-  const pilih = (paket) => {
-    select.value = paket;
-    document.querySelectorAll('.plan').forEach((p) => p.classList.toggle('selected', p.dataset.paket === paket));
-    document.querySelectorAll('[data-pilih-paket]').forEach((b) => {
-      const aktif = b.dataset.pilihPaket === paket;
-      b.textContent = aktif ? 'Nominal dipilih ✓' : 'Pilih nominal';
-      b.classList.toggle('btn-primary', aktif);
-      b.classList.toggle('btn-outline', !aktif);
-    });
-  };
-  document.querySelectorAll('[data-pilih-paket]').forEach((b) => b.addEventListener('click', () => {
-    pilih(b.dataset.pilihPaket);
-    document.querySelector('#form-konfirmasi').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    toast(`Nominal ${b.dataset.pilihPaket} dipilih. Lengkapi formulir konfirmasi.`);
-  }));
-  select.addEventListener('change', () => pilih(select.value));
-  document.querySelectorAll('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText(b.dataset.copy);
-      toast('Tersalin ke papan klip.');
-    } catch {
-      toast(`Salin manual: ${b.dataset.copy}`);
-    }
-  }));
-  const kirim = async () => {
-    const d = validasiDonasi(form);
-    if (!d) return;
-    try {
-      d.bukti = await kompresGambar(d.buktiFile);
-      delete d.buktiFile;
-      kirimPengajuan(d);
-    } catch (err) {
-      toast(err.message);
-    }
-  };
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    kirim();
-  });
-  document.querySelector('#bukti')?.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    const preview = document.querySelector('#bukti-preview');
-    if (!file) return preview.classList.add('hidden');
-    document.querySelector('#bukti-preview-img').src = URL.createObjectURL(file);
-    preview.classList.remove('hidden');
-  });
-  document.querySelector('#tutup-bukti')?.addEventListener('click', () => document.querySelector('#dialog-bukti').close());
-  document.querySelector('#btn-cek')?.addEventListener('click', cekStatusDonasi);
-  if (localStorage.getItem('faisal-akses')) tandaiTerverifikasiDenganKode();
-  renderRiwayatPengajuan();
-}
-
 /* ---------- Profil pemilik di sidebar admin ---------- */
 function initAdminProfile() {
   if (document.body.dataset.admin !== '1') return;
@@ -1282,7 +977,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initFollow();
   initAuth();
   initEditor();
-  initDonasi();
   initAdminProfile();
   initAdminSidebar();
   initArticleFilters();
@@ -1291,7 +985,6 @@ document.addEventListener('DOMContentLoaded', () => {
   perbaruiAngka();
   catatKunjunganSekali();
   if (document.body.dataset.admin !== '1') {
-    muatAkses();
     // Seluruh konten berasal dari redaksi Faisal. Unggahan CMS dimuat lebih
     // dulu, lalu semua daftar dan News Ticker dirender ulang.
     muatPostingan().then(() => {
