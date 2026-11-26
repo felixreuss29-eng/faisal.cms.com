@@ -142,11 +142,17 @@ function initFollow() {
 }
 
 /* ---------- Header & footer ---------- */
-const NAV = ['Beranda', 'Berita Terkini', 'Politik', 'Nasional', 'Ekonomi', 'Olahraga', 'Hukum', 'Teknologi'];
+const KATEGORI = ['Politik', 'Nasional', 'Ekonomi', 'Olahraga', 'Hukum', 'Teknologi', 'Internasional', 'Pendidikan'];
+function kategoriAktif() {
+  const pilihan = new URLSearchParams(location.search).get('k');
+  return KATEGORI.includes(pilihan) ? pilihan : 'Politik';
+}
+const NAV = ['Beranda', 'Berita Terkini', ...KATEGORI];
 const NAV_HREF = {
   'Beranda': './', 'Berita Terkini': 'berita', 'Politik': 'kategori?k=Politik',
   'Nasional': 'kategori?k=Nasional', 'Ekonomi': 'kategori?k=Ekonomi', 'Olahraga': 'kategori?k=Olahraga',
-  'Hukum': 'kategori?k=Hukum', 'Teknologi': 'kategori?k=Teknologi'
+  'Hukum': 'kategori?k=Hukum', 'Teknologi': 'kategori?k=Teknologi',
+  'Internasional': 'kategori?k=Internasional', 'Pendidikan': 'kategori?k=Pendidikan'
 };
 function renderHeader(active = 'Beranda') {
   const host = document.querySelector('[data-site-header]');
@@ -330,7 +336,17 @@ function kartuTerkiniHTML(a) {
 }
 function gabunganTerkini() {
   const dariPemilik = postinganTerbaru().map((a) => ({ ...a, _sumber: 'pemilik' }));
-  const dariAntara = (BERITA.articles || []).slice(0, 6).map((a) => ({ ...a, _sumber: 'antara' }));
+  const semuaAntara = BERITA.articles || [];
+  // Empat berita terbaru didahulukan, lalu satu per kategori agar filter
+  // Internasional dan Pendidikan juga punya isi saat ada beritanya.
+  const pilih = semuaAntara.slice(0, 4);
+  for (const k of KATEGORI) {
+    if (pilih.length >= 10) break;
+    if (pilih.some((a) => a.category === k)) continue;
+    const tambahan = semuaAntara.find((a) => a.category === k && !pilih.includes(a));
+    if (tambahan) pilih.push(tambahan);
+  }
+  const dariAntara = pilih.map((a) => ({ ...a, _sumber: 'antara' }));
   return [...dariPemilik, ...dariAntara];
 }
 function renderBeritaHarian() {
@@ -377,12 +393,14 @@ function renderBeritaPage() {
 }
 function renderBeritaKategori() {
   const host = document.querySelector('#berita-kategori');
-  if (!host || !BERITA.articles.length) return;
-  const pilihan = BERITA.articles.filter((a) => a.category === 'Politik');
-  const tampil = (pilihan.length ? pilihan : BERITA.articles).slice(0, 3);
-  host.innerHTML = `<div class="section-head"><span class="section-mark"></span><h2 class="section-title">Berita terkini dari ANTARA</h2><a class="section-more" href="berita">Lihat semua →</a></div>
+  if (!host) return;
+  const kategori = kategoriAktif();
+  const tampil = BERITA.articles.filter((a) => a.category === kategori).slice(0, 3);
+  host.innerHTML = `<div class="section-head"><span class="section-mark"></span><h2 class="section-title">Berita ${esc(kategori.toLowerCase())} dari ANTARA</h2><a class="section-more" href="berita">Lihat semua →</a></div>
     <p class="meta" data-news-updated></p>
-    <div class="grid-3">${tampil.map((a) => beritaCardHTML(a, false)).join('')}</div>`;
+    ${tampil.length
+      ? `<div class="grid-3">${tampil.map((a) => beritaCardHTML(a, false)).join('')}</div>`
+      : '<p class="meta">Belum ada berita pada kategori ini hari ini.</p>'}`;
   labelPembaruan();
   updateDynamicTime();
 }
@@ -509,7 +527,7 @@ function renderHome() {
       <div class="home-about-copy">
         <span class="kicker">Kenali Faisal</span>
         <h2 id="judul-tentang-web">Berita yang jelas, sumber yang terang.</h2>
-        <p class="home-about-lead">Faisal adalah portal berita Indonesia yang menyajikan kabar politik, ekonomi, olahraga, dan hukum.</p>
+        <p class="home-about-lead">Faisal adalah portal berita Indonesia yang menyajikan kabar politik, nasional, ekonomi, olahraga, hukum, teknologi, internasional, dan pendidikan.</p>
         <div class="home-about-list">
           <article class="home-about-item">
             <span class="home-about-num" aria-hidden="true">I</span>
@@ -719,9 +737,8 @@ function renderArticle() {
 function renderCategory() {
   const host = document.querySelector('#category-root');
   if (!host) return;
-  const daftarKategori = ['Politik', 'Nasional', 'Ekonomi', 'Olahraga', 'Hukum', 'Teknologi'];
-  const pilihan = new URLSearchParams(location.search).get('k');
-  const kategori = daftarKategori.includes(pilihan) ? pilihan : 'Politik';
+  const daftarKategori = KATEGORI;
+  const kategori = kategoriAktif();
   document.title = kategori + ' — Faisal';
   document.querySelectorAll('.site-nav a, .mobile-nav a').forEach((a) => {
     if (a.textContent.trim() === kategori) a.setAttribute('aria-current', 'page');
@@ -730,20 +747,22 @@ function renderCategory() {
   const lokal = [...ARTICLES, ...POSTINGAN].filter((a) => a.category === kategori);
   const berita = BERITA.articles.filter((a) => a.category === kategori);
   const semua = [...lokal, ...berita];
-  const utama = semua[0] || ARTICLES[0];
-  const gambarUtama = utama.image && utama.image.startsWith('assets/') ? utama.image : img(utama.image || 'hero.jpg');
-  const tautanUtama = utama.link || `artikel?id=${utama.id}`;
+  const utama = semua[0];
   const kartu = [...lokal.map(cardHTML), ...berita.map((a) => beritaCardHTML(a, true))];
   host.innerHTML = `
     <section class="category-band"><div class="wrap"><span class="kicker">Kategori</span><h1>${esc(kategori)}</h1><p>Berita dan analisis ${esc(kategori.toLowerCase())} dari redaksi Faisal.</p></div></section>
     <div class="wrap">
       <div class="filter-bar">${daftarKategori.map((k) => `<a class="chip ${k === kategori ? 'active' : ''}" href="kategori?k=${encodeURIComponent(k)}">${k}</a>`).join('')}</div>
-      <div class="section"><h2 class="sr-only">Sorotan ${esc(kategori)}</h2><div class="split">
-        <article class="lead"><a href="${tautanUtama}"><img src="${gambarUtama}" alt="Berita utama ${esc(kategori)}" /></a><span class="kicker">Utama</span><h3><a href="${tautanUtama}">${esc(utama.title)}</a></h3></article>
-        <div>${rankedHTML(semua.slice(1, 4).map((a) => a.title), kategori)}</div>
-      </div></div>
-      <div class="section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title">Berita ${esc(kategori)}</h2></div><div class="grid-3">${kartu.length ? kartu.join('') : '<p class="meta">Belum ada berita pada kategori ini.</p>'}</div></div>
-      <button class="load-more" type="button">Muat lebih banyak</button>
+      ${utama ? (() => {
+        const gambarUtama = utama.image && utama.image.startsWith('assets/') ? utama.image : img(utama.image || 'hero.jpg');
+        const tautanUtama = utama.link || `artikel?id=${utama.id}`;
+        return `<div class="section"><h2 class="sr-only">Sorotan ${esc(kategori)}</h2><div class="split">
+          <article class="lead"><a href="${tautanUtama}"><img src="${gambarUtama}" alt="Berita utama ${esc(kategori)}" /></a><span class="kicker">Utama</span><h3><a href="${tautanUtama}">${esc(utama.title)}</a></h3></article>
+          <div>${rankedHTML(semua.slice(1, 4).map((a) => a.title), kategori)}</div>
+        </div></div>`;
+      })() : ''}
+      <div class="section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title">Berita ${esc(kategori)}</h2></div><div class="grid-3">${kartu.length ? kartu.join('') : '<p class="meta">Belum ada berita pada kategori ini. Berita harian diperbarui setiap pukul 00:00 WIB.</p>'}</div></div>
+      ${utama ? '<button class="load-more" type="button">Muat lebih banyak</button>' : ''}
     </div>`;
   const tombol = host.querySelector('.load-more');
   if (tombol) tombol.addEventListener('click', () => toast('Menampilkan artikel berikutnya…'));

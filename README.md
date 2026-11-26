@@ -76,8 +76,8 @@ Jika ingin deploy manual tanpa Actions: **Settings → Pages → Deploy from a b
 
 `.github/workflows/update-news.yml` berjalan otomatis pukul **00:00 WIB** (17:00 UTC) dan juga bisa dijalankan manual lewat tab **Actions → Perbarui berita harian → Run workflow**. Alurnya:
 
-1. `scripts/update-news.mjs` mengambil RSS `https://www.antaranews.com/rss/terkini.xml`.
-2. Script menyimpan 12 berita terbaru ke `assets/js/news.json` dan mengunduh fotonya ke `assets/img/berita/`.
+1. `scripts/update-news.mjs` mengambil tiga RSS ANTARA: `terkini.xml` (diklasifikasikan ke delapan kategori), `dunia-internasional.xml` (Internasional), dan `humaniora.xml` (hanya artikel Pendidikan, karena ANTARA tidak punya RSS pendidikan khusus).
+2. Script menyimpan maksimal 24 berita terbaru ke `assets/js/news.json` dan mengunduh fotonya ke `assets/img/berita/`. Kategori yang dikenal: Politik, Nasional, Ekonomi, Olahraga, Hukum, Teknologi, Internasional, dan Pendidikan.
 3. Workflow membuat commit bila ada perubahan; commit itu memicu workflow deploy GitHub Pages.
 4. Halaman `berita.html`, beranda, kategori, dan pencarian membaca `news.json` saat dibuka — tidak perlu build.
 

@@ -11,7 +11,7 @@ Repositori `faisal.cms` dipublikasikan agar website dapat dilihat dan di-deploy 
 
 ## Materi pihak ketiga
 
-- Berita dan foto yang diambil dari RSS **ANTARA News** (`https://www.antaranews.com/rss/terkini.xml`) tetap menjadi hak ANTARA dan/atau fotografernya. Sumber ditampilkan di antarmuka. Penggunaan ulang untuk keperluan komersial memerlukan izin dari ANTARA.
+- Berita dan foto yang diambil dari RSS **ANTARA News** (`https://www.antaranews.com/rss/terkini.xml`, `https://www.antaranews.com/rss/dunia-internasional.xml`, dan `https://www.antaranews.com/rss/humaniora.xml`) tetap menjadi hak ANTARA dan/atau fotografernya. Sumber ditampilkan di antarmuka. Penggunaan ulang untuk keperluan komersial memerlukan izin dari ANTARA.
 - Font **Playfair Display** dan **Inter** yang dimuat dari Google Fonts tunduk pada lisensi masing-masing (*SIL Open Font License 1.1*).
 
 Permintaan izin: `felixreuss29@gmail.com`.
