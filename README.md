@@ -162,7 +162,7 @@ Sebelum langkah 4 selesai, halaman publik tetap berfungsi dengan catatan "Supaba
 
 ## Lisensi
 
-Lihat `HAK-CIPTA.md`. Repo ini memakai **All Rights Reserved** (tanpa file `LICENSE`). Seluruh berita dan foto yang tampil adalah materi redaksi Faisal; tidak ada konten RSS pihak ketiga yang disalin ke website.
+Lihat `HAK-CIPTA.md`. Repo ini memakai **All Rights Reserved** (tanpa file `LICENSE`). Seluruh berita ditulis dan diterbitkan oleh redaksi Faisal; foto dari pihak ketiga tetap dikreditkan sesuai sumbernya. Tidak ada konten RSS pihak ketiga yang disalin ke website.
 
 ## Catatan
 
