@@ -438,7 +438,7 @@ function renderFooter() {
   if (!host) return;
   const cols = [
     ['Perusahaan', ['Tentang Kami', 'Redaksi', 'Karir', 'Iklan']],
-    ['Layanan', ['Berita Terkini', 'Dukungan', 'Newsletter', 'Arsip Berita']],
+    ['Layanan', ['Berita Terkini', 'Dukungan', 'Arsip Berita']],
     ['Hukum', ['Syarat Penggunaan', 'Kebijakan Privasi', 'Koreksi & Hak Jawab', 'Pedoman Media Siber']],
     ['Ikuti Kami', ['Instagram @faisalakbar0423']]
   ];
@@ -793,7 +793,6 @@ function renderArticle() {
         </div>
         ${iklanHTML('ad-sidebar')}
         <div class="sidebar-section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title" style="font-size:20px">Terpopuler</h2></div>${rankedHTML(POPULAR)}</div>
-        <div class="panel" style="background:var(--accent-soft);border-color:var(--accent-line)"><h2 class="panel-title" style="font-size:18px">Rangkuman harian redaksi</h2><p class="meta">Berita penting pilihan redaksi, setiap pagi di email Anda.</p><form data-newsletter><input type="email" placeholder="Alamat email" autocomplete="email" required aria-label="Alamat email" /><label class="check-row"><input type="checkbox" data-newsletter-setuju required /><span>Saya setuju email saya digunakan untuk rangkuman harian sesuai <a href="kebijakan-privasi">Kebijakan Privasi</a></span></label><button class="btn btn-primary" type="submit">Daftar</button></form></div>
       </aside>
     </div>`;
   if (dariAdmin) {
