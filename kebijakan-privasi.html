@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/style.css?v=47" />
+  <link rel="stylesheet" href="assets/css/style.css?v=48" />
 </head>
 <body data-page="Kebijakan Privasi">
   <div data-site-header></div>
@@ -34,7 +34,7 @@
     <section class="panel" id="data" aria-labelledby="judul-data">
       <h2 class="panel-title" id="judul-data">1. Data yang kami minta dan proses</h2>
       <ul class="step-list">
-        <li><strong>Rangkuman harian.</strong> Untuk menerima rangkuman harian, kami hanya meminta alamat email Anda. Persetujuan wajib dicentang sebelum permintaan dikirim.</li>
+        <li><strong>Akun pembaca.</strong> Jika Anda mendaftar, alamat email dan kata sandi diverifikasi oleh Supabase Auth. Kata sandi tidak pernah disimpan di website. Email dipakai untuk mengenali akun Anda dan mengaktifkan notifikasi berita. Akun dapat ditinggalkan kapan saja dengan menekan tombol keluar, dan penghapusan dapat diminta lewat email di bawah.</li>
         <li><strong>Komentar.</strong> Nama pilihan Anda dan teks komentar disimpan agar tampil untuk semua pembaca dan dapat dimoderasi pemilik. Jangan memasukkan data sensitif ke dalam komentar.</li>
         <li><strong>Statistik kunjungan.</strong> Kami mencatat pengenal acak yang dibuat di browser, tanggal (WIB), dan halaman yang dibuka, maksimal sekali per hari per halaman, untuk menghitung pengunjung unik. Pengenal ini bukan nama, email, nomor telepon, atau alamat IP.</li>
         <li><strong>Pengikut penulis.</strong> Tombol “Ikuti” menyimpan pengenal acak browser dan nama penulis yang diikuti. Jumlah pengikut ditampilkan sebagai angka; daftar identitas pembaca tidak dibuka ke publik. Ikutan dapat dibatalkan dengan menekan tombol itu lagi.</li>
@@ -47,7 +47,7 @@
 
     <section class="panel" id="tujuan" aria-labelledby="judul-tujuan">
       <h2 class="panel-title" id="judul-tujuan">2. Tujuan penggunaan data</h2>
-      <p class="meta">Data digunakan semata-mata untuk: mengirimkan rangkuman harian yang Anda minta; menampilkan dan memoderasi komentar; menghitung statistik pengunjung unik; menampilkan jumlah pengikut penulis; mengirim notifikasi berita yang Anda izinkan; serta menjaga keamanan akun CMS pemilik. Kami tidak menjual, menyewakan, atau membagikan data pribadi Anda kepada pihak lain untuk kepentingan komersial.</p>
+      <p class="meta">Data digunakan semata-mata untuk: mengelola akun pembaca; menampilkan dan memoderasi komentar; menghitung statistik pengunjung unik; menampilkan jumlah pengikut penulis; mengirim notifikasi berita yang Anda izinkan; serta menjaga keamanan akun CMS pemilik. Kami tidak menjual, menyewakan, atau membagikan data pribadi Anda kepada pihak lain untuk kepentingan komersial.</p>
     </section>
 
     <section class="panel" id="pihak-ketiga" aria-labelledby="judul-pihak">
@@ -55,17 +55,16 @@
       <p class="meta">Karena Faisal adalah situs statis di GitHub Pages, beberapa fungsi memakai layanan pihak ketiga berikut:</p>
       <ul class="step-list">
         <li><strong>GitHub Pages</strong> — menyajikan halaman website.</li>
-        <li><strong>Supabase</strong> — menyimpan komentar, statistik kunjungan, pengikut penulis, langganan notifikasi, dan autentikasi pemilik. Kunci yang dipublikasikan di browser hanya publishable/anon key, bukan secret key.</li>
+        <li><strong>Supabase</strong> — menyimpan komentar, statistik kunjungan, pengikut penulis, langganan notifikasi, akun pembaca, dan autentikasi pemilik. Kunci yang dipublikasikan di browser hanya publishable/anon key, bukan secret key.</li>
         <li><strong>Google Fonts</strong> — memuat font Inter dan Playfair Display.</li>
         <li><strong>Layanan terjemahan mesin</strong> — Google Translate dan, sebagai cadangan, MyMemory Translation API. Saat Anda memilih bahasa selain Indonesia, teks halaman dikirim ke layanan tersebut untuk diterjemahkan.</li>
-        <li><strong>Aplikasi email Anda sendiri</strong> — permintaan rangkuman disiapkan sebagai pesan yang Anda kirim sendiri. Faisal belum menggunakan layanan pengirim email otomatis.</li>
       </ul>
       <p class="meta">Layanan di atas memiliki kebijakan privasi tersendiri. Penggunaan fitur tertentu berarti Anda memahami bahwa data yang diperlukan dikirim ke penyedia layanan yang bersangkutan.</p>
     </section>
 
     <section class="panel" id="hak-anda" aria-labelledby="judul-hak">
       <h2 class="panel-title" id="judul-hak">4. Hak Anda</h2>
-      <p class="meta">Anda dapat meminta penghapusan data yang kami proses, termasuk permintaan berhenti menerima rangkuman harian, dengan mengirim email ke alamat di bawah. Anda juga dapat membatalkan ikutan dengan menekan kembali tombol “Mengikuti”, mematikan notifikasi lewat tombol di footer, serta menghapus preferensi dan riwayat lokal kapan saja melalui pengaturan browser pada perangkat Anda.</p>
+      <p class="meta">Anda dapat meminta penghapusan data yang kami proses, termasuk penghapusan akun pembaca, dengan mengirim email ke alamat di bawah. Anda juga dapat keluar dari akun lewat halaman Akun Pembaca, membatalkan ikutan dengan menekan kembali tombol “Mengikuti”, mematikan notifikasi lewat tombol di footer, serta menghapus preferensi dan riwayat lokal kapan saja melalui pengaturan browser pada perangkat Anda.</p>
       <p class="meta">Kami akan menindaklanjuti permintaan dalam waktu wajar setelah identitas pemohon dan data yang dimaksud dapat diverifikasi.</p>
     </section>
 
@@ -80,11 +79,11 @@
 
   <div data-site-footer></div>
   <div class="toast" role="status" aria-live="polite"></div>
-  <script src="assets/js/supabase-config.js?v=47"></script>
-  <script src="assets/js/supabase.js?v=47"></script>
-  <script src="assets/js/data.js?v=47"></script>
-  <script src="assets/js/config.js?v=47"></script>
-  <script src="assets/js/i18n.js?v=47"></script>
-  <script src="assets/js/app.js?v=47"></script>
+  <script src="assets/js/supabase-config.js?v=48"></script>
+  <script src="assets/js/supabase.js?v=48"></script>
+  <script src="assets/js/data.js?v=48"></script>
+  <script src="assets/js/config.js?v=48"></script>
+  <script src="assets/js/i18n.js?v=48"></script>
+  <script src="assets/js/app.js?v=48"></script>
 </body>
 </html>

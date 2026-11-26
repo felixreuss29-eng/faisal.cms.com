@@ -215,6 +215,37 @@ function terapkanStatusNotifikasi(aktif, keterangan = '') {
     if (label) label.textContent = teks;
   });
 }
+
+async function perbaruiTampilanAkun() {
+  const link = document.querySelector('[data-akun-link]');
+  if (!link || !FD || typeof FD.emailPembaca !== 'function') return;
+  const label = link.querySelector('[data-akun-teks]');
+  const avatar = link.querySelector('.akun-avatar');
+  const email = FD.emailPembaca();
+  if (email) {
+    if (label) label.textContent = 'Akun';
+    if (avatar) avatar.textContent = email.charAt(0).toUpperCase();
+    link.setAttribute('aria-label', 'Akun pembaca: ' + email);
+    link.title = 'Akun pembaca: ' + email;
+    link.classList.add('masuk');
+  } else {
+    if (label) label.textContent = 'Masuk';
+    if (avatar) avatar.textContent = '@';
+    link.setAttribute('aria-label', 'Masuk atau daftar akun pembaca');
+    link.title = 'Masuk atau daftar akun pembaca';
+    link.classList.remove('masuk');
+  }
+  if (typeof FD.sesiPembaca === 'function' && email) {
+    const sah = await FD.sesiPembaca();
+    if (!sah && label && avatar) {
+      label.textContent = 'Masuk';
+      avatar.textContent = '@';
+      link.setAttribute('aria-label', 'Masuk atau daftar akun pembaca');
+      link.title = 'Masuk atau daftar akun pembaca';
+      link.classList.remove('masuk');
+    }
+  }
+}
 async function initNotifikasi() {
   const tombol = document.querySelector('[data-notif-toggle]');
   if (!tombol || !FD || typeof FD.statusNotifikasi !== 'function') return;
@@ -393,6 +424,9 @@ function renderHeader(active = 'Beranda') {
               <label class="sr-only" for="pilih-bahasa">Pilih bahasa</label>
               <select id="pilih-bahasa" class="language-select" data-bahasa aria-label="Pilih bahasa" title="Pilih bahasa. Terjemahan otomatis; teks asli tetap bahasa Indonesia."></select>
             </div>
+            <a class="akun-btn" href="akun" data-akun-link aria-label="Masuk atau daftar akun pembaca" title="Masuk atau daftar akun pembaca">
+              <span class="akun-avatar" aria-hidden="true">@</span><span class="akun-teks" data-akun-teks>Masuk</span>
+            </a>
             <div class="notif-wrap">
               <button class="icon-btn notif-btn" type="button" data-notif-toggle aria-pressed="false" aria-label="Aktifkan notifikasi berita" title="Aktifkan notifikasi berita">
                 <span class="notif-lonceng" aria-hidden="true">
@@ -414,6 +448,7 @@ function renderHeader(active = 'Beranda') {
     </div>
     <nav class="mobile-nav hidden" aria-label="Navigasi mobile">
       ${NAV.map((n) => `<a href="${NAV_HREF[n]}">${n}</a>`).join('')}
+      <a href="akun">Akun pembaca</a>
       <a href="donasi">Dukungan</a>
     </nav>
     <div class="ticker" aria-label="Berita berjalan">
@@ -490,12 +525,12 @@ function renderFooter() {
   if (!host) return;
   const cols = [
     ['Perusahaan', ['Tentang Kami', 'Redaksi', 'Karir', 'Iklan']],
-    ['Layanan', ['Berita Terkini', 'Dukungan', 'Arsip Berita']],
+    ['Layanan', ['Berita Terkini', 'Akun Pembaca', 'Dukungan', 'Arsip Berita']],
     ['Hukum', ['Syarat Penggunaan', 'Kebijakan Privasi', 'Koreksi & Hak Jawab', 'Pedoman Media Siber']],
     ['Ikuti Kami', ['Instagram @faisalakbar0423']]
   ];
   const tautan = {
-    'Tentang Kami': 'tentang', 'Berita Terkini': 'berita', 'Dukungan': 'donasi',
+    'Tentang Kami': 'tentang', 'Berita Terkini': 'berita', 'Akun Pembaca': 'akun', 'Dukungan': 'donasi',
     'Syarat Penggunaan': 'disclaimer', 'Kebijakan Privasi': 'kebijakan-privasi',
     'Koreksi & Hak Jawab': 'koreksi', 'Pedoman Media Siber': 'statis',
     'Instagram @faisalakbar0423': 'https://www.instagram.com/faisalakbar0423/'
@@ -1225,6 +1260,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAdminGuard();
   initTheme();
   renderHeader(document.body.dataset.page || 'Beranda');
+  perbaruiTampilanAkun();
   rapikanNav();
   window.addEventListener('resize', rapikanNav);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(rapikanNav);

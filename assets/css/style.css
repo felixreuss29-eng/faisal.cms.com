@@ -110,6 +110,11 @@ button { cursor: pointer; }
 .btn-block { width: 100%; }
 .icon-btn { min-width: 44px; min-height: 44px; border: 0; background: transparent; color: var(--muted); }
 .menu-toggle { display: none; }
+.akun-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 8px; border-radius: 6px; color: var(--text-soft); text-decoration: none; }
+.akun-btn:hover, .akun-btn.masuk { color: var(--accent); background: var(--surface); }
+.akun-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.akun-avatar { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--text); color: var(--bg); font-size: 13px; font-weight: 700; line-height: 1; }
+.akun-teks { font-size: 11px; font-weight: 700; white-space: nowrap; }
 .notif-btn { position: relative; display: inline-grid; place-items: center; border-radius: 6px; }
 .notif-btn:hover, .notif-btn.aktif { color: var(--accent); }
 .notif-btn:focus-visible, .footer-notif:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
@@ -455,6 +460,25 @@ th { font-size: 10px; text-transform: uppercase; letter-spacing: .04em; color: v
 .auth-links { display: flex; justify-content: space-between; gap: 12px; margin: 18px 0; font-size: 11px; }
 .auth-links a { color: var(--admin-accent); font-weight: 600; }
 .secure-note { font-size: 10px; color: var(--muted); }
+
+/* Halaman akun pembaca */
+.akun-tabs { display: flex; gap: 6px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+.akun-tab { min-height: 44px; padding: 0 16px; border: 0; border-bottom: 3px solid transparent; background: transparent; color: var(--muted); font-size: 12px; font-weight: 700; cursor: pointer; }
+.akun-tab.on { color: var(--accent); border-bottom-color: var(--accent); }
+.akun-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.akun-ingat { display: flex; align-items: center; gap: 8px; font-size: 11px; margin-bottom: 18px; }
+.akun-ingat input { width: auto; min-height: auto; }
+.akun-notif { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); margin: 20px 0 24px; }
+.akun-notif .meta { margin: 6px 0 0; }
+.akun-subjudul { font-family: var(--font-display); font-size: 20px; margin: 0 0 12px; }
+.akun-berita-list { list-style: none; padding: 0; margin: 0; }
+.akun-berita-list li { border-bottom: 1px solid var(--border); }
+.akun-berita-list li:last-child { border-bottom: 0; }
+.akun-berita-list a { display: block; padding: 14px 0; text-decoration: none; color: var(--text); }
+.akun-berita-list a:hover strong { color: var(--accent); }
+.akun-berita-list strong { display: block; font-size: 14px; line-height: 1.4; margin: 6px 0; }
+.akun-berita-list .meta { display: block; }
+
 /* Sembunyikan isi admin selama sesi masih diverifikasi ke Supabase. */
 body.guard-checking main, body.guard-checking .admin-shell { visibility: hidden; }
 
@@ -476,6 +500,8 @@ body.guard-checking main, body.guard-checking .admin-shell { visibility: hidden;
   .brand-tag { display: none; }
   .header-actions .btn-primary, .search-box { display: none; }
   .header-actions { gap: 6px; }
+  .akun-btn { min-width: 44px; padding: 0; justify-content: center; }
+  .akun-teks { display: none; }
   .language-select { max-width: 88px; font-size: 10px; padding: 0 4px; }
   .menu-toggle { display: inline-grid; }
   .mobile-nav { display: flex; position: fixed; inset: 58px 0 auto; z-index: 40; flex-direction: column; gap: 0; background: var(--bg); border-bottom: 2px solid var(--accent); box-shadow: var(--shadow); }

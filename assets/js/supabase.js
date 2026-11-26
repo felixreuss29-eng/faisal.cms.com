@@ -14,6 +14,7 @@
   const KUNCI_NAMA = 'faisal-nama-komentar';
   const KUNCI_IKUTI = 'faisal-ikuti-';
   const KUNCI_PUSH = 'faisal-push';
+  const KUNCI_PEMBACA = 'faisal-pembaca-sesi';
   const PEMILIK = 'felixreuss29@gmail.com';
 
   function konfigurasi() {
@@ -473,6 +474,152 @@
     } catch { /* abai */ }
   }
 
+  /* ---------- AKUN PEMBACA (terpisah dari akun pemilik/CMS) ----------
+     Email dan kata sandi hanya diverifikasi Supabase Auth. Browser
+     menyimpan token sesi, bukan kata sandi. */
+
+  function bacaSesiPembaca() {
+    let teks = '';
+    try { teks = localStorage.getItem(KUNCI_PEMBACA) || sessionStorage.getItem(KUNCI_PEMBACA) || ''; }
+    catch { return null; }
+    if (!teks) return null;
+    try { return JSON.parse(teks); } catch { return null; }
+  }
+  function simpanSesiPembaca(sesi, ingat) {
+    try {
+      localStorage.removeItem(KUNCI_PEMBACA);
+      sessionStorage.removeItem(KUNCI_PEMBACA);
+      (ingat ? localStorage : sessionStorage).setItem(KUNCI_PEMBACA, JSON.stringify(sesi));
+    } catch { /* abai */ }
+  }
+  function tokenPembaca() {
+    const sesi = bacaSesiPembaca();
+    return (sesi && sesi.access_token) || '';
+  }
+  function emailPembaca() {
+    const sesi = bacaSesiPembaca();
+    return (sesi && sesi.email) || '';
+  }
+  function statusPembaca() { return Boolean(tokenPembaca()); }
+  function keluarPembaca() {
+    try {
+      localStorage.removeItem(KUNCI_PEMBACA);
+      sessionStorage.removeItem(KUNCI_PEMBACA);
+    } catch { /* abai */ }
+  }
+  function validPembaca(email, password) {
+    const alamat = String(email || '').trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(alamat)) throw new Error('Alamat email tidak valid.');
+    if (alamat === PEMILIK) throw new Error('Akun pemilik memakai halaman CMS: /admin/login.html');
+    const sandi = String(password || '');
+    if (sandi.length < 8) throw new Error('Kata sandi minimal 8 karakter.');
+    return { email: alamat, password: sandi };
+  }
+  function simpanHasilPembaca(hasil, ingat) {
+    const token = hasil && hasil.access_token;
+    if (!token) return false;
+    simpanSesiPembaca({
+      access_token: token,
+      refresh_token: hasil.refresh_token || '',
+      expires_at: Date.now() + (Number(hasil.expires_in) || 3600) * 1000,
+      email: String((hasil.user && hasil.user.email) || '').toLowerCase()
+    }, Boolean(ingat));
+    return true;
+  }
+  async function daftarPembaca(email, password, ingat = true) {
+    if (!siap()) throw new Error('Supabase belum terhubung');
+    const v = validPembaca(email, password);
+    let respons;
+    try {
+      respons = await fetch(konfigurasi().url + '/auth/v1/signup', {
+        method: 'POST',
+        headers: header(),
+        body: JSON.stringify(v),
+        signal: sinyal()
+      });
+    } catch (e) {
+      throw new Error('Tidak dapat menghubungi Supabase: ' + e.message);
+    }
+    const teks = await respons.text();
+    let hasil = {};
+    try { hasil = JSON.parse(teks); } catch { /* abai */ }
+    if (!respons.ok) {
+      const m = hasil.msg || hasil.message || hasil.error_description || '';
+      throw new Error(/already registered|user already/i.test(m)
+        ? 'Email ini sudah terdaftar. Silakan masuk.'
+        : (m || 'Pendaftaran gagal. Coba lagi.'));
+    }
+    if (!simpanHasilPembaca(hasil, ingat)) return 'konfirmasi';
+    return 'aktif';
+  }
+  async function masukPembaca(email, password, ingat = true) {
+    if (!siap()) throw new Error('Supabase belum terhubung');
+    const v = validPembaca(email, password);
+    let respons;
+    try {
+      respons = await fetch(konfigurasi().url + '/auth/v1/token?grant_type=password', {
+        method: 'POST',
+        headers: header(),
+        body: JSON.stringify(v),
+        signal: sinyal()
+      });
+    } catch (e) {
+      throw new Error('Tidak dapat menghubungi Supabase: ' + e.message);
+    }
+    const teks = await respons.text();
+    let hasil = {};
+    try { hasil = JSON.parse(teks); } catch { /* abai */ }
+    if (!respons.ok) {
+      throw new Error(hasil.msg || hasil.message || hasil.error_description || 'Email atau kata sandi salah.');
+    }
+    if (!simpanHasilPembaca(hasil, ingat)) throw new Error('Supabase tidak mengembalikan sesi masuk.');
+    return true;
+  }
+  async function perbaruiSesiPembaca() {
+    const sesi = bacaSesiPembaca();
+    if (!sesi || !sesi.refresh_token) return false;
+    const ingat = Boolean(localStorage.getItem(KUNCI_PEMBACA));
+    let respons;
+    try {
+      respons = await fetch(konfigurasi().url + '/auth/v1/token?grant_type=refresh_token', {
+        method: 'POST',
+        headers: header(),
+        body: JSON.stringify({ refresh_token: sesi.refresh_token }),
+        signal: sinyal()
+      });
+    } catch { return false; }
+    if (!respons.ok) return false;
+    let hasil = {};
+    try { hasil = await respons.json(); } catch { return false; }
+    if (!hasil.access_token) return false;
+    simpanSesiPembaca({
+      access_token: hasil.access_token,
+      refresh_token: hasil.refresh_token || sesi.refresh_token,
+      expires_at: Date.now() + (Number(hasil.expires_in) || 3600) * 1000,
+      email: sesi.email || ''
+    }, ingat);
+    return true;
+  }
+  async function sesiPembaca() {
+    if (!siap()) return null;
+    const sesi = bacaSesiPembaca();
+    if (!sesi || !sesi.access_token) return null;
+    try {
+      const user = await minta('/auth/v1/user', { token: sesi.access_token });
+      const email = String((user && user.email) || '').toLowerCase();
+      if (email) return email;
+    } catch { /* coba perbarui */ }
+    if (await perbaruiSesiPembaca()) {
+      try {
+        const user = await minta('/auth/v1/user', { token: tokenPembaca() });
+        const email = String((user && user.email) || '').toLowerCase();
+        if (email) return email;
+      } catch { /* gagal juga */ }
+    }
+    keluarPembaca();
+    return null;
+  }
+
   window.FaisalData = {
     siap,
     siapDipakai: siap,
@@ -494,6 +641,12 @@
     statusPemilik,
     tokenPemilik,
     sesiPemilik,
+    daftarPembaca,
+    masukPembaca,
+    keluarPembaca,
+    statusPembaca,
+    sesiPembaca,
+    emailPembaca,
     namaTersimpan: () => { try { return localStorage.getItem(KUNCI_NAMA) || ''; } catch { return ''; } }
   };
 })();
