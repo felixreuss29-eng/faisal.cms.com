@@ -1,6 +1,45 @@
 {
   "posts": [
     {
+      "id": "post-1795677694504",
+      "title": "Kemendikdasmen Klaim 55 Ribu Lebih Sekolah Telah Direvitalisasi dalam Dua Tahun",
+      "category": "Pendidikan",
+      "excerpt": "Kemendikdasmen menyatakan lebih dari 55.000 satuan pendidikan telah direvitalisasi dalam dua tahun pemerintahan Prabowo-Gibran, dengan target hampir 80.000 hingga akhir 2026.",
+      "image": "upload/post-1795677694504.png",
+      "alt": "Grafik batang jumlah sekolah yang direvitalisasi: lebih dari 55.000 dalam dua tahun pertama dan proyeksi sekitar 80.000 hingga akhir 2026, beserta data papan interaktif dan guru.",
+      "sumberRujukan": "Kemendikdasmen, Siaran Pers Nomor 926/sipers/A6/XI/2026 — https://www.kemendikdasmen.go.id/siaran-pers/16400",
+      "kreditFoto": "Dokumentasi Faisal",
+      "author": {
+        "name": "Faisal Akbar",
+        "role": "Pemilik & Pemimpin Redaksi",
+        "photo": "pemilik-profil-rapi.jpg"
+      },
+      "published": "2026-11-26T07:21:37.529Z",
+      "updated": "2026-11-26T07:21:37.529Z",
+      "body": [
+        {
+          "type": "p",
+          "text": "Jakarta – Kementerian Pendidikan Dasar dan Menengah (Kemendikdasmen) menyatakan telah merevitalisasi lebih dari 55.000 satuan pendidikan selama dua tahun pertama pemerintahan Presiden Prabowo Subianto dan Wakil Presiden Gibran Rakabuming Raka. Jumlah itu diproyeksikan naik menjadi hampir 80.000 satuan pendidikan hingga akhir 2026."
+        },
+        {
+          "type": "p",
+          "text": "Menurut kementerian, revitalisasi diprioritaskan bagi sekolah dengan kerusakan berat, sekolah di wilayah tertinggal, terdepan, dan terluar (3T), serta sekolah yang terdampak bencana. Untuk wilayah terdampak bencana di Sumatra, Mendikdasmen Abdul Mu'ti menyebut 98 persen sekolah terdampak telah dibangun kembali dan seluruhnya sudah belajar normal, meski sebagian masih menerapkan sistem pergantian waktu belajar.\nMu'ti mengatakan langkah ini menindaklanjuti arahan Presiden. Dalam program One on One tvOne, Jumat (30/10), ia menyampaikan bahwa Presiden berulang kali menegaskan \"tidak boleh ada kelas yang rusak\"."
+        },
+        {
+          "type": "p",
+          "text": "Selain perbaikan fisik, pemerintah memperluas pembelajaran digital. Sepanjang 2025, lebih dari 288.865 papan interaktif digital telah dikirim ke sekolah, dan pada 2026 ditargetkan lebih dari 700.000 perangkat tambahan, sehingga totalnya melampaui satu juta. Untuk sekolah yang belum terjangkau listrik, Kemendikdasmen bekerja sama dengan PLN dan menyiapkan panel surya, sedangkan perangkatnya menyimpan materi sehingga tetap bisa dipakai tanpa internet."
+        },
+        {
+          "type": "p",
+          "text": "Di sisi guru, kementerian menyebut lebih dari 200.000 guru yang belum berkualifikasi D4 atau S1 mendapat kesempatan kuliah lewat Rekognisi Pembelajaran Lampau dengan bantuan Rp3 juta per semester. Tunjangan sertifikasi guru non-ASN naik dari Rp1,5 juta menjadi Rp2 juta per bulan."
+        },
+        {
+          "type": "p",
+          "text": "Ke depan, Kemendikdasmen berencana mempercepat penyelesaian revitalisasi sekolah, memperluas digitalisasi, dan meningkatkan kapasitas guru bersama berbagai mitra. Angka-angka di atas merupakan pernyataan resmi kementerian dan belum diverifikasi secara independen."
+        }
+      ]
+    },
+    {
       "id": "post-1795675771194",
       "title": "AS Usulkan Tarif Impor Baru hingga 18 Persen untuk Indonesia, 13 Negara Lain Ikut Disasar",
       "category": "Internasional",
