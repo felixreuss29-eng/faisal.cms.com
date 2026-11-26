@@ -1,6 +1,65 @@
 {
   "posts": [
     {
+      "id": "post-1795697499652",
+      "title": "Junta Myanmar Menolak Patuhi Putusan ICJ soal Genosida Rohingya",
+      "category": "Internasional",
+      "excerpt": "Pemimpin junta Myanmar, Min Aung Hlaing, menyatakan tidak akan mematuhi bagian putusan ICJ yang dinilainya \"tidak pantas\". Sepekan sebelumnya, ICJ menyatakan Myanmar melakukan genosida terhadap etnis Rohingya.",
+      "image": "upload/post-1795697499652.jpeg",
+      "alt": "Min Aung Hlaing, pemimpin junta Myanmar, yang menyatakan tidak akan mematuhi sebagian putusan Mahkamah Internasional (ICJ) soal genosida Rohingya.",
+      "sumberRujukan": "https://koran-jakarta.com/2026-11-26/myanmar-tolak-putusan-genosida-icj-tak-akan-patuhi-aspek-tak-pantas",
+      "kreditFoto": "Min Aung Hlaing foto",
+      "author": {
+        "name": "Faisal Akbar",
+        "role": "Pemilik & Pemimpin Redaksi",
+        "photo": "pemilik-profil-rapi.jpg"
+      },
+      "published": "2026-11-26T12:51:42.995Z",
+      "updated": "2026-11-26T12:51:42.995Z",
+      "body": [
+        {
+          "type": "p",
+          "text": "YANGON – Pemimpin Myanmar Min Aung Hlaing menyatakan pemerintahnya tidak akan mematuhi bagian putusan pengadilan internasional yang dinilainya \"tidak pantas\". Putusan itu menyatakan bahwa Myanmar melakukan genosida terhadap minoritas Rohingya, dan pernyataan Min Aung Hlaing dilaporkan media pemerintah pada Kamis (26/11/2026).\nSikap ini muncul sepekan setelah putusan dibacakan dan memicu pertanyaan baru: apa yang bisa dilakukan dunia jika sebuah negara menolak menjalankan putusan pengadilan internasional?"
+        },
+        {
+          "type": "p",
+          "text": "Apa isi putusan itu?"
+        },
+        {
+          "type": "p",
+          "text": "Putusan tersebut dikeluarkan oleh Mahkamah Internasional (ICJ), pengadilan di Den Haag, Belanda, yang menyelesaikan sengketa hukum antarnegara. Pekan lalu, ICJ memaparkan bukti-bukti kekejaman Myanmar terhadap etnis Rohingya yang mayoritas Muslim, dalam penindakan keras tahun 2017 di Negara Bagian Rakhine bagian barat.\nPutusan ini merupakan yang pertama dalam 80 tahun sejarah ICJ, di mana para hakimnya menetapkan suatu negara telah melakukan genosida. Para hakim juga memerintahkan Myanmar menyelidiki dan menghukum siapa pun yang dicurigai melakukan genosida.\nPerkara ini diajukan oleh Gambia, negara di Afrika Barat, pada November 2019, dengan dasar Konvensi Genosida 1948. Gambia menuduh militer Myanmar melakukan tindakan genosida terhadap warga Rohingya."
+        },
+        {
+          "type": "p",
+          "text": "Apa bantahan Myanmar?"
+        },
+        {
+          "type": "p",
+          "text": "Myanmar selalu menolak tuduhan genosida. Pemerintahnya beralasan tindakan militer ditujukan kepada pemberontak bersenjata, setelah serangkaian serangan menewaskan selusin personel keamanan. Namun, ICJ menolak argumen Myanmar bahwa pihaknya sedang menjalankan operasi kontra-pemberontakan.\nApa arti \"tidak mematuhi\"?"
+        },
+        {
+          "type": "p",
+          "text": "Dalam pernyataannya, Min Aung Hlaing hanya menyebut aspek-aspek yang dianggap \"tidak pantas\". Belum jelas bagian putusan mana yang dimaksud. Putusan ICJ bersifat final dan mengikat secara hukum, tetapi pengadilan ini tidak memiliki aparat penegak hukum sendiri untuk memaksa sebuah negara menjalankannya. Karena itu, pelaksanaan putusan sangat bergantung pada sikap negara yang bersangkutan dan tekanan dari masyarakat internasional."
+        },
+        {
+          "type": "p",
+          "text": "Siapa itu Rohingya?"
+        },
+        {
+          "type": "p",
+          "text": "Rohingya adalah etnis minoritas yang mayoritas beragama Islam dan berasal dari Rakhine, Myanmar bagian barat. Setelah penindakan militer 2017, ratusan ribu warga Rohingya meninggalkan Myanmar dan banyak yang kini hidup di kamp pengungsian di Bangladesh."
+        },
+        {
+          "type": "p",
+          "text": "Apa selanjutnya?"
+        },
+        {
+          "type": "p",
+          "text": "Belum jelas langkah apa yang akan diambil pihak-pihak lain menyikapi penolakan Myanmar ini. Redaksi akan memperbarui berita ini jika ada perkembangan."
+        }
+      ]
+    },
+    {
       "id": "post-1795683669556",
       "title": "Real Madrid Pesta Gol! Hancurkan PSV Eindhoven 5-1 di Liga Champions",
       "category": "Olahraga",
