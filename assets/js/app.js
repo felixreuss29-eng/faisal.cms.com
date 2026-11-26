@@ -234,7 +234,7 @@ function renderFooter() {
             <span class="brand-name">Faisal</span>
             <p style="font-size:11px;margin:12px 0 0">Berita independen dan tepercaya untuk Indonesia.</p>
             <p style="font-size:11px;margin:10px 0 0">Pemilik: <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a><br />WhatsApp: <a href="https://wa.me/6281286484770">081286484770</a><br />QRIS: tersedia di halaman donasi</p>
-            <a class="footer-translate" href="https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=${encodeURIComponent(location.href)}" target="_blank" rel="noopener">Terjemahkan halaman (semua bahasa)</a>
+            <a class="footer-translate" href="https://translate.google.com/translate?sl=id&amp;tl=en&amp;u=${encodeURIComponent(location.href)}">Terjemahkan halaman (semua bahasa)</a>
           </div>
           ${cols.map(([t, links]) => `<div><h3>${t}</h3><ul>${links.map((l) => `<li><a href="${hrefFooter(l)}" ${eksternal(l) ? 'target="_blank" rel="noopener noreferrer"' : ''}>${l}</a></li>`).join('')}</ul></div>`).join('')}
         </div>

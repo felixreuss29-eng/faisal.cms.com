@@ -138,7 +138,7 @@ Sebelum langkah 4 selesai, halaman publik tetap berfungsi dengan catatan "Supaba
 - Waktu nyata: tanggal, jam WIB (`Asia/Jakarta`) dan waktu relatif dihitung ulang tiap 30 detik dari `Date` dan `Intl.DateTimeFormat('id-ID')`.
 - Estimasi baca: dihitung dari jumlah kata ÷ 200 wpm saat halaman dibuka; di editor diperbarui saat mengetik.
 - Dark mode tersimpan di `localStorage`, tombol berlabel aksesibel.
-- Pilihan bahasa di header: 24 bahasa (Indonesia, Inggris, Arab, Mandarin, Jepang, Korea, dll.) plus tautan Google Translate untuk bahasa lain. Seluruh teks halaman, termasuk isi artikel dan berita, diterjemahkan otomatis dan di-cache di browser (`faisal-bahasa`, `faisal-terjemahan`); versi Indonesia tetap menjadi acuan.
+- Pilihan bahasa di header: 24 bahasa (Indonesia, Inggris, Arab, Mandarin, Jepang, Korea, dll.) plus opsi Google Translate untuk bahasa lain. Seluruh teks halaman, termasuk isi artikel dan berita, diterjemahkan otomatis dan di-cache di browser (`faisal-bahasa`, `faisal-terjemahan`); versi Indonesia tetap menjadi acuan. Terjemahan mencoba dua alamat Google (`translate_a/single` dan `translate_a/t`), lalu penyedia cadangan MyMemory bila Google diblokir/terkena batas permintaan di browser tertentu (misalnya browser dalam aplikasi). Bila masih gagal atau hanya sebagian, muncul pemberitahuan dengan tautan Google Translate yang dibuka di tab yang sama (popup sering diblokir di WebView).
 - Responsif 1440 / 768 / 390: hamburger, grid satu kolom di mobile, area sentuh minimal 44px, fokus keyboard terlihat.
 - State UI: skeleton tidak dipakai karena konten langsung tersedia; empty state (pencarian), error (email/kata sandi), sukses (reset sandi), toast, cookie banner, pop-up izin push, validasi form.
 - Status admin tidak hanya warna: setiap badge punya teks (Draf, Review, Revisi/Ditolak, Disetujui, Terbit) dan ikon titik. Sidebar CMS bisa diciutkan; filter status di daftar artikel berfungsi.
@@ -167,7 +167,7 @@ Sebelum langkah 4 selesai, halaman publik tetap berfungsi dengan catatan "Supaba
 9. **QA lanjutan** — audit Lighthouse otomatis sudah dijalankan (aksesibilitas, best practices, SEO = 100 pada halaman utama, artikel, kategori, dan dasbor; light & dark). Namun uji pembaca layar manual dan tinjauan visual manusia pada 1440/768/390 belum dilakukan.
 10. **Desain yang belum tersalin penuh** — layout tablet admin 768 dan beberapa state UI baru belum direbuild di file desain setelah perubahan warna.
 11. **Lisensi foto** — foto berita berasal dari RSS ANTARA News dan dicantumkan sumbernya di antarmuka. Hak cipta tetap pada ANTARA/fotografer; untuk publikasi komersial atau penggunaan ulang, periksa izin dan kredit yang disyaratkan. Foto profil pemilik adalah file yang Anda kirim.
-12. **Terjemahan mesin** — terjemahan dihasilkan otomatis oleh Google Translate dan dapat salah pada istilah khusus; teks asli bahasa Indonesia tetap menjadi rujukan. Pembaca juga bisa membuka versi Google Translate penuh lewat tautan di footer atau opsi "Bahasa lain".
+12. **Terjemahan mesin** — terjemahan dihasilkan otomatis oleh Google Translate (atau MyMemory bila Google tidak dapat diakses) dan dapat salah pada istilah khusus; teks asli bahasa Indonesia tetap menjadi rujukan. Pembaca juga bisa membuka versi Google Translate penuh lewat tautan di footer atau opsi "Bahasa lain"; tautan itu sengaja dibuka di tab yang sama agar bekerja di browser dalam aplikasi.
 
 ## Lisensi
 
