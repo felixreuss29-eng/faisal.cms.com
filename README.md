@@ -10,7 +10,7 @@ berita.html             Berita harian dari RSS ANTARA + filter kategori
 artikel.html            Halaman artikel + estimasi baca otomatis
 kategori.html           Halaman kategori/daftar berita
 pencarian.html          Hasil pencarian (termasuk empty state)
-donasi.html             Donasi pembaca + QRIS, konfirmasi WhatsApp/email
+donasi.html             Donasi pembaca + QRIS, konfirmasi email
 tentang.html            Tentang Faisal, prinsip redaksi, pemilik & kontak
 statis.html             Pedoman Media Siber, redaksi, hak jawab, privasi, cookie & peta situs
 404.html                Halaman tidak ditemukan
@@ -105,9 +105,9 @@ Buka `admin/posting.html` → menu **Tulis Postingan** di sidebar CMS.
 ## Alur donasi dan kode terima kasih (manual)
 
 1. Pembaca memindai QRIS di `donasi.html` (Store baju faisal, NMID IDI 026596688139), mengisi formulir, dan **wajib mengunggah bukti transfer**.
-2. Pembaca mengirim data + foto bukti ke WhatsApp `081286484770` atau email `felixreuss29@gmail.com`.
+2. Pembaca mengirim data + foto bukti ke email `felixreuss29@gmail.com`. Nomor telepon pribadi pemilik tidak ditampilkan di website maupun dokumentasi.
 3. Pemilik memeriksa bukti, lalu membuka `admin/posting.html` → **Kode terima kasih untuk pendukung**, mengisi kode, dan klik **Simpan kode ke website**. Repository hanya menyimpan hash SHA-256 kode di `assets/js/access.json`, bukan kode aslinya.
-4. Pemilik mengirim kode tersebut ke pembaca lewat WhatsApp.
+4. Pemilik mengirim kode tersebut ke pembaca lewat email.
 5. Pembaca memasukkan kode pada kolom **Kode terima kasih** di halaman artikel. Paywall terbuka dan status tersimpan di perangkatnya.
 
 Kode bisa diganti kapan saja lewat halaman admin; pembaca perlu memasukkan kode baru setelah deploy selesai. Saat kode yang benar dimasukkan, pengajuan dengan status “Menunggu verifikasi” pada **perangkat yang sama** otomatis ditandai “Terverifikasi” beserta jamnya; status ini hanya catatan lokal, bukan data server. Ini pembatasan sisi klien, bukan pengganti autentikasi server.
@@ -117,7 +117,7 @@ Kode bisa diganti kapan saja lewat halaman admin; pembaca perlu memasukkan kode 
 Komentar dan angka kunjungan baru sama di semua perangkat setelah Supabase dihubungkan:
 
 1. Buat project di https://supabase.com/dashboard (pilih region terdekat, misalnya Singapore).
-2. Buka **SQL Editor → New query**, salin seluruh isi `supabase-setup.sql`, lalu **Run**. File ini membuat tabel langganan, komentar (`faisal_komentar`), kunjungan (`faisal_statistik`), kebijakan RLS, dan fungsi `faisal_ringkasan_statistik`.
+2. Buka **SQL Editor → New query**, salin seluruh isi `supabase-setup.sql`, lalu **Run**. File ini membuat tabel komentar (`faisal_komentar`), kunjungan (`faisal_statistik`), kebijakan RLS, dan fungsi `faisal_ringkasan_statistik`. Tabel `subscriptions` di file yang sama adalah skema lama yang saat ini tidak dipakai website; tidak ada alamat email pembaca yang ditulis ke repositori atau ke tabel itu oleh kode publik.
 3. Buka **Authentication → Users → Add user → Create new user**, pakai email `felixreuss29@gmail.com`, isi kata sandi, lalu centang **Auto Confirm User** (atau konfirmasi lewat email). Email ini harus sama dengan kebijakan pemilik di SQL.
 4. Buka **Project Settings → API Keys**, salin **Project URL** dan **Publishable key** (`sb_publishable_...`). Isi keduanya di `assets/js/supabase-config.js`:
 
@@ -143,16 +143,17 @@ Sebelum langkah 4 selesai, halaman publik tetap berfungsi dengan catatan "Supaba
 - State UI: skeleton tidak dipakai karena konten langsung tersedia; empty state (pencarian), error (email/kata sandi), sukses (reset sandi), toast, cookie banner, pop-up izin push, validasi form.
 - Status admin tidak hanya warna: setiap badge punya teks (Draf, Review, Revisi/Ditolak, Disetujui, Terbit) dan ikon titik. Sidebar CMS bisa diciutkan; filter status di daftar artikel berfungsi.
 - Halaman `statis.html` berisi Pedoman Media Siber, identitas redaksi, hak jawab, kebijakan privasi, karir, iklan, cookie, dan peta situs.
-- Komentar artikel tampil untuk semua pengunjung lewat Supabase (`faisal_komentar`), lengkap dengan nama, waktu WIB, dan tombol hapus untuk pemilik yang sudah masuk dengan akun Supabase. Jika Supabase belum terhubung, komentar jatuh ke penyimpanan lokal (`faisal-komentar-<id>`) dan diberi catatan demikian; tombol bagikan WA/email/salin tautan tetap berfungsi nyata.
+- Komentar artikel tampil untuk semua pengunjung lewat Supabase (`faisal_komentar`), lengkap dengan nama, waktu WIB, dan tombol hapus untuk pemilik yang sudah masuk dengan akun Supabase. Jika Supabase belum terhubung, komentar jatuh ke penyimpanan lokal (`faisal-komentar-<id>`) dan diberi catatan demikian; tombol bagikan email/salin tautan tetap berfungsi nyata.
 - Statistik kunjungan: satu pengunjung dihitung sekali per hari per halaman (`faisal_statistik`, pengenal acak di browser). Dasbor menampilkan pengunjung hari ini, total pengunjung unik, jumlah tampilan artikel, kunjungan terbaru, dan panel moderasi; kartu berita serta halaman artikel menampilkan "Dilihat N kali".
-- Gambar lokal bertema berita, tidak lagi placeholder gunung; foto berita harian diunduh otomatis dan disimpan di repository.
-- Berita harian: RSS ANTARA → `news.json` → beranda/`berita.html`/kategori/pencarian, dengan jam publikasi WIB dan tautan ke sumber.
+- Gambar lokal bertema berita, tidak lagi placeholder gunung. Foto ANTARA tidak ditampilkan di halaman publik (`SHOW_ANTARA_IMAGES = false` di `assets/js/config.js`); kartu memakai placeholder netral.
+- Berita harian: RSS ANTARA → `news.json` → beranda/`berita.html`/kategori/pencarian. Tiap kartu hanya judul, ringkasan pendek, nama sumber, waktu terbit (WIB), dan tautan “Baca selengkapnya di ANTARA”; isi artikel sumber tidak disalin.
 - Unggah postingan dari CMS: form admin → GitHub Contents API → `posts.json` + foto → tampil di beranda, `berita.html`, pencarian, dan halaman artikel.
 - Media sosial hanya Instagram `@faisalakbar0423`; Facebook, X/Twitter, dan YouTube dihapus karena belum tersedia.
 - Halaman `tentang.html` berisi misi, prinsip redaksi, tim, pemilik, dan kontak.
 - Foto profil pemilik dipakai di sidebar CMS, halaman masuk, dan halaman tentang kami.
 - Audit Lighthouse otomatis: skor 100/100 untuk aksesibilitas, best practices, dan SEO pada halaman utama, artikel, kategori, serta dasbor (light dan dark).
-- Donasi: pilih nominal → kirim dukungan via QRIS (gambar QR di `assets/img/qris.jpg`) → **wajib unggah bukti transfer** → formulir membuat pesan konfirmasi siap dikirim ke WhatsApp `081286484770` atau email pemilik `felixreuss29@gmail.com`. Bukti dikompresi dan tersimpan di browser bersama riwayat/status; pengguna tetap harus mengirim foto bukti manual karena browser tidak bisa melampirkannya ke WhatsApp/email.
+- Donasi: pilih nominal → kirim dukungan via QRIS (gambar QR di `assets/img/qris.jpg`) → **wajib unggah bukti transfer** → formulir membuat pesan konfirmasi siap dikirim ke email pemilik `felixreuss29@gmail.com`. Bukti dikompresi dan tersimpan di browser bersama riwayat/status; pengguna tetap harus mengirim foto bukti manual karena browser tidak bisa melampirkannya ke email.
+- Formulir rangkuman harian memakai checkbox persetujuan wajib dan mengirim permintaan lewat aplikasi email pengguna; alamat email tidak disimpan di file publik repositori. Halaman hukum: `tentang.html`, `kebijakan-privasi.html`, `disclaimer.html`, `koreksi.html`.
 
 ## Yang masih kurang / perlu ditambahkan
 
@@ -160,13 +161,13 @@ Sebelum langkah 4 selesai, halaman publik tetap berfungsi dengan catatan "Supaba
 2. **Autentikasi nyata** — kata sandi login dan sesi admin diverifikasi Supabase Auth; email selain `felixreuss29@gmail.com`, kata sandi salah, dan penanda buatan di browser ditolak. Sebelum `assets/js/supabase-config.js` diisi dan `supabase-setup.sql` dijalankan, **tidak ada yang bisa masuk** (termasuk pemilik). Alur 2 langkah lama yang menerima enam digit apa pun sudah dihapus; `login-2fa.html` kini hanya mengalihkan ke `login.html`. Unggah postingan tetap memakai token GitHub di browser pemilik, bukan sesi pengguna.
 3. **WYSIWYG & upload media** — editor lama masih `textarea` dan berlabel pratinjau; unggah foto nyata ada di `posting.html`, tetapi belum ada rich text atau pengelola aset.
 4. **Alur persetujuan persisten** — tabel alur hanya contoh; tombol "Kirim review" belum mengubah data/status di server maupun menyimpan riwayat.
-5. **Verifikasi pembayaran otomatis** — donasi memakai QRIS statis → bukti wajib → konfirmasi WhatsApp/email → kode terima kasih manual. QRIS statis tidak punya webhook, jadi donasi tidak bisa terkonfirmasi otomatis. Skema Supabase untuk approval + masa aktif 1 bulan sudah disiapkan di `supabase-setup.sql`, tetapi belum dipasang karena URL dan publishable key belum diisi di `assets/js/supabase-config.js`. Pencarian juga masih filter array lokal.
+5. **Verifikasi pembayaran otomatis** — donasi memakai QRIS statis → bukti wajib → konfirmasi email → kode terima kasih manual. QRIS statis tidak punya webhook, jadi donasi tidak bisa terkonfirmasi otomatis. Skema Supabase untuk approval + masa aktif 1 bulan sudah disiapkan di `supabase-setup.sql`, tetapi belum dipasang karena URL dan publishable key belum diisi di `assets/js/supabase-config.js`. Pencarian juga masih filter array lokal.
 6. **Komentar & statistik bersama** — kode dan SQL sudah siap, tetapi `assets/js/supabase-config.js` masih kosong dan `supabase-setup.sql` belum dijalankan. Sebelum dihubungkan, komentar dan angka kunjungan hanya tersimpan di perangkat masing-masing. Panel moderasi juga baru bisa menghapus komentar setelah akun pemilik Supabase dibuat. Belum ada anti-spam otomatis selain batas panjang teks/nama.
 7. **SEO & metadata lengkap** — `robots.txt` sudah ada, tetapi belum ada canonical URL, Open Graph/Twitter card, JSON-LD, dan sitemap.xml (URL final deploy belum diketahui).
 8. **Analitik & iklan** — slot iklan masih placeholder; belum ada integrasi ads/analytics.
 9. **QA lanjutan** — audit Lighthouse otomatis sudah dijalankan (aksesibilitas, best practices, SEO = 100 pada halaman utama, artikel, kategori, dan dasbor; light & dark). Namun uji pembaca layar manual dan tinjauan visual manusia pada 1440/768/390 belum dilakukan.
 10. **Desain yang belum tersalin penuh** — layout tablet admin 768 dan beberapa state UI baru belum direbuild di file desain setelah perubahan warna.
-11. **Lisensi foto** — foto berita berasal dari RSS ANTARA News dan dicantumkan sumbernya di antarmuka. Hak cipta tetap pada ANTARA/fotografer; untuk publikasi komersial atau penggunaan ulang, periksa izin dan kredit yang disyaratkan. Foto profil pemilik adalah file yang Anda kirim.
+11. **Lisensi foto** — foto ANTARA tidak ditampilkan di publik secara default; yang muncul adalah nama sumber, waktu terbit, dan tautan ke artikel asli. Hak cipta tetap pada ANTARA/fotografer; untuk publikasi komersial atau penggunaan ulang, periksa izin dan kredit yang disyaratkan. Foto profil pemilik adalah file yang Anda kirim.
 12. **Terjemahan mesin** — terjemahan dihasilkan otomatis oleh Google Translate (atau MyMemory bila Google tidak dapat diakses) dan dapat salah pada istilah khusus; teks asli bahasa Indonesia tetap menjadi rujukan. Pembaca juga bisa membuka versi Google Translate penuh lewat tautan di footer atau opsi "Bahasa lain"; tautan itu sengaja dibuka di tab yang sama agar bekerja di browser dalam aplikasi.
 
 ## Lisensi
@@ -175,6 +176,6 @@ Lihat `HAK-CIPTA.md`. Repo ini memakai **All Rights Reserved** (tanpa file `LICE
 
 ## Catatan
 
-Email pemilik yang dipakai untuk konfirmasi donasi dan akun admin: `felixreuss29@gmail.com`. WhatsApp pemilik: `081286484770`. Donasi: QRIS statis di `assets/img/qris.jpg` (Store baju faisal, NMID IDI 026596688139). Instagram: `@faisalakbar0423`. TikTok: `@wangtaouzi0411` (nama tampil `felix reuss`). Nama yang ditampilkan di profil admin: Faisal Akbar.
+Email pemilik yang dipakai untuk konfirmasi donasi dan akun admin: `felixreuss29@gmail.com`. Nomor telepon/WhatsApp pribadi sengaja tidak dicantumkan. Donasi: QRIS statis di `assets/img/qris.jpg` (Store baju faisal, NMID IDI 026596688139). Instagram: `@faisalakbar0423`. TikTok: `@wangtaouzi0411` (nama tampil `felix reuss`). Nama yang ditampilkan di profil admin: Faisal Akbar.
 
-Karena sitem ini statis di GitHub Pages, pesan konfirmasi dibuka di aplikasi WhatsApp/email pengguna dan dikirim oleh mereka sendiri. Tidak ada pembayaran yang diproses otomatis oleh website.
+Karena situs ini statis di GitHub Pages, pesan konfirmasi dan permintaan rangkuman dibuka di aplikasi email pengguna dan dikirim oleh mereka sendiri. Tidak ada pembayaran yang diproses otomatis oleh website. Faisal belum terdaftar sebagai perusahaan pers di Dewan Pers dan tidak menyatakan diri sebagai badan hukum; lihat `disclaimer.html`.

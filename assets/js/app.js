@@ -5,6 +5,8 @@
 const WPM = 200;
 const TZ = 'Asia/Jakarta';
 const OWNER_EMAIL = 'felixreuss29@gmail.com';
+const KONFIG = window.FAISAL_CONFIG || {};
+const SHOW_ANTARA_IMAGES = KONFIG.SHOW_ANTARA_IMAGES === true;
 const FD = window.FaisalData;
 const img = (name) => `assets/img/${name}`;
 /* ---------- Alamat bersih (tanpa .html di address bar) ---------- */
@@ -41,6 +43,29 @@ function waktuRelatif(iso, now = new Date()) {
   if (menit < 1440) return `${Math.floor(menit / 60)} jam lalu`;
   if (menit < 10080) return `${Math.floor(menit / 1440)} hari lalu`;
   return formatTanggal(new Date(iso));
+}
+function formatWaktuTerbit(iso) {
+  const tanggal = new Date(iso);
+  if (Number.isNaN(tanggal.getTime())) return 'Waktu tidak tersedia';
+  const hari = new Intl.DateTimeFormat('id-ID', {
+    timeZone: TZ, day: 'numeric', month: 'short', year: 'numeric'
+  }).format(tanggal);
+  return `${hari}, ${formatJam(tanggal)} WIB`;
+}
+function sumberPostingan(a) {
+  return (a && a.sumberRujukan) ? String(a.sumberRujukan) : 'Belum dicantumkan';
+}
+function kreditFoto(a) {
+  return (a && a.kreditFoto) ? String(a.kreditFoto) : 'Dokumentasi Faisal';
+}
+function infoPostinganHTML(a, ringkas = false) {
+  const terbit = formatWaktuTerbit(a.published);
+  const diperbarui = formatWaktuTerbit(a.updated || a.published);
+  return `<div class="postingan-info${ringkas ? ' ringkas' : ''}">
+    <span>Penulis: <strong>Redaksi faisal.cms.com</strong></span>
+    <span>Dirangkum dari: <strong>${esc(sumberPostingan(a))}</strong></span>
+    <span>Diterbitkan: ${esc(terbit)} · Diperbarui: ${esc(diperbarui)}</span>
+  </div>`;
 }
 function jumlahKata(blocks) {
   const teks = (blocks || []).map((b) => b.text || '').join(' ');
@@ -217,11 +242,13 @@ function renderFooter() {
   const cols = [
     ['Perusahaan', ['Tentang Kami', 'Redaksi', 'Karir', 'Iklan']],
     ['Layanan', ['Berita Terkini', 'Donasi', 'Newsletter', 'Arsip Berita']],
-    ['Hukum', ['Pedoman Media Siber', 'Hak Jawab', 'Kebijakan Privasi', 'Cookie']],
+    ['Hukum', ['Syarat Penggunaan', 'Kebijakan Privasi', 'Koreksi & Hak Jawab', 'Pedoman Media Siber']],
     ['Ikuti Kami', ['Instagram @faisalakbar0423']]
   ];
   const tautan = {
     'Tentang Kami': 'tentang', 'Berita Terkini': 'berita', 'Donasi': 'donasi',
+    'Syarat Penggunaan': 'disclaimer', 'Kebijakan Privasi': 'kebijakan-privasi',
+    'Koreksi & Hak Jawab': 'koreksi', 'Pedoman Media Siber': 'statis',
     'Instagram @faisalakbar0423': 'https://www.instagram.com/faisalakbar0423/'
   };
   const hrefFooter = (label) => tautan[label] || 'statis';
@@ -233,14 +260,14 @@ function renderFooter() {
           <div>
             <span class="brand-name">Faisal</span>
             <p style="font-size:11px;margin:12px 0 0">Berita independen dan tepercaya untuk Indonesia.</p>
-            <p style="font-size:11px;margin:10px 0 0">Pemilik: <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a><br />WhatsApp: <a href="https://wa.me/6281286484770">081286484770</a><br />QRIS: tersedia di halaman donasi</p>
+            <p style="font-size:11px;margin:10px 0 0">Pemilik &amp; Pemimpin Redaksi: Faisal Akbar<br />Email: <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a><br />QRIS: tersedia di halaman donasi</p>
             <a class="footer-translate" href="https://translate.google.com/translate?sl=id&amp;tl=en&amp;u=${encodeURIComponent(location.href)}">Terjemahkan halaman (semua bahasa)</a>
           </div>
           ${cols.map(([t, links]) => `<div><h3>${t}</h3><ul>${links.map((l) => `<li><a href="${hrefFooter(l)}" ${eksternal(l) ? 'target="_blank" rel="noopener noreferrer"' : ''}>${l}</a></li>`).join('')}</ul></div>`).join('')}
         </div>
         <div class="footer-bottom">
-          <span>© ${new Date().getFullYear()} Faisal Media. Seluruh hak dilindungi.</span>
-          <span>Diterbitkan dengan prinsip kejurnalisme yang terbuka dan bertanggung jawab.</span>
+          <span>© 2026 Faisal. Redaksi: Faisal Akbar. Seluruh hak dilindungi.</span>
+          <span>Berita ANTARA ditampilkan sebagai tautan ke sumber aslinya. Hak cipta ada pada ANTARA News.</span>
         </div>
       </div>
     </footer>`;
@@ -270,19 +297,26 @@ function terapkanAkses() {
   if (status) status.textContent = aktif ? 'Terima kasih. Dukungan Anda aktif pada perangkat ini.' : '';
 }
 
+function gambarAntaraHTML(a, denganTautan = true) {
+  const isi = (SHOW_ANTARA_IMAGES && a.image)
+    ? `<img src="${a.image.startsWith('assets/') ? a.image : img(a.image)}" alt="Foto berita: ${esc(a.title)}" loading="lazy" />`
+    : `<div class="antara-placeholder" role="img" aria-label="Foto tidak ditampilkan. ANTARA News"><span>ANTARA News</span><small>Foto tidak ditampilkan sesuai kebijakan hak cipta</small></div>`;
+  return denganTautan
+    ? `<a href="${esc(a.link)}" target="_blank" rel="noopener noreferrer">${isi}</a>`
+    : isi;
+}
 function beritaCardHTML(a, denganRingkasan = true) {
-  const gambar = a.image
-    ? `<a href="${esc(a.link)}" target="_blank" rel="noopener noreferrer"><img src="${a.image.startsWith('assets/') ? a.image : img(a.image)}" alt="Foto berita: ${esc(a.title)}" loading="lazy" /></a>`
-    : '';
+  const sumber = esc(a.sumber || 'ANTARA News');
   return `<article class="card">
-    ${gambar}
-    <div class="card-tags"><span class="kicker">${esc(a.category)}</span> <span class="sumber-label">${esc(a.sumber || 'ANTARA News')}</span></div>
+    ${gambarAntaraHTML(a)}
+    <div class="card-tags"><span class="sumber-label">Sumber: ${sumber}</span></div>
     <h3><a href="${esc(a.link)}" target="_blank" rel="noopener noreferrer">${esc(a.title)}</a></h3>
     ${denganRingkasan ? `<p class="meta card-excerpt">${esc(a.excerpt)}</p>` : ''}
     <div class="card-meta">
-      <span class="meta" data-relative="${a.published}">${waktuRelatif(a.published)}</span>
-      ${tombolIkuti(a.sumber || 'ANTARA News', 'btn-follow follow-kicker')}
+      <time class="meta" datetime="${esc(a.published)}">Terbit: ${esc(formatWaktuTerbit(a.published))}</time>
+      <span class="meta" data-relative="${esc(a.published)}">${waktuRelatif(a.published)}</span>
     </div>
+    <a class="sumber-lanjutan" href="${esc(a.link)}" target="_blank" rel="noopener noreferrer">Baca selengkapnya di ANTARA →</a>
   </article>`;
 }
 function labelPembaruan() {
@@ -378,7 +412,7 @@ function renderBeritaPage() {
     </div>
     <p class="result-meta" data-news-updated></p>
     <div class="grid-3" id="grid-berita">${semua.map(kartuTerkiniHTML).join('')}</div>
-    <p class="meta" style="margin-top:20px">Berita dari pemilik memuat tautan artikel internal. Berita ANTARA membuka artikel di <a href="https://www.antaranews.com" target="_blank" rel="noopener noreferrer">situs sumber</a>.</p>`;
+    <p class="meta" style="margin-top:20px">Berita dari pemilik memuat tautan artikel internal. Berita ANTARA ditampilkan sebagai tautan ke sumber aslinya. Hak cipta ada pada ANTARA News. Kunjungi <a href="https://www.antaranews.com" target="_blank" rel="noopener noreferrer">ANTARA News</a>.</p>`;
   labelPembaruan();
   updateDynamicTime();
   host.querySelectorAll('[data-berita-filter]').forEach((b) => b.addEventListener('click', () => {
@@ -491,6 +525,7 @@ function cardHTML(a) {
     <div class="card-tags"><span class="kicker">${esc(a.category)}</span> <span class="sumber-label">${esc(penulis)}</span></div>
     <h3><a href="artikel?id=${a.id}">${esc(a.title)}</a></h3>
     ${a.excerpt ? `<p class="meta card-excerpt">${esc(a.excerpt)}</p>` : ''}
+    ${a.sumberRujukan ? `<p class="meta postingan-sumber">Dirangkum dari: ${esc(sumberPostingan(a))}</p>` : ''}
     <div class="card-meta">
       <span class="meta" data-relative="${a.published}">${waktuRelatif(a.published)}</span>
       <span class="meta" data-view="${esc(a.id)}">Dilihat …</span>
@@ -600,10 +635,11 @@ function renderArticle() {
             <div class="byline-penulis"><strong>${esc(penulis)}</strong><span class="meta">${esc(peran)}</span></div>
             ${tombolIkuti(penulis)}
             <div class="byline-waktu meta"><span data-relative="${a.published}">${waktuRelatif(a.published)}</span> · <span data-view="${esc(a.id)}">Dilihat …</span> · <b data-reading="${a.id}">${readingMinutes(a.body)} menit baca</b></div>
-            <div class="share"><span>Bagikan</span><a href="#" data-bagikan="wa" aria-label="WA — bagikan ke WhatsApp">WA</a><a href="#" data-bagikan="email" aria-label="Email — bagikan lewat email">Email</a><a href="#" data-bagikan="link" aria-label="Link — salin tautan artikel">Link</a></div>
+            <div class="share"><span>Bagikan</span><a href="#" data-bagikan="email" aria-label="Email — bagikan lewat email">Email</a><a href="#" data-bagikan="link" aria-label="Link — salin tautan artikel">Link</a></div>
           </div>
+          ${dariAdmin ? infoPostinganHTML(a) : ''}
         </header>
-        <figure class="article-figure"><img src="${gambarArtikel(a)}" alt="${esc(a.alt || 'Ilustrasi: ' + a.title)}" /><figcaption>Ilustrasi artikel. Foto: Dokumentasi Faisal.</figcaption></figure>
+        <figure class="article-figure"><img src="${gambarArtikel(a)}" alt="${esc(a.alt || 'Ilustrasi: ' + a.title)}" /><figcaption>${dariAdmin ? 'Foto: ' + esc(kreditFoto(a)) + '.' : 'Ilustrasi artikel. Foto: Dokumentasi Faisal.'}</figcaption></figure>
         <div class="article-body" style="margin-top:28px">${isi}</div>
         <section class="paywall" style="margin-top:32px">
           <span class="kicker">Dukungan Pembaca</span><h3>Artikel ini terbuka untuk pembaca yang mendukung Faisal</h3>
@@ -617,7 +653,7 @@ function renderArticle() {
           </form>
           <span class="error hidden" data-akses-error>Kode tidak valid. Periksa kembali pesan dari pemilik.</span>
           <p class="meta" data-akses-status aria-live="polite"></p>
-          <p class="meta">Belum berdonasi? <a href="donasi#form-konfirmasi">Kirim bukti donasi di sini.</a> Bantuan: <a href="https://wa.me/6281286484770">081286484770</a> · <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a></p>
+          <p class="meta">Belum berdonasi? <a href="donasi#form-konfirmasi">Kirim bukti donasi di sini.</a> Bantuan: <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a></p>
         </section>
         <div class="tags"><span class="tag">#Pilkada2027</span><span class="tag">#KPU</span><span class="tag">#Pemilih</span><span class="tag">#Demokrasi</span></div>
         <div class="correction"><strong>Catatan redaksi</strong><br />Jadwal dan tahapan mengikuti kalender resmi penyelenggara pemilu, diperbarui pada <span data-clock></span>.</div>
@@ -642,7 +678,7 @@ function renderArticle() {
         </div>
         ${iklanHTML('ad-sidebar')}
         <div class="sidebar-section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title" style="font-size:20px">Terpopuler</h2></div>${rankedHTML(POPULAR)}</div>
-        <div class="panel" style="background:var(--accent-soft);border-color:var(--accent-line)"><h2 class="panel-title" style="font-size:18px">Rangkuman harian redaksi</h2><p class="meta">Berita penting pilihan redaksi, setiap pagi di email Anda.</p><form data-newsletter><input type="email" placeholder="Alamat email" required aria-label="Alamat email" /><button class="btn btn-primary" type="submit">Daftar</button></form></div>
+        <div class="panel" style="background:var(--accent-soft);border-color:var(--accent-line)"><h2 class="panel-title" style="font-size:18px">Rangkuman harian redaksi</h2><p class="meta">Berita penting pilihan redaksi, setiap pagi di email Anda.</p><form data-newsletter><input type="email" placeholder="Alamat email" autocomplete="email" required aria-label="Alamat email" /><label class="check-row"><input type="checkbox" data-newsletter-setuju required /><span>Saya setuju email saya digunakan untuk rangkuman harian sesuai <a href="kebijakan-privasi">Kebijakan Privasi</a></span></label><button class="btn btn-primary" type="submit">Daftar</button></form><p class="meta" style="margin-top:8px">Berhenti berlangganan: <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a>.</p></div>
       </aside>
     </div>`;
   if (dariAdmin) {
@@ -651,13 +687,12 @@ function renderArticle() {
     const tags = host.querySelector('.tags');
     if (tags) tags.innerHTML = `<span class="tag">#${esc(a.category)}</span><span class="tag">#Faisal</span>`;
     const figcaption = host.querySelector('.article-figure figcaption');
-    if (figcaption) figcaption.textContent = a.alt ? `Foto: ${esc(a.alt)}.` : 'Foto: Dokumentasi Faisal.';
+    if (figcaption) figcaption.textContent = `Foto: ${kreditFoto(a)}.`;
   }
   host.querySelectorAll('[data-bagikan]').forEach((b) => b.addEventListener('click', (e) => {
     e.preventDefault();
     const url = location.href;
-    if (b.dataset.bagikan === 'wa') window.open('https://wa.me/?text=' + encodeURIComponent(a.title + ' — ' + url), '_blank', 'noopener,noreferrer');
-    else if (b.dataset.bagikan === 'email') location.href = 'mailto:?subject=' + encodeURIComponent(a.title) + '&body=' + encodeURIComponent(url);
+    if (b.dataset.bagikan === 'email') location.href = 'mailto:?subject=' + encodeURIComponent(a.title) + '&body=' + encodeURIComponent(url);
     else navigator.clipboard.writeText(url).then(() => toast('Tautan artikel disalin.')).catch(() => toast(url));
   }));
   host.querySelector('[data-akses-form]')?.addEventListener('submit', async (e) => {
@@ -754,10 +789,14 @@ function renderCategory() {
     <div class="wrap">
       <div class="filter-bar">${daftarKategori.map((k) => `<a class="chip ${k === kategori ? 'active' : ''}" href="kategori?k=${encodeURIComponent(k)}">${k}</a>`).join('')}</div>
       ${utama ? (() => {
-        const gambarUtama = utama.image && utama.image.startsWith('assets/') ? utama.image : img(utama.image || 'hero.jpg');
-        const tautanUtama = utama.link || `artikel?id=${utama.id}`;
+        const dariAntara = Boolean(utama.link);
+        const gambarUtama = dariAntara
+          ? `<a href="${esc(utama.link)}" target="_blank" rel="noopener noreferrer">${gambarAntaraHTML(utama, false)}</a>`
+          : `<a href="artikel?id=${esc(utama.id)}"><img src="${gambarArtikel(utama)}" alt="${esc(utama.alt || 'Ilustrasi: ' + utama.title)}" /></a>`;
+        const tautanUtama = dariAntara ? utama.link : `artikel?id=${utama.id}`;
+        const atributLuar = dariAntara ? ' target="_blank" rel="noopener noreferrer"' : '';
         return `<div class="section"><h2 class="sr-only">Sorotan ${esc(kategori)}</h2><div class="split">
-          <article class="lead"><a href="${tautanUtama}"><img src="${gambarUtama}" alt="Berita utama ${esc(kategori)}" /></a><span class="kicker">Utama</span><h3><a href="${tautanUtama}">${esc(utama.title)}</a></h3></article>
+          <article class="lead">${gambarUtama}<span class="kicker">${dariAntara ? 'ANTARA News' : 'Utama'}</span><h3><a href="${esc(tautanUtama)}"${atributLuar}>${esc(utama.title)}</a></h3>${dariAntara ? `<p class="meta">Terbit: ${esc(formatWaktuTerbit(utama.published))}</p>` : ''}</article>
           <div>${rankedHTML(semua.slice(1, 4).map((a) => a.title), kategori)}</div>
         </div></div>`;
       })() : ''}
@@ -820,9 +859,25 @@ function initForms() {
   document.querySelectorAll('[data-newsletter]').forEach((f) => f.addEventListener('submit', (e) => {
     e.preventDefault();
     const input = f.querySelector('input[type="email"]');
-    if (!input.checkValidity()) return toast('Alamat email tidak valid.');
-    toast('Terima kasih! Newsletter akan dikirim ke ' + input.value);
+    const setuju = f.querySelector('[data-newsletter-setuju]');
+    if (!input.checkValidity()) return toast('Alamat email tidak valid. Contoh: nama@email.com');
+    if (!setuju) return toast('Persetujuan belum tersedia pada formulir ini.');
+    if (!setuju.checked) {
+      setuju.focus();
+      return toast('Centang persetujuan terlebih dahulu untuk menerima rangkuman.');
+    }
+    const email = input.value.trim();
+    const pesan = `Permintaan rangkuman harian Faisal\nEmail: ${email}\n\nSaya setuju email saya digunakan untuk menerima rangkuman harian sesuai Kebijakan Privasi Faisal.`;
+    const tautan = `mailto:${OWNER_EMAIL}?subject=${encodeURIComponent('Permintaan rangkuman harian Faisal')}&body=${encodeURIComponent(pesan)}`;
+    const a = document.createElement('a');
+    a.href = tautan;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    toast('Permintaan disiapkan di aplikasi email Anda. Kirim pesannya untuk bergabung.');
     input.value = '';
+    setuju.checked = false;
   }));
   document.querySelectorAll('[data-toast]').forEach((el) => el.addEventListener('click', (e) => {
     e.preventDefault();
@@ -892,8 +947,6 @@ function initEditor() {
 
 /* ---------- Donasi: QRIS + konfirmasi pemilik ---------- */
 const METODE_BAYAR = 'QRIS';
-const OWNER_WHATSAPP = '081286484770';
-const OWNER_WHATSAPP_API = '6281286484770';
 const HARGA_PAKET = { 'Dukungan Dasar': 10000, 'Dukungan Istimewa': 15000, 'Dukungan Arsip': 10000 };
 const rupiah = (n) => 'Rp ' + new Intl.NumberFormat('id-ID').format(n);
 
@@ -977,7 +1030,6 @@ function validasiDonasi(form) {
   const el = (nama) => form.elements.namedItem(nama);
   const nama = (el('nama')?.value || '').trim();
   const email = (el('email')?.value || '').trim();
-  const wa = (el('wa')?.value || '').replace(/\D/g, '');
   const paket = el('paket')?.value || '';
   const setuju = form.querySelector('#setuju').checked;
   const fileBukti = el('bukti')?.files?.[0];
@@ -985,7 +1037,6 @@ function validasiDonasi(form) {
   const cek = {
     nama: nama.length >= 2,
     email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),
-    wa: /^08\d{8,11}$/.test(wa),
     paket: Object.hasOwn(HARGA_PAKET, paket),
     bukti: buktiValid,
     setuju
@@ -998,7 +1049,6 @@ function validasiDonasi(form) {
   }
   return {
     nama, email,
-    wa: '0' + wa.slice(1),
     paket,
     jumlah: HARGA_PAKET[paket],
     catatan: (el('catatan')?.value || '').trim(),
@@ -1012,7 +1062,6 @@ function pesanDonasi(d) {
     'Konfirmasi donasi Faisal',
     `Nama: ${d.nama}`,
     `Email: ${d.email}`,
-    `WhatsApp: ${d.wa}`,
     `Nominal dukungan: ${d.paket}`,
     `Jumlah: ${rupiah(d.jumlah)}`,
     `Metode: ${METODE_BAYAR}`,
@@ -1029,45 +1078,30 @@ function tampilkanHasil(selector, d, tautan, kanal) {
   box.innerHTML = `<h3>Pengajuan tersimpan di perangkat ini</h3>
     <p><strong>${esc(d.nama)}</strong> · ${esc(d.paket)} · ${rupiah(d.jumlah)}</p>
     <p>Status: <span class="badge ${kelasStatus(d)}">${esc(labelStatus(d))}</span></p>
-    <p>Pesan sudah disiapkan untuk ${esc(kanal)} ke ${esc(kanal === 'WhatsApp' ? OWNER_WHATSAPP : OWNER_EMAIL)}. Jika aplikasi tidak terbuka otomatis, gunakan tautan di bawah.</p>
+    <p>Pesan sudah disiapkan untuk email ke ${OWNER_EMAIL}. Jika aplikasi email tidak terbuka otomatis, gunakan tautan di bawah.</p>
     <p class="meta">${d.status === 'Terverifikasi'
       ? 'Kode terima kasih sudah dimasukkan pada perangkat ini. Status terverifikasi berlaku untuk catatan di perangkat ini.'
-      : 'Bukti transfer tersimpan di perangkat ini. Browser tidak bisa melampirkan file otomatis, jadi kirim foto bukti yang sama secara manual di ' + esc(kanal) + '. Setelah bukti dicek, pemilik akan mengirim kode terima kasih untuk membuka seluruh artikel.'}</p>
-    <div class="contact-row"><a class="btn btn-primary" href="${esc(tautan)}" ${kanal === 'WhatsApp' ? 'target="_blank" rel="noopener"' : ''}>Buka ${esc(kanal)}</a><button class="btn btn-outline" type="button" data-lihat-bukti>Lihat bukti</button></div>`;
+      : 'Bukti transfer tersimpan di perangkat ini. Browser tidak bisa melampirkan file otomatis, jadi kirim foto bukti yang sama secara manual lewat email. Setelah bukti dicek, pemilik akan mengirim kode terima kasih untuk membuka seluruh artikel.'}</p>
+    <div class="contact-row"><a class="btn btn-primary" href="${esc(tautan)}">Buka email</a><button class="btn btn-outline" type="button" data-lihat-bukti>Lihat bukti</button></div>`;
   box.querySelector('[data-lihat-bukti]')?.addEventListener('click', () => lihatBukti(d.bukti));
 }
-function kirimPengajuan(d, kanal) {
+function kirimPengajuan(d) {
   if (localStorage.getItem('faisal-akses')) {
     d.status = 'Terverifikasi';
     d.verifiedAt = new Date().toISOString();
   }
   simpanPengajuan(d);
   const pesan = pesanDonasi(d);
-  let tautan;
-  if (kanal === 'WhatsApp') {
-    tautan = `https://wa.me/${OWNER_WHATSAPP_API}?text=${encodeURIComponent(pesan)}`;
-    const direct = document.querySelector('#wa-direct');
-    if (direct) direct.href = tautan;
-    const a = document.createElement('a');
-    a.href = tautan;
-    a.target = '_blank';
-    a.rel = 'noopener noreferrer';
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-  } else {
-    tautan = `mailto:${OWNER_EMAIL}?subject=${encodeURIComponent('Konfirmasi donasi Faisal — ' + d.nama)}&body=${encodeURIComponent(pesan)}`;
-    const direct = document.querySelector('#email-direct');
-    if (direct) direct.href = tautan;
-    const a = document.createElement('a');
-    a.href = tautan;
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-  }
-  tampilkanHasil('#hasil-pengajuan', d, tautan, kanal === 'WhatsApp' ? 'WhatsApp' : 'email');
+  const tautan = `mailto:${OWNER_EMAIL}?subject=${encodeURIComponent('Konfirmasi donasi Faisal — ' + d.nama)}&body=${encodeURIComponent(pesan)}`;
+  const direct = document.querySelector('#email-direct');
+  if (direct) direct.href = tautan;
+  const a = document.createElement('a');
+  a.href = tautan;
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  tampilkanHasil('#hasil-pengajuan', d, tautan, 'email');
   renderRiwayatPengajuan();
   toast('Pengajuan donasi tersimpan. Pesan dibuka untuk dikirim ke pemilik.');
 }
@@ -1080,7 +1114,7 @@ function renderRiwayatPengajuan() {
     return;
   }
   host.innerHTML = semua.map((r, i) => `<div class="history-item">
-    <div><strong>${esc(r.nama)}</strong><span class="meta">${esc(r.email)} · ${esc(r.wa)} · ${esc(r.paket)} · ${rupiah(r.jumlah)}</span><span class="meta">Diajukan ${formatTanggal(new Date(r.waktu))}, ${formatJam(new Date(r.waktu))} WIB</span><span class="meta">Bukti: ${r.bukti ? 'sudah diunggah' : 'belum tersedia'}</span></div>
+    <div><strong>${esc(r.nama)}</strong><span class="meta">${esc(r.email)} · ${esc(r.paket)} · ${rupiah(r.jumlah)}</span><span class="meta">Diajukan ${formatTanggal(new Date(r.waktu))}, ${formatJam(new Date(r.waktu))} WIB</span><span class="meta">Bukti: ${r.bukti ? 'sudah diunggah' : 'belum tersedia'}</span></div>
     <span class="badge ${kelasStatus(r)}">${esc(labelStatus(r))}</span>
     ${r.bukti ? `<button class="kicker" type="button" data-lihat-bukti-index="${i}">Lihat bukti</button>` : ''}
   </div>`).join('');
@@ -1095,13 +1129,13 @@ function cekStatusDonasi() {
   const cocok = ambilPengajuan().find((r) => r.email.toLowerCase() === email.toLowerCase());
   box.classList.remove('hidden');
   if (!cocok) {
-    box.innerHTML = '<h3>Tidak ada pengajuan</h3><p>Email ini belum terdaftar pada perangkat ini. Kirim konfirmasi melalui WhatsApp atau email pemilik.</p>';
+    box.innerHTML = '<h3>Tidak ada pengajuan</h3><p>Email ini belum terdaftar pada perangkat ini. Kirim konfirmasi melalui email pemilik.</p>';
     return;
   }
   box.innerHTML = `<h3>Status pengajuan</h3>
     <p><strong>${esc(cocok.nama)}</strong> · ${esc(cocok.paket)} · ${rupiah(cocok.jumlah)}</p>
     <p>Status: <span class="badge ${kelasStatus(cocok)}">${esc(labelStatus(cocok))}</span></p>
-    <p class="meta">Diajukan ${formatTanggal(new Date(cocok.waktu))}, ${formatJam(new Date(cocok.waktu))} WIB. Konfirmasi akhir dikirim ke ${esc(cocok.email)} / WhatsApp ${esc(cocok.wa)}.</p>
+    <p class="meta">Diajukan ${formatTanggal(new Date(cocok.waktu))}, ${formatJam(new Date(cocok.waktu))} WIB. Konfirmasi akhir dikirim ke ${esc(cocok.email)}.</p>
     <p class="meta">Bukti transfer: ${cocok.bukti ? (cocok.status === 'Terverifikasi' ? 'sudah diunggah dan sudah cocok dengan kode terima kasih yang dimasukkan' : 'sudah diunggah dan perlu dicek pemilik') : 'belum tersedia'}.</p>`;
 }
 function initDonasi() {
@@ -1132,22 +1166,21 @@ function initDonasi() {
       toast(`Salin manual: ${b.dataset.copy}`);
     }
   }));
-  const kirim = async (kanal) => {
+  const kirim = async () => {
     const d = validasiDonasi(form);
     if (!d) return;
     try {
       d.bukti = await kompresGambar(d.buktiFile);
       delete d.buktiFile;
-      kirimPengajuan(d, kanal);
+      kirimPengajuan(d);
     } catch (err) {
       toast(err.message);
     }
   };
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    kirim('WhatsApp');
+    kirim();
   });
-  document.querySelector('#kirim-email')?.addEventListener('click', () => kirim('email'));
   document.querySelector('#bukti')?.addEventListener('change', (e) => {
     const file = e.target.files[0];
     const preview = document.querySelector('#bukti-preview');

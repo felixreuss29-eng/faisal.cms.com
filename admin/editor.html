@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/css/style.css?v=24" />
+  <link rel="stylesheet" href="../assets/css/style.css?v=25" />
 </head>
 <body data-admin="1">
   <div class="admin-shell">
@@ -21,21 +21,24 @@
       </nav>
     </aside>
     <div class="admin-main">
-      <header class="admin-topbar"><button class="icon-btn" type="button" data-sidebar-toggle aria-label="Ciutkan sidebar" aria-expanded="true">☰</button><h1>Editor Artikel</h1><div class="spacer"></div><span class="badge draft">Draf</span><button class="btn btn-outline" data-toast="Draf tersimpan">Simpan draf</button><button class="btn btn-primary" data-toast="Artikel dikirim untuk review">Kirim review</button></header>
+      <header class="admin-topbar"><button class="icon-btn" type="button" data-sidebar-toggle aria-label="Ciutkan sidebar" aria-expanded="true">☰</button><h1>Editor Artikel</h1><div class="spacer"></div><span class="badge draft">Draf</span><button class="btn btn-outline" data-toast="Draf tersimpan">Simpan draf</button><button class="btn btn-primary" id="kirim-review">Kirim review</button></header>
       <main class="admin-content">
         <nav class="breadcrumb" aria-label="Breadcrumb">Admin › Artikel › Editor</nav>
         <div class="panel" style="margin-bottom:18px"><p class="meta"><strong>Catatan:</strong> halaman ini adalah pratinjau alur redaksi. Untuk menerbitkan tulisan ke website, gunakan <a href="posting.html">Tulis Postingan</a>.</p></div>
         <div class="admin-card" style="margin-top:0">
           <div class="form-field"><label for="judul">Judul</label><input id="judul" value="KPU Tetapkan Jadwal Pilkada 2027, Ini Rangkaian Tahapannya" /></div>
           <div class="form-field"><label for="ringkasan">Ringkasan</label><input id="ringkasan" value="Kalender pemilihan kepala daerah berikutnya mencakup pencalonan hingga pelantikan." /></div>
+          <div class="form-field"><label for="sumber">Sumber rujukan <span aria-hidden="true">*</span></label><input id="sumber" placeholder="Contoh: ANTARA News — https://www.antaranews.com/berita/…" required /><span class="meta">Wajib sebelum kirim review. Dicantumkan sebagai “Dirangkum dari: …” pada artikel yang terbit.</span></div>
+          <div class="form-field"><label for="kredit">Kredit foto (opsional)</label><input id="kredit" placeholder="Contoh: Dokumentasi Faisal / Nama fotografer" /><span class="meta">Isi hanya jika Anda memiliki izin penggunaan foto tersebut. Foto ANTARA tidak diunggah ulang tanpa izin.</span></div>
           <div class="form-field"><label for="kategori">Kategori</label><select id="kategori"><option>Politik</option><option>Nasional</option><option>Ekonomi</option><option>Olahraga</option><option>Hukum</option><option>Teknologi</option><option>Internasional</option><option>Pendidikan</option></select></div>
-          <div class="form-field"><label for="isi">Isi artikel</label><textarea id="isi">Komisi Pemilihan Umum telah menetapkan kalender penyelenggaraan pemilihan kepala daerah tahun 2027, mulai dari pemutakhiran data pemilih hingga pelantikan kepala daerah terpilih.</textarea><span class="meta">Estimasi baca: <b id="estimasi-baca">— menit baca</b> · dihitung otomatis dari jumlah kata.</span></div>
+          <div class="form-field"><label for="isi">Isi artikel</label><textarea id="isi">Komisi Pemilihan Umum telah menetapkan kalender penyelenggaraan pemilihan kepala daerah tahun 2027, mulai dari pemutakhiran data pemilih hingga pelantikan kepala daerah terpilih.</textarea><span class="meta">Tulis rangkuman dengan bahasa sendiri; jangan salin isi sumber secara utuh. Untuk perkara hukum yang belum diputus, gunakan kata “diduga” dan sebutkan sumber keterangan. Estimasi baca: <b id="estimasi-baca">— menit baca</b> · dihitung otomatis dari jumlah kata.</span></div>
+          <span class="error hidden" id="editor-error" role="alert">Sumber rujukan wajib diisi sebelum artikel dikirim untuk review.</span>
         </div>
         <section class="admin-card">
           <h2>Alur persetujuan</h2>
           <table><thead><tr><th>Tahap</th><th>Oleh</th><th>Waktu</th><th>Status</th></tr></thead><tbody>
             <tr><td>Draf</td><td>Faisal Akbar</td><td><span data-relative="2026-11-25T04:10:00+07:00"></span></td><td><span class="badge published">Selesai</span></td></tr>
-            <tr><td>Review</td><td>Rina Puspita</td><td><span data-relative="2026-11-25T06:00:00+07:00"></span></td><td><span class="badge review">Menunggu</span></td></tr>
+            <tr><td>Review</td><td>Faisal Akbar</td><td><span data-relative="2026-11-25T06:00:00+07:00"></span></td><td><span class="badge review">Menunggu</span></td></tr>
             <tr><td>Disetujui</td><td>Redaktur Pelaksana</td><td>—</td><td><span class="badge draft">Belum</span></td></tr>
             <tr><td>Terbit</td><td>Penerbit</td><td>—</td><td><span class="badge draft">Belum</span></td></tr>
           </tbody></table>
@@ -44,8 +47,26 @@
     </div>
   </div>
   <div class="toast" role="status" aria-live="polite"></div>
-  <script src="../assets/js/supabase-config.js?v=24"></script>
-  <script src="../assets/js/supabase.js?v=24"></script>
-  <script src="../assets/js/data.js?v=24"></script><script src="../assets/js/app.js?v=24"></script>
+  <script src="../assets/js/supabase-config.js?v=25"></script>
+  <script src="../assets/js/config.js?v=25"></script>
+  <script src="../assets/js/supabase.js?v=25"></script>
+  <script src="../assets/js/data.js?v=25"></script><script src="../assets/js/app.js?v=25"></script>
+  <script>
+  (function () {
+    var tombol = document.getElementById('kirim-review');
+    if (!tombol) return;
+    tombol.addEventListener('click', function () {
+      var sumber = document.getElementById('sumber');
+      var galat = document.getElementById('editor-error');
+      if ((sumber.value || '').trim().length < 3) {
+        galat.classList.remove('hidden');
+        sumber.focus();
+        return;
+      }
+      galat.classList.add('hidden');
+      toast('Artikel dikirim untuk review.');
+    });
+  })();
+  </script>
 </body>
 </html>

@@ -218,7 +218,8 @@ main { padding-bottom: 64px; }
 .newsletter { margin-top: 48px; padding: 28px; background: var(--accent-soft); border: 1px solid var(--accent-line); border-radius: 6px; }
 .newsletter h2 { font-family: var(--font-display); font-size: 24px; margin: 0 0 8px; }
 .newsletter p { margin: 0 0 18px; color: var(--accent-strong); font-size: 12px; }
-.inline-form { display: flex; gap: 10px; max-width: 940px; }
+.inline-form { display: flex; flex-wrap: wrap; gap: 10px; max-width: 940px; }
+.inline-form .check-row { flex: 1 1 100%; }
 .inline-form input { flex: 1; min-height: 44px; padding: 0 14px; border: 1px solid var(--accent-line); border-radius: 4px; background: var(--bg); color: var(--text); }
 .inline-form .btn { flex: 0 0 auto; }
 
@@ -502,6 +503,21 @@ body.guard-checking main, body.guard-checking .admin-shell { visibility: hidden;
 .akses-form { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0 6px; }
 .akses-form input { flex: 1 1 220px; min-height: 44px; }
 .akses-form .btn { min-height: 44px; }
+
+/* ---------- Kepatuhan hukum: sumber, kredit, dan dokumen ---------- */
+.antara-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; aspect-ratio: 16/9; border: 1px dashed var(--border); border-radius: 4px; background: var(--surface-2); text-align: center; padding: 12px; }
+.antara-placeholder span { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--text-soft); }
+.antara-placeholder small { font-size: 10px; color: var(--muted); line-height: 1.4; }
+.sumber-lanjutan { display: inline-block; margin-top: 10px; font-size: 11px; font-weight: 600; color: var(--accent); text-decoration: none; }
+.sumber-lanjutan:hover { text-decoration: underline; }
+.postingan-info { display: flex; flex-direction: column; gap: 4px; margin: 14px 0 0; padding: 12px 14px; border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 4px; font-size: 11px; color: var(--text-soft); line-height: 1.5; }
+.postingan-info.ringkas { margin: 8px 0; padding: 8px 10px; font-size: 10px; }
+.postingan-info strong { color: var(--text); }
+.postingan-sumber { margin: 0 0 8px; font-size: 10px; color: var(--muted); }
+.footer-catatan { font-size: 10px; color: var(--muted); }
+.statis-index { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 22px; }
+.statis-index a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 11px; color: var(--text-soft); text-decoration: none; }
+.statis-index a:hover { border-color: var(--accent); color: var(--accent); }
 
 @media (max-width: 760px) {
   .about-hero h1 { font-size: 30px; }

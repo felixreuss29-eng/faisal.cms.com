@@ -4,11 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Donasi untuk Faisal — Faisal</title>
-  <meta name="description" content="Dukung Faisal, portal berita independen. Kirim donasi melalui QRIS dan sampaikan buktinya langsung kepada pemilik via WhatsApp 081286484770." />
+  <meta name="description" content="Dukung Faisal melalui QRIS. Kirim bukti donasi langsung kepada pemilik via email; nomor telepon pribadi tidak ditampilkan." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/style.css?v=24" />
+  <link rel="stylesheet" href="assets/css/style.css?v=25" />
 </head>
 <body data-page="Beranda">
   <div data-site-header></div>
@@ -61,12 +61,11 @@
         </div>
         <div class="panel">
           <h3 class="panel-title">2. Sampaikan bukti dukungan</h3>
-          <p class="meta">Setelah mengirim donasi melalui QRIS, unggah buktinya pada formulir di bawah, lalu sampaikan nama, email, nomor WhatsApp, nominal, dan bukti transfer melalui WhatsApp atau email pemilik. Setelah bukti dicek, pemilik mengirim <strong>kode terima kasih</strong>. Masukkan kode tersebut pada halaman artikel apabila Anda ingin membuka seluruh tulisan.</p>
+          <p class="meta">Setelah mengirim donasi melalui QRIS, unggah buktinya pada formulir di bawah, lalu sampaikan nama, email, nominal, dan bukti transfer melalui email pemilik. Setelah bukti dicek, pemilik mengirim <strong>kode terima kasih</strong>. Masukkan kode tersebut pada halaman artikel apabila Anda ingin membuka seluruh tulisan.</p>
           <div class="contact-row">
-            <a class="btn btn-primary" id="wa-direct" href="https://wa.me/6281286484770?text=Konfirmasi%20donasi%20Faisal" target="_blank" rel="noopener">WhatsApp 081286484770</a>
-            <a class="btn btn-outline" id="email-direct" href="mailto:felixreuss29@gmail.com?subject=Konfirmasi%20donasi%20Faisal">Email pemilik</a>
+            <a class="btn btn-primary" id="email-direct" href="mailto:felixreuss29@gmail.com?subject=Konfirmasi%20donasi%20Faisal">Email pemilik</a>
           </div>
-          <p class="meta" id="kontak-pemilik">Pemilik: <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a> · WhatsApp: <a href="https://wa.me/6281286484770">081286484770</a></p>
+          <p class="meta" id="kontak-pemilik">Pemilik: <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a>. Nomor telepon pribadi tidak ditampilkan di website ini.</p>
           <p class="meta">Pemilik biasanya menanggapi dalam maksimal 1×24 jam kerja.</p>
         </div>
       </div>
@@ -88,11 +87,6 @@
               <span class="error hidden" data-error="email">Alamat email tidak valid.</span>
             </div>
             <div class="form-field">
-              <label for="wa">Nomor WhatsApp</label>
-              <input id="wa" name="wa" type="tel" inputmode="tel" autocomplete="tel" placeholder="08xxxxxxxxxx" required />
-              <span class="error hidden" data-error="wa">Nomor WhatsApp harus diawali 08 dan berisi 10–13 digit.</span>
-            </div>
-            <div class="form-field">
               <label for="paket-pilihan">Nominal dukungan</label>
               <select id="paket-pilihan" name="paket" required>
                 <option value="">Pilih nominal dukungan</option>
@@ -110,18 +104,17 @@
           <div class="form-field">
             <label for="bukti">Bukti transfer QRIS <span aria-hidden="true">*</span></label>
             <input id="bukti" name="bukti" type="file" accept="image/jpeg,image/png,image/webp" required />
-            <span class="meta">Wajib: foto atau tangkapan layar bukti transfer (JPG, PNG, atau WebP, maksimal 10 MB). Bukti disimpan di perangkat ini dan tetap perlu dikirim ke pemilik lewat WhatsApp/email.</span>
+            <span class="meta">Wajib: foto atau tangkapan layar bukti transfer (JPG, PNG, atau WebP, maksimal 10 MB). Bukti disimpan di perangkat ini dan tetap perlu dikirim ke pemilik lewat email.</span>
             <span class="error hidden" data-error="bukti">Bukti transfer wajib diunggah berupa gambar maksimal 10 MB.</span>
             <div class="bukti-preview hidden" id="bukti-preview"><img id="bukti-preview-img" alt="Pratinjau bukti transfer QRIS" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" /></div>
           </div>
           <label class="check-row">
             <input id="setuju" type="checkbox" required />
-            <span>Saya menyetujui bahwa bukti donasi diverifikasi manual oleh pemilik dan konfirmasinya disampaikan melalui WhatsApp atau email.</span>
+            <span>Saya menyetujui bahwa bukti donasi diverifikasi manual oleh pemilik dan konfirmasinya disampaikan melalui email.</span>
           </label>
           <span class="error hidden" data-error="setuju">Centang persetujuan untuk melanjutkan.</span>
           <div class="form-actions">
-            <button class="btn btn-primary" type="submit">Kirim bukti via WhatsApp</button>
-            <button class="btn btn-outline" type="button" id="kirim-email">Kirim via email</button>
+            <button class="btn btn-primary" type="submit">Siapkan email konfirmasi</button>
           </div>
         </form>
         <div class="submission-result hidden" id="hasil-pengajuan" role="status" aria-live="polite"></div>
@@ -131,7 +124,7 @@
     <section class="section" id="cek-status" aria-labelledby="judul-status">
       <div class="section-head"><span class="section-mark"></span><h2 class="section-title" id="judul-status">Cek status pengajuan</h2></div>
       <div class="panel form-panel">
-        <p class="meta">Status di bawah ini dibaca dari catatan pada perangkat ini. Konfirmasi akhir tetap dikirim pemilik lewat WhatsApp atau email.</p>
+        <p class="meta">Status di bawah ini dibaca dari catatan pada perangkat ini. Konfirmasi akhir tetap dikirim pemilik lewat email.</p>
         <div class="status-row">
           <label class="sr-only" for="cek-email">Email yang digunakan</label>
           <input id="cek-email" type="email" placeholder="Alamat email yang didaftarkan" />
@@ -156,10 +149,11 @@
   <div data-site-footer></div>
   <div class="toast" role="status" aria-live="polite"></div>
 
-  <script src="assets/js/supabase-config.js?v=24"></script>
-  <script src="assets/js/supabase.js?v=24"></script>
-  <script src="assets/js/data.js?v=24"></script>
-  <script src="assets/js/i18n.js?v=24"></script>
-  <script src="assets/js/app.js?v=24"></script>
+  <script src="assets/js/supabase-config.js?v=25"></script>
+  <script src="assets/js/config.js?v=25"></script>
+  <script src="assets/js/supabase.js?v=25"></script>
+  <script src="assets/js/data.js?v=25"></script>
+  <script src="assets/js/i18n.js?v=25"></script>
+  <script src="assets/js/app.js?v=25"></script>
 </body>
 </html>

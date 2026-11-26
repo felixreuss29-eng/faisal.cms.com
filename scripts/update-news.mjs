@@ -26,6 +26,10 @@ const SUMBER = [
   { url: 'https://www.antaranews.com/rss/humaniora.xml', batas: 20, hanyaJika: /pendidikan|sekolah|anak tk|taman kanak|program indonesia pintar|\bpip\b|siswa|pelajar|mahasiswa|guru|dosen|kampus|universitas/i }
 ];
 const BATAS_TOTAL = 24;
+/* Hak cipta foto ANTARA tetap pada ANTARA/fotografer. Secara default kode ini
+   tidak mengunduh/menyimpan foto dan publik hanya menampilkan judul, ringkasan
+   pendek, sumber, waktu terbit, serta tautan ke artikel asli. */
+const SIMPAN_GAMBAR_FOTO_ANTARA = false;
 // Berita yang tidak ingin ditampilkan. Filter ini berlaku setiap kali RSS diambil,
 // jadi artikel yang diblokir tidak akan muncul lagi setelah pembaruan harian.
 const DIBLOKIR = [
@@ -95,10 +99,14 @@ for (const sumber of feed) {
     const id = 'berita-' + ((link.match(/\/(\d{6,})\//) || [])[1] || String(dilihat.size + 1));
     if (dilihat.has(id)) continue;
     dilihat.add(id);
-    const urlGambar = atribut(item, 'media:content', 'url') || atribut(item, 'enclosure', 'url');
+    const urlGambar = SIMPAN_GAMBAR_FOTO_ANTARA
+      ? (atribut(item, 'media:content', 'url') || atribut(item, 'enclosure', 'url'))
+      : null;
     const image = urlGambar ? unduhGambar(urlGambar, `${id}.jpg`) : null;
     const description = tag(item, 'description');
-    const excerpt = ringkas(tag(item, 'content:encoded') || description);
+    // description adalah ringkasan singkat dari RSS; content:encoded tidak dipakai
+    // agar isi artikel sumber tidak ikut tersalin ke repositori.
+    const excerpt = ringkas(description);
     const publishedDate = tag(item, 'pubDate');
     const published = publishedDate && !Number.isNaN(Date.parse(publishedDate))
       ? new Date(publishedDate).toISOString()
@@ -127,11 +135,14 @@ await writeFile(JSON_PATH, JSON.stringify({
   articles
 }, null, 2));
 
-// Buang foto lama yang sudah tidak dipakai agar repository tidak terus bertambah.
-const dipakai = new Set(articles.map((a) => a.image).filter(Boolean).map((p) => p.split('/').pop()));
-for (const nama of await readdir(IMG_DIR)) {
-  if (/^berita-\d+\.jpg$/.test(nama) && !dipakai.has(nama)) {
-    await unlink(join(IMG_DIR, nama)).catch(() => {});
+// Bersihkan foto lama hanya bila pengunduhan foto diaktifkan. Jika tidak,
+// berkas lama sengaja dibiarkan agar tidak menghapus konten tanpa konfirmasi.
+if (SIMPAN_GAMBAR_FOTO_ANTARA) {
+  const dipakai = new Set(articles.map((a) => a.image).filter(Boolean).map((p) => p.split('/').pop()));
+  for (const nama of await readdir(IMG_DIR)) {
+    if (/^berita-\d+\.jpg$/.test(nama) && !dipakai.has(nama)) {
+      await unlink(join(IMG_DIR, nama)).catch(() => {});
+    }
   }
 }
 
@@ -139,4 +150,4 @@ const ringkasan = Object.entries(articles.reduce((acc, a) => {
   acc[a.category] = (acc[a.category] || 0) + 1;
   return acc;
 }, {})).map(([k, v]) => `${k}: ${v}`).join(', ');
-console.log(`Update selesai: ${articles.length} artikel (${ringkasan}), ${articles.filter((a) => a.image).length} foto tersimpan.`);
+console.log(`Update selesai: ${articles.length} artikel (${ringkasan}), ${articles.filter((a) => a.image).length} foto tersimpan. Tampilkan foto ANTARA: ${SIMPAN_GAMBAR_FOTO_ANTARA ? 'ya' : 'tidak'}.`);

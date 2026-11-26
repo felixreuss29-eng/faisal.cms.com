@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/style.css?v=24" />
+  <link rel="stylesheet" href="assets/css/style.css?v=25" />
 </head>
 <body data-page="Beranda">
   <div data-site-header></div>
@@ -49,19 +49,25 @@
       <p>Rangkuman harian redaksi Faisal — politik, ekonomi, dan isu yang paling berdampak.</p>
       <form class="inline-form" data-newsletter>
         <label class="sr-only" for="email-newsletter">Alamat email</label>
-        <input id="email-newsletter" type="email" placeholder="Alamat email Anda" required />
+        <input id="email-newsletter" type="email" placeholder="Alamat email Anda" autocomplete="email" required />
         <button class="btn btn-primary" type="submit">Terima rangkuman</button>
+        <label class="check-row">
+          <input type="checkbox" data-newsletter-setuju required />
+          <span>Saya setuju email saya digunakan untuk menerima rangkuman harian sesuai <a href="kebijakan-privasi">Kebijakan Privasi</a></span>
+        </label>
       </form>
+      <p class="meta" style="margin-top:8px">Anda dapat berhenti berlangganan kapan saja dengan menghubungi <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a>. Email tidak disimpan di repositori website.</p>
     </section>
   </main>
 
   <div data-site-footer></div>
   <div class="toast" role="status" aria-live="polite"></div>
 
-  <script src="assets/js/supabase-config.js?v=24"></script>
-  <script src="assets/js/supabase.js?v=24"></script>
-  <script src="assets/js/data.js?v=24"></script>
-  <script src="assets/js/i18n.js?v=24"></script>
-  <script src="assets/js/app.js?v=24"></script>
+  <script src="assets/js/supabase-config.js?v=25"></script>
+  <script src="assets/js/config.js?v=25"></script>
+  <script src="assets/js/supabase.js?v=25"></script>
+  <script src="assets/js/data.js?v=25"></script>
+  <script src="assets/js/i18n.js?v=25"></script>
+  <script src="assets/js/app.js?v=25"></script>
 </body>
 </html>
