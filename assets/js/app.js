@@ -280,111 +280,6 @@ async function initNotifikasi() {
   });
 }
 
-/* ---------- Riwayat notifikasi terbaru ---------- */
-let panelRiwayat = null;
-
-function isiRiwayatNotifikasi() {
-  if (!panelRiwayat) return;
-  const daftar = POSTINGAN.slice()
-    .sort((a, b) => new Date(b.updated || b.published || 0) - new Date(a.updated || a.published || 0))
-    .slice(0, 5);
-  const isi = daftar.length
-    ? `<ul class="notif-panel-list">${daftar.map((a) => {
-        const diperbarui = a.updated && new Date(a.updated).getTime() > new Date(a.published || 0).getTime();
-        const waktu = formatWaktuTerbit(diperbarui ? a.updated : a.published);
-        return `<li><a class="notif-panel-item" href="artikel?id=${encodeURIComponent(a.id)}">
-          <h4>${esc(a.title)}</h4>
-          <p>${esc(a.category || 'Berita')} · ${diperbarui ? 'Diperbarui' : 'Terbit'} ${esc(waktu)}</p>
-        </a></li>`;
-      }).join('')}</ul>`
-    : '<p class="notif-panel-kosong">Belum ada berita pemilik yang diterbitkan.</p>';
-  panelRiwayat.querySelector('[data-notif-riwayat-isi]').innerHTML = isi;
-}
-
-function tutupRiwayatNotifikasi() {
-  if (!panelRiwayat) return;
-  panelRiwayat.hidden = true;
-  document.querySelectorAll('[data-notif-riwayat]').forEach((b) => b.setAttribute('aria-expanded', 'false'));
-}
-
-function posisikanRiwayat(tombol) {
-  const r = tombol.getBoundingClientRect();
-  const lebar = Math.min(360, window.innerWidth - 24);
-  panelRiwayat.style.width = lebar + 'px';
-  panelRiwayat.style.left = Math.max(12, Math.min(r.right - lebar, window.innerWidth - lebar - 12)) + 'px';
-  const bawah = r.bottom + 8;
-  const tinggi = Math.min(520, window.innerHeight - bawah - 12);
-  if (tinggi < 160) {
-    panelRiwayat.style.top = 'auto';
-    panelRiwayat.style.bottom = Math.max(12, Math.min(window.innerHeight - r.top + 8, window.innerHeight - 12)) + 'px';
-    panelRiwayat.style.maxHeight = Math.max(160, Math.min(360, r.top - 24)) + 'px';
-  } else {
-    panelRiwayat.style.bottom = 'auto';
-    panelRiwayat.style.top = bawah + 'px';
-    panelRiwayat.style.maxHeight = tinggi + 'px';
-  }
-}
-
-function bukaRiwayatNotifikasi(tombol) {
-  if (!panelRiwayat) return;
-  if (!panelRiwayat.hidden && tombol.getAttribute('aria-expanded') === 'true') {
-    tutupRiwayatNotifikasi();
-    return;
-  }
-  isiRiwayatNotifikasi();
-  posisikanRiwayat(tombol);
-  panelRiwayat.hidden = false;
-  document.querySelectorAll('[data-notif-riwayat]').forEach((b) => b.setAttribute('aria-expanded', String(b === tombol)));
-  panelRiwayat.querySelector('[data-notif-riwayat-tutup]').focus();
-}
-
-function pasangRiwayatNotifikasi() {
-  if (!document.querySelector('[data-notif-riwayat]')) return;
-  if (!panelRiwayat) {
-    panelRiwayat = document.createElement('div');
-    panelRiwayat.id = 'riwayat-notifikasi';
-    panelRiwayat.className = 'notif-panel';
-    panelRiwayat.setAttribute('role', 'region');
-    panelRiwayat.setAttribute('aria-label', 'Riwayat notifikasi terbaru');
-    panelRiwayat.hidden = true;
-    panelRiwayat.innerHTML = `
-      <div class="notif-panel-head">
-        <h3>Riwayat notifikasi terbaru</h3>
-        <button class="notif-panel-close" type="button" data-notif-riwayat-tutup aria-label="Tutup riwayat notifikasi">✕</button>
-      </div>
-      <div data-notif-riwayat-isi></div>
-      <p class="notif-panel-footer">Menampilkan 5 berita pemilik terbaru. Buka artikel untuk detail.</p>`;
-    document.body.appendChild(panelRiwayat);
-    panelRiwayat.querySelector('[data-notif-riwayat-tutup]').addEventListener('click', () => {
-      tutupRiwayatNotifikasi();
-      const b = document.querySelector('[data-notif-riwayat][aria-expanded="false"]');
-      if (b) b.focus();
-    });
-    document.addEventListener('click', (e) => {
-      const tombol = e.target.closest('[data-notif-riwayat]');
-      if (tombol) {
-        e.preventDefault();
-        bukaRiwayatNotifikasi(tombol);
-        return;
-      }
-      if (!panelRiwayat.hidden && !e.target.closest('.notif-panel')) tutupRiwayatNotifikasi();
-    });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && !panelRiwayat.hidden) {
-        tutupRiwayatNotifikasi();
-        const b = document.querySelector('[data-notif-riwayat]');
-        if (b) b.focus();
-      }
-    });
-    window.addEventListener('resize', () => {
-      if (panelRiwayat.hidden) return;
-      const b = document.querySelector('[data-notif-riwayat][aria-expanded="true"]');
-      if (b) posisikanRiwayat(b);
-    });
-  }
-  isiRiwayatNotifikasi();
-}
-
 /* ---------- Header & footer ---------- */
 const KATEGORI = ['Politik', 'Nasional', 'Ekonomi', 'Olahraga', 'Hukum', 'Teknologi', 'Internasional', 'Pendidikan'];
 function kategoriAktif() {
@@ -434,7 +329,6 @@ function renderHeader(active = 'Beranda') {
                   <span class="notif-silang"></span><span class="notif-titik"></span>
                 </span>
               </button>
-              <button class="icon-btn notif-riwayat-btn" type="button" data-notif-riwayat aria-expanded="false" aria-controls="riwayat-notifikasi" aria-label="Lihat riwayat notifikasi terbaru" title="Riwayat notifikasi terbaru"><span aria-hidden="true">◷</span></button>
             </div>
             <button class="icon-btn" type="button" data-theme-toggle aria-label="Aktifkan mode gelap">☾</button>
             <a class="btn btn-primary" href="donasi">Dukungan</a>
@@ -552,7 +446,6 @@ function renderFooter() {
             <p style="font-size:11px;margin:10px 0 0">Pemilik &amp; Pemimpin Redaksi: Faisal Akbar<br />Email: <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a><br />QRIS: tersedia di halaman dukungan</p>
             <a class="footer-translate" href="https://translate.google.com/translate?sl=id&amp;tl=en&amp;u=${encodeURIComponent(location.href)}">Terjemahkan halaman (semua bahasa)</a>
             <button class="footer-notif" type="button" data-notif-toggle aria-pressed="false"><span data-notif-teks>Aktifkan notifikasi berita</span></button>
-            <button class="footer-notif footer-notif-riwayat" type="button" data-notif-riwayat aria-expanded="false" aria-controls="riwayat-notifikasi">Lihat riwayat notifikasi terbaru</button>
           </div>
           ${cols.map(([t, links]) => `<div><h3>${t}</h3><ul>${links.map((l) => `<li><a href="${hrefFooter(l)}" ${eksternal(l) ? 'target="_blank" rel="noopener noreferrer"' : ''}>${l}</a></li>`).join('')}</ul></div>`).join('')}
         </div>
@@ -1283,7 +1176,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(rapikanNav);
   initTickerToggle();
   renderFooter();
-  pasangRiwayatNotifikasi();
   renderHome();
   renderArticle();
   renderCategory();
@@ -1312,7 +1204,6 @@ document.addEventListener('DOMContentLoaded', () => {
       renderBeritaPage();
       perbaruiAngka();
       sinkronIkuti();
-      pasangRiwayatNotifikasi();
     });
   }
   startClock();
