@@ -81,7 +81,7 @@
         tombol.textContent = 'Mengirim…';
         try {
           if (!await FD.sesiPemilik()) throw new Error('Sesi pemilik tidak dapat diverifikasi. Masuk lagi ke CMS.');
-          const respons = await fetch(cfg.url + '/functions/v1/kirim-notifikasi-', {
+          const opsiFetch = {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -93,13 +93,23 @@
               id: document.getElementById('notif-id').value.trim(),
               ringkasan: document.getElementById('notif-ringkasan').value.trim()
             })
-          });
+          };
+          let respons;
+          try {
+            respons = await fetch(cfg.url + '/functions/v1/kirim-notifikasi-', opsiFetch);
+          } catch (e) {
+            // Cold start / jaringan sekali gagal: coba ulang satu kali.
+            await new Promise((r) => setTimeout(r, 900));
+            respons = await fetch(cfg.url + '/functions/v1/kirim-notifikasi-', opsiFetch);
+          }
           const hasil = await respons.json();
           if (!respons.ok) throw new Error(hasil.error || ('HTTP ' + respons.status));
           pesanSukses.textContent = 'Notifikasi terkirim ke ' + hasil.dikirim + ' dari ' + hasil.total + ' perangkat.';
           pesanSukses.classList.remove('hidden');
         } catch (err) {
-          pesanError.textContent = err.message;
+          pesanError.textContent = /failed to fetch|networkerror|typeerror/i.test(String(err.message))
+            ? 'Gagal menghubungi Supabase. Periksa koneksi internet dan pemblokir iklan di browser, lalu coba lagi. (' + err.message + ')'
+            : err.message;
           pesanError.classList.remove('hidden');
         } finally {
           tombol.disabled = false;
