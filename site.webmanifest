@@ -1,0 +1,16 @@
+{
+  "name": "Faisal — Berita Independen & Terpercaya",
+  "short_name": "Faisal",
+  "description": "Portal berita Indonesia yang menyajikan kabar dengan bahasa yang jelas dan sumber yang disebutkan.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#b91c1c",
+  "lang": "id",
+  "icons": [
+    { "src": "assets/img/favicon.png", "sizes": "64x64", "type": "image/png", "purpose": "any" },
+    { "src": "assets/img/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any maskable" },
+    { "src": "assets/img/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
