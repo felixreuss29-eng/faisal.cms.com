@@ -450,6 +450,11 @@ function renderHeader(active = 'Beranda') {
       ${NAV.map((n) => `<a href="${NAV_HREF[n]}">${n}</a>`).join('')}
       <a href="akun">Akun pembaca</a>
       <a href="donasi">Dukungan</a>
+      <div class="mobile-bahasa" data-no-translate>
+        <label class="sr-only" for="pilih-bahasa-hp">Pilih bahasa</label>
+        <select id="pilih-bahasa-hp" data-bahasa-hp aria-label="Pilih bahasa"></select>
+      </div>
+      <button class="mobile-nav-btn" type="button" data-theme-toggle><span aria-hidden="true">☾</span> Mode gelap</button>
     </nav>
     <div class="ticker" aria-label="Berita berjalan">
       <div class="wrap" style="display:flex;align-items:center;gap:14px;width:100%">
@@ -1255,6 +1260,18 @@ async function initModerasi() {
   }
 }
 
+function sinkronBahasaHP() {
+  const hp = document.querySelector('[data-bahasa-hp]');
+  const utama = document.querySelector('[data-bahasa]');
+  if (!hp || !utama) return;
+  hp.innerHTML = utama.innerHTML;
+  hp.value = utama.value;
+  hp.addEventListener('change', () => {
+    utama.value = hp.value;
+    utama.dispatchEvent(new Event('change'));
+  });
+}
+
 /* ---------- Inisialisasi ---------- */
 document.addEventListener('DOMContentLoaded', () => {
   initAdminGuard();
@@ -1282,6 +1299,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initArticleFilters();
   initModerasi();
   if (typeof window.initBahasa === 'function') window.initBahasa();
+  sinkronBahasaHP();
   perbaruiAngka();
   catatKunjunganSekali();
   if (document.body.dataset.admin !== '1') {
