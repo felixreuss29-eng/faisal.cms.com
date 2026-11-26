@@ -226,7 +226,7 @@
           if (fd && cfg && fd.siap() && typeof fd.tokenPemilik === 'function') {
             const token = fd.tokenPemilik();
             if (token) {
-              const notif = await fetch(cfg.url + '/functions/v1/kirim-notifikasi', {
+              const notif = await fetch(cfg.url + '/functions/v1/kirim-notifikasi-', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
