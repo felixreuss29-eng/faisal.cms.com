@@ -21,11 +21,11 @@ Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
   if (req.method !== 'POST') return json({ error: 'Gunakan POST.' }, 405);
 
-  // Dashboard Supabase menolak nama rahasia yang diawali "SUPABASE_",
-  // jadi memakai awalan FAISAL_ untuk variasi server.
-  const url = Deno.env.get('FAISAL_URL') || Deno.env.get('SUPABASE_URL');
-  const anon = Deno.env.get('FAISAL_ANON_KEY');
-  const service = Deno.env.get('FAISAL_SERVICE_KEY');
+  // SUPABASE_URL, SUPABASE_ANON_KEY, dan SUPABASE_SERVICE_ROLE_KEY
+  // disuntikkan otomatis oleh runtime Edge Function Supabase.
+  const url = Deno.env.get('SUPABASE_URL');
+  const anon = Deno.env.get('SUPABASE_ANON_KEY');
+  const service = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
   const publik = Deno.env.get('VAPID_PUBLIC_KEY');
   const privat = Deno.env.get('VAPID_PRIVATE_KEY');
   const subject = Deno.env.get('VAPID_SUBJECT') || `mailto:${PEMILIK}`;
