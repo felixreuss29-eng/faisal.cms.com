@@ -5,8 +5,6 @@
 const WPM = 200;
 const TZ = 'Asia/Jakarta';
 const OWNER_EMAIL = 'felixreuss29@gmail.com';
-const KONFIG = window.FAISAL_CONFIG || {};
-const SHOW_ANTARA_IMAGES = KONFIG.SHOW_ANTARA_IMAGES === true;
 const FD = window.FaisalData;
 const img = (name) => `assets/img/${name}`;
 /* ---------- Alamat bersih (tanpa .html di address bar) ---------- */
@@ -267,14 +265,13 @@ function renderFooter() {
         </div>
         <div class="footer-bottom">
           <span>© 2026 Faisal. Redaksi: Faisal Akbar. Seluruh hak dilindungi.</span>
-          <span>Berita ANTARA ditampilkan sebagai tautan ke sumber aslinya. Hak cipta ada pada ANTARA News.</span>
+          <span>Seluruh berita ditulis dan diterbitkan oleh redaksi Faisal.</span>
         </div>
       </div>
     </footer>`;
 }
 
-/* ---------- Berita harian dari RSS (diperbarui GitHub Actions) ---------- */
-let BERITA = { articles: [], generatedAt: '', sourceName: 'ANTARA News' };
+/* ---------- Konten redaksi: data contoh + unggahan CMS ---------- */
 let POSTINGAN = [];
 let AKSES = { hash: '' };
 
@@ -297,35 +294,8 @@ function terapkanAkses() {
   if (status) status.textContent = aktif ? 'Terima kasih. Dukungan Anda aktif pada perangkat ini.' : '';
 }
 
-function gambarAntaraHTML(a, denganTautan = true) {
-  const isi = (SHOW_ANTARA_IMAGES && a.image)
-    ? `<img src="${a.image.startsWith('assets/') ? a.image : img(a.image)}" alt="Foto berita: ${esc(a.title)}" loading="lazy" />`
-    : `<div class="antara-placeholder" role="img" aria-label="Foto tidak ditampilkan. ANTARA News"><span>ANTARA News</span><small>Foto tidak ditampilkan sesuai kebijakan hak cipta</small></div>`;
-  return denganTautan
-    ? `<a href="${esc(a.link)}" target="_blank" rel="noopener noreferrer">${isi}</a>`
-    : isi;
-}
-function beritaCardHTML(a, denganRingkasan = true) {
-  const sumber = esc(a.sumber || 'ANTARA News');
-  return `<article class="card">
-    ${gambarAntaraHTML(a)}
-    <div class="card-tags"><span class="sumber-label">Sumber: ${sumber}</span></div>
-    <h3><a href="${esc(a.link)}" target="_blank" rel="noopener noreferrer">${esc(a.title)}</a></h3>
-    ${denganRingkasan ? `<p class="meta card-excerpt">${esc(a.excerpt)}</p>` : ''}
-    <div class="card-meta">
-      <time class="meta" datetime="${esc(a.published)}">Terbit: ${esc(formatWaktuTerbit(a.published))}</time>
-      <span class="meta" data-relative="${esc(a.published)}">${waktuRelatif(a.published)}</span>
-    </div>
-    <a class="sumber-lanjutan" href="${esc(a.link)}" target="_blank" rel="noopener noreferrer">Baca selengkapnya di ANTARA →</a>
-  </article>`;
-}
-function labelPembaruan() {
-  document.querySelectorAll('[data-news-updated]').forEach((el) => {
-    if (!BERITA.generatedAt) return;
-    const t = new Date(BERITA.generatedAt);
-    el.textContent = `Diperbarui otomatis ${formatTanggal(t)}, ${formatJam(t)} WIB · Sumber: Faisal & ${BERITA.sourceName || 'ANTARA News'}`;
-  });
-}
+/* Berita dari RSS pihak ketiga sudah tidak dipakai. Semua kartu dan artikel
+   berasal dari data contoh redaksi atau unggahan CMS pemilik. */
 /* ---------- Jumlah tampilan & statistik kunjungan ---------- */
 async function perbaruiAngka() {
   if (!FD) return;
@@ -366,33 +336,22 @@ function catatKunjunganSekali() {
   }
 }
 function kartuTerkiniHTML(a) {
-  return a._sumber === 'pemilik' ? cardHTML(a) : beritaCardHTML(a, false);
+  return cardHTML(a);
 }
 function gabunganTerkini() {
-  const dariPemilik = postinganTerbaru().map((a) => ({ ...a, _sumber: 'pemilik' }));
-  const semuaAntara = BERITA.articles || [];
-  // Empat berita terbaru didahulukan, lalu satu per kategori agar filter
-  // Internasional dan Pendidikan juga punya isi saat ada beritanya.
-  const pilih = semuaAntara.slice(0, 4);
-  for (const k of KATEGORI) {
-    if (pilih.length >= 10) break;
-    if (pilih.some((a) => a.category === k)) continue;
-    const tambahan = semuaAntara.find((a) => a.category === k && !pilih.includes(a));
-    if (tambahan) pilih.push(tambahan);
-  }
-  const dariAntara = pilih.map((a) => ({ ...a, _sumber: 'antara' }));
-  return [...dariPemilik, ...dariAntara];
+  return [...postinganTerbaru(), ...ARTICLES]
+    .sort((a, b) => new Date(b.published || 0) - new Date(a.published || 0))
+    .slice(0, 12);
 }
 function renderBeritaHarian() {
   const host = document.querySelector('#daftar-berita-harian');
   if (!host) return;
   const semua = gabunganTerkini();
   if (!semua.length) {
-    host.innerHTML = '<div class="empty-state"><h3>Berita belum tersedia</h3><p>Unggah berita melalui <strong>Tulis Postingan</strong> di CMS atau tunggu pembaruan harian dari ANTARA News.</p></div>';
+    host.innerHTML = '<div class="empty-state"><h3>Berita belum tersedia</h3><p>Unggah berita melalui <strong>Tulis Postingan</strong> di CMS.</p></div>';
     return;
   }
   host.innerHTML = `<div class="grid-3">${semua.map(kartuTerkiniHTML).join('')}</div>`;
-  labelPembaruan();
   updateDynamicTime();
 }
 function renderBeritaPage() {
@@ -400,7 +359,7 @@ function renderBeritaPage() {
   if (!host) return;
   const semua = gabunganTerkini();
   if (!semua.length) {
-    host.innerHTML = '<div class="empty-state"><h3>Berita belum tersedia</h3><p>Unggah berita melalui CMS atau tunggu pembaruan harian dari ANTARA News.</p></div>';
+    host.innerHTML = '<div class="empty-state"><h3>Berita belum tersedia</h3><p>Unggah berita melalui menu <strong>Tulis Postingan</strong> di CMS.</p></div>';
     return;
   }
   const kategori = [...new Set(semua.map((a) => a.category))];
@@ -410,10 +369,9 @@ function renderBeritaPage() {
       <button class="chip active" type="button" data-berita-filter="Semua">Semua</button>
       ${kategori.map((k) => `<button class="chip" type="button" data-berita-filter="${esc(k)}">${esc(k)}</button>`).join('')}
     </div>
-    <p class="result-meta" data-news-updated></p>
+    <p class="result-meta">Menampilkan seluruh berita yang diterbitkan redaksi Faisal.</p>
     <div class="grid-3" id="grid-berita">${semua.map(kartuTerkiniHTML).join('')}</div>
-    <p class="meta" style="margin-top:20px">Berita dari pemilik memuat tautan artikel internal. Berita ANTARA ditampilkan sebagai tautan ke sumber aslinya. Hak cipta ada pada ANTARA News. Kunjungi <a href="https://www.antaranews.com" target="_blank" rel="noopener noreferrer">ANTARA News</a>.</p>`;
-  labelPembaruan();
+    <p class="meta" style="margin-top:20px">Seluruh berita di situs ini ditulis dan diterbitkan oleh redaksi Faisal. Rujukan sumber dicantumkan pada artikel bila berasal dari bahan bacaan lain.</p>`;
   updateDynamicTime();
   host.querySelectorAll('[data-berita-filter]').forEach((b) => b.addEventListener('click', () => {
     host.querySelectorAll('[data-berita-filter]').forEach((x) => x.classList.remove('active'));
@@ -429,35 +387,27 @@ function renderBeritaKategori() {
   const host = document.querySelector('#berita-kategori');
   if (!host) return;
   const kategori = kategoriAktif();
-  const tampil = BERITA.articles.filter((a) => a.category === kategori).slice(0, 3);
-  host.innerHTML = `<div class="section-head"><span class="section-mark"></span><h2 class="section-title">Berita ${esc(kategori.toLowerCase())} dari ANTARA</h2><a class="section-more" href="berita">Lihat semua →</a></div>
-    <p class="meta" data-news-updated></p>
+  const tampil = [...postinganTerbaru(), ...ARTICLES]
+    .filter((a) => a.category === kategori)
+    .sort((a, b) => new Date(b.published || 0) - new Date(a.published || 0))
+    .slice(0, 3);
+  host.innerHTML = `<div class="section-head"><span class="section-mark"></span><h2 class="section-title">Berita ${esc(kategori.toLowerCase())} dari Redaksi Faisal</h2><a class="section-more" href="berita">Lihat semua →</a></div>
+    <p class="meta">Berita pada kategori ini ditulis dan diterbitkan oleh redaksi Faisal.</p>
     ${tampil.length
-      ? `<div class="grid-3">${tampil.map((a) => beritaCardHTML(a, false)).join('')}</div>`
-      : '<p class="meta">Belum ada berita pada kategori ini hari ini.</p>'}`;
-  labelPembaruan();
+      ? `<div class="grid-3">${tampil.map(cardHTML).join('')}</div>`
+      : '<p class="meta">Belum ada berita pada kategori ini. Unggah melalui menu <strong>Tulis Postingan</strong> di CMS.</p>'}`;
   updateDynamicTime();
 }
 function perbaruiTicker() {
   const el = document.querySelector('[data-ticker]');
   if (!el) return;
-  // Unggahan pemilik didahulukan, lalu topik ramai dari ANTARA.
-  const kataViral = ['cpns', 'pongkor', 'km 50', 'hoaks', 'badak', 'pilkada', 'pemilu', 'inflasi', 'slank', 'pon'];
-  const pilihan = kataViral
-    .map((k) => (BERITA.articles || []).find((a) => a.title.toLowerCase().includes(k)))
-    .filter(Boolean)
-    .slice(0, 3);
-  const antara = pilihan.length ? pilihan : (BERITA.articles || []).slice(0, 4);
-  const daftar = [
-    ...postinganTerbaru().slice(0, 2).map((a) => ({ judul: a.title, id: a.id })),
-    ...antara.map((a) => ({ judul: a.title, id: a.id, tautan: a.link }))
-  ].slice(0, 6);
+  // News Ticker tetap berjalan, tetapi isinya hanya berita redaksi Faisal.
+  const daftar = [...postinganTerbaru(), ...ARTICLES]
+    .sort((a, b) => new Date(b.published || 0) - new Date(a.published || 0))
+    .slice(0, 6)
+    .map((a) => ({ judul: a.title, id: a.id }));
   if (!daftar.length) return;
-  const isi = daftar.map((x) => {
-    const href = x.tautan || `artikel?id=${encodeURIComponent(x.id)}`;
-    const luar = Boolean(x.tautan);
-    return `<a class="ticker-item" href="${esc(href)}"${luar ? ' target="_blank" rel="noopener noreferrer"' : ''}>${esc(x.judul)}</a><span class="ticker-dot" aria-hidden="true">•</span>`;
-  }).join('');
+  const isi = daftar.map((x) => `<a class="ticker-item" href="artikel?id=${encodeURIComponent(x.id)}">${esc(x.judul)}</a><span class="ticker-dot" aria-hidden="true">•</span>`).join('');
   // Dua grup identik supaya animasi -50% kembali mulus tanpa jeda.
   // Grup kedua semi-transparan untuk pembaca layar, jadi tautannya tidak bisa difokuskan.
   const isiPasif = isi.replace(/<a /g, '<a tabindex="-1" ');
@@ -475,15 +425,7 @@ function initTickerToggle() {
     tombol.textContent = jeda ? '▶' : '❚❚';
   });
 }
-async function muatBerita() {
-  try {
-    const res = await fetch('assets/js/news.json', { cache: 'no-store' });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    if (Array.isArray(data.articles)) BERITA = data;
-  } catch (e) {
-    console.warn('Berita harian tidak dapat dimuat:', e.message);
-  }
+function muatBerita() {
   renderBeritaKategori();
   renderCategory();
   renderSearch();
@@ -779,28 +721,20 @@ function renderCategory() {
     if (a.textContent.trim() === kategori) a.setAttribute('aria-current', 'page');
     else a.removeAttribute('aria-current');
   });
-  const lokal = [...ARTICLES, ...POSTINGAN].filter((a) => a.category === kategori);
-  const berita = BERITA.articles.filter((a) => a.category === kategori);
-  const semua = [...lokal, ...berita];
+  const semua = [...ARTICLES, ...POSTINGAN]
+    .filter((a) => a.category === kategori)
+    .sort((a, b) => new Date(b.published || 0) - new Date(a.published || 0));
   const utama = semua[0];
-  const kartu = [...lokal.map(cardHTML), ...berita.map((a) => beritaCardHTML(a, true))];
+  const kartu = semua.map(cardHTML);
   host.innerHTML = `
     <section class="category-band"><div class="wrap"><span class="kicker">Kategori</span><h1>${esc(kategori)}</h1><p>Berita dan analisis ${esc(kategori.toLowerCase())} dari redaksi Faisal.</p></div></section>
     <div class="wrap">
       <div class="filter-bar">${daftarKategori.map((k) => `<a class="chip ${k === kategori ? 'active' : ''}" href="kategori?k=${encodeURIComponent(k)}">${k}</a>`).join('')}</div>
-      ${utama ? (() => {
-        const dariAntara = Boolean(utama.link);
-        const gambarUtama = dariAntara
-          ? `<a href="${esc(utama.link)}" target="_blank" rel="noopener noreferrer">${gambarAntaraHTML(utama, false)}</a>`
-          : `<a href="artikel?id=${esc(utama.id)}"><img src="${gambarArtikel(utama)}" alt="${esc(utama.alt || 'Ilustrasi: ' + utama.title)}" /></a>`;
-        const tautanUtama = dariAntara ? utama.link : `artikel?id=${utama.id}`;
-        const atributLuar = dariAntara ? ' target="_blank" rel="noopener noreferrer"' : '';
-        return `<div class="section"><h2 class="sr-only">Sorotan ${esc(kategori)}</h2><div class="split">
-          <article class="lead">${gambarUtama}<span class="kicker">${dariAntara ? 'ANTARA News' : 'Utama'}</span><h3><a href="${esc(tautanUtama)}"${atributLuar}>${esc(utama.title)}</a></h3>${dariAntara ? `<p class="meta">Terbit: ${esc(formatWaktuTerbit(utama.published))}</p>` : ''}</article>
-          <div>${rankedHTML(semua.slice(1, 4).map((a) => a.title), kategori)}</div>
-        </div></div>`;
-      })() : ''}
-      <div class="section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title">Berita ${esc(kategori)}</h2></div><div class="grid-3">${kartu.length ? kartu.join('') : '<p class="meta">Belum ada berita pada kategori ini. Berita harian diperbarui setiap pukul 00:00 WIB.</p>'}</div></div>
+      ${utama ? `<div class="section"><h2 class="sr-only">Sorotan ${esc(kategori)}</h2><div class="split">
+        <article class="lead"><a href="artikel?id=${esc(utama.id)}"><img src="${gambarArtikel(utama)}" alt="${esc(utama.alt || 'Ilustrasi: ' + utama.title)}" /></a><span class="kicker">Utama</span><h3><a href="artikel?id=${esc(utama.id)}">${esc(utama.title)}</a></h3></article>
+        <div>${rankedHTML(semua.slice(1, 4).map((a) => a.title), kategori)}</div>
+      </div></div>` : ''}
+      <div class="section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title">Berita ${esc(kategori)}</h2></div><div class="grid-3">${kartu.length ? kartu.join('') : '<p class="meta">Belum ada berita pada kategori ini. Unggah melalui menu <strong>Tulis Postingan</strong> di CMS.</p>'}</div></div>
       ${utama ? '<button class="load-more" type="button">Muat lebih banyak</button>' : ''}
     </div>`;
   const tombol = host.querySelector('.load-more');
@@ -814,16 +748,14 @@ function renderSearch() {
   const q = new URLSearchParams(location.search).get('q') || '';
   const kunci = q.toLowerCase();
   const hasil = q ? ARTICLES.filter((a) => (a.title + a.category + a.excerpt).toLowerCase().includes(kunci)) : [];
-  const hasilBerita = q ? BERITA.articles.filter((a) => (a.title + a.category + a.excerpt).toLowerCase().includes(kunci)) : [];
   const hasilAdmin = q ? POSTINGAN.filter((a) => (a.title + a.category + a.excerpt).toLowerCase().includes(kunci)) : [];
-  const jumlah = hasil.length + hasilBerita.length + hasilAdmin.length;
+  const jumlah = hasil.length + hasilAdmin.length;
   host.innerHTML = `
     <div class="wrap" style="padding-top:32px">
       <h1 style="font-family:var(--font-display);font-size:32px;margin:0">Pencarian</h1>
       <p class="result-meta">${q ? `${jumlah} hasil untuk “${esc(q)}”` : 'Masukkan kata kunci pada kolom pencarian di atas.'}</p>
       ${q && !jumlah ? `<div class="empty-state"><h3>Tidak ada hasil</h3><p>Coba kata kunci lain atau lihat berita terkini.</p><a class="btn btn-outline" href="berita">Lihat berita terkini</a></div>` : `
-        ${hasilAdmin.length ? `<section class="section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title">Postingan admin</h2></div><div class="grid-3">${hasilAdmin.map(cardHTML).join('')}</div></section>` : ''}
-        ${hasilBerita.length ? `<section class="section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title">Berita terkini · ANTARA News</h2></div><div class="grid-3">${hasilBerita.map((a) => beritaCardHTML(a, false)).join('')}</div></section>` : ''}
+        ${hasilAdmin.length ? `<section class="section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title">Postingan pemilik</h2></div><div class="grid-3">${hasilAdmin.map(cardHTML).join('')}</div></section>` : ''}
         ${hasil.length ? `<section class="section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title">Arsip redaksi</h2></div><div class="grid-3">${hasil.map(cardHTML).join('')}</div></section>` : ''}`}
     </div>`;
   updateDynamicTime();
@@ -1360,9 +1292,10 @@ document.addEventListener('DOMContentLoaded', () => {
   catatKunjunganSekali();
   if (document.body.dataset.admin !== '1') {
     muatAkses();
-    // Berita terkini menggabungkan unggahan pemilik dan RSS ANTARA,
-    // jadi keduanya harus selesai dimuat sebelum dirender.
-    Promise.all([muatBerita(), muatPostingan()]).then(() => {
+    // Seluruh konten berasal dari redaksi Faisal. Unggahan CMS dimuat lebih
+    // dulu, lalu semua daftar dan News Ticker dirender ulang.
+    muatPostingan().then(() => {
+      muatBerita();
       perbaruiTicker();
       renderBeritaHarian();
       renderBeritaPage();

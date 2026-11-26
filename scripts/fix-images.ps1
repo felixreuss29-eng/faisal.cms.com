@@ -1,5 +1,6 @@
-# Ganti foto placeholder bertema gunung dengan foto berita nyata dari RSS ANTARA.
-# Dijalankan sekali saat menyiapkan aset: ./scripts/fix-images.ps1
+# Skrip historis: dulu dipakai sekali untuk mengganti foto placeholder dengan
+# foto dari RSS ANTARA. Saat ini tidak dipakai; website hanya menampilkan berita
+# redaksi Faisal. Jangan dijalankan lagi tanpa izin penggunaan foto.
 $base = 'https://img.antaranews.com/cache/800x533/'
 $map = @'
 hero.jpg|2026/11/25/rapat-pembahasan-mekanisme-pengisian-wapres-2913999.jpg

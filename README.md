@@ -6,7 +6,7 @@ Versi web nyata dari desain `Faisal_Portal_Design.figcraft`. Statis, tanpa build
 
 ```
 index.html              Beranda (desktop/tablet/mobile, light & dark)
-berita.html             Berita harian dari RSS ANTARA + filter kategori
+berita.html             Seluruh berita redaksi + filter kategori
 artikel.html            Halaman artikel + estimasi baca otomatis
 kategori.html           Halaman kategori/daftar berita
 pencarian.html          Hasil pencarian (termasuk empty state)
@@ -24,19 +24,16 @@ admin/
   posting.html          Unggah postingan, foto, dan kode terima kasih donasi ke GitHub
 assets/css/style.css    Design token, komponen, responsive, dark mode
 assets/js/data.js       Contoh konten (placeholder API/CMS)
-assets/js/news.json     Berita harian hasil scripts/update-news.mjs
 assets/js/posts.json    Postingan yang diunggah dari admin CMS
 assets/js/access.json   Sidik jari (hash SHA-256) kode terima kasih donasi
 assets/js/app.js        Perilaku: jam, waktu relatif, tema, toast, form, cookie, push
 assets/js/i18n.js       Pilihan bahasa + terjemahan otomatis seluruh teks halaman
 assets/js/supabase.js   Komentar bersama, moderasi pemilik, dan statistik kunjungan (REST)
 assets/img/*.jpg        Foto berita lokal (menggantikan placeholder gunung)
-assets/img/berita/*.jpg Foto berita harian yang diunduh otomatis
 assets/img/pemilik-profil.jpg  Foto profil pemilik di CMS & tentang kami
 assets/img/upload/*.jpg  Foto postingan hasil unggahan admin
-scripts/update-news.mjs Ambil RSS ANTARA → news.json + foto lokal
-scripts/fix-images.ps1  Pengganti satu kali untuk foto placeholder
-.github/workflows/      Deploy GitHub Pages + pembaruan berita harian
+scripts/fix-images.ps1  Pengganti satu kali untuk foto placeholder (bersifat historis)
+.github/workflows/      Deploy GitHub Pages
 Faisal_Portal_Design.figcraft  Sumber desain (tidak dipakai saat runtime)
 ```
 
@@ -72,22 +69,18 @@ Semua tautan memakai path relatif, jadi tetap berfungsi bila repository dipasang
 
 Jika ingin deploy manual tanpa Actions: **Settings → Pages → Deploy from a branch → main / (root)**.
 
-## Pembaruan berita setiap hari
+## Pembaruan berita
 
-`.github/workflows/update-news.yml` berjalan otomatis pukul **00:00 WIB** (17:00 UTC) dan juga bisa dijalankan manual lewat tab **Actions → Perbarui berita harian → Run workflow**. Alurnya:
+Website ini **tidak lagi mengambil berita dari RSS pihak ketiga**, termasuk ANTARA News. Seluruh berita ditulis dan diterbitkan oleh redaksi Faisal.
 
-1. `scripts/update-news.mjs` mengambil tiga RSS ANTARA: `terkini.xml` (diklasifikasikan ke delapan kategori), `dunia-internasional.xml` (Internasional), dan `humaniora.xml` (hanya artikel Pendidikan, karena ANTARA tidak punya RSS pendidikan khusus).
-2. Script menyimpan maksimal 24 berita terbaru ke `assets/js/news.json` dan mengunduh fotonya ke `assets/img/berita/`. Kategori yang dikenal: Politik, Nasional, Ekonomi, Olahraga, Hukum, Teknologi, Internasional, dan Pendidikan.
-3. Workflow membuat commit bila ada perubahan; commit itu memicu workflow deploy GitHub Pages.
-4. Halaman `berita.html`, beranda, kategori, dan pencarian membaca `news.json` saat dibuka — tidak perlu build.
+Cara menambah berita:
 
-Untuk menjalankan manual di komputer:
+1. Buka `admin/posting.html` → **Tulis Postingan** di CMS.
+2. Isi judul, kategori, ringkasan, **sumber rujukan (wajib)**, foto beserta kreditnya (opsional), dan isi postingan.
+3. Klik **Unggah & terbitkan**. Berita masuk ke `assets/js/posts.json` lewat GitHub Contents API, lalu GitHub Pages otomatis deploy.
+4. Berita muncul di beranda, `berita.html`, kategori, pencarian, News Ticker, dan halaman artikel.
 
-```powershell
-node scripts/update-news.mjs
-```
-
-Jika GitHub menonaktifkan scheduled workflow karena repository tidak aktif, buka **Actions → Perbarui berita harian → Run workflow** atau ubah jadwal cron.
+Tidak ada workflow penjadwalan berita lagi; satu-satunya GitHub Actions yang dipakai adalah deploy GitHub Pages.
 
 ## Unggah postingan dari admin (tanpa backend)
 
@@ -145,8 +138,8 @@ Sebelum langkah 4 selesai, halaman publik tetap berfungsi dengan catatan "Supaba
 - Halaman `statis.html` berisi Pedoman Media Siber, identitas redaksi, hak jawab, kebijakan privasi, karir, iklan, cookie, dan peta situs.
 - Komentar artikel tampil untuk semua pengunjung lewat Supabase (`faisal_komentar`), lengkap dengan nama, waktu WIB, dan tombol hapus untuk pemilik yang sudah masuk dengan akun Supabase. Jika Supabase belum terhubung, komentar jatuh ke penyimpanan lokal (`faisal-komentar-<id>`) dan diberi catatan demikian; tombol bagikan email/salin tautan tetap berfungsi nyata.
 - Statistik kunjungan: satu pengunjung dihitung sekali per hari per halaman (`faisal_statistik`, pengenal acak di browser). Dasbor menampilkan pengunjung hari ini, total pengunjung unik, jumlah tampilan artikel, kunjungan terbaru, dan panel moderasi; kartu berita serta halaman artikel menampilkan "Dilihat N kali".
-- Gambar lokal bertema berita, tidak lagi placeholder gunung. Foto ANTARA tidak ditampilkan di halaman publik (`SHOW_ANTARA_IMAGES = false` di `assets/js/config.js`); kartu memakai placeholder netral.
-- Berita harian: RSS ANTARA → `news.json` → beranda/`berita.html`/kategori/pencarian. Tiap kartu hanya judul, ringkasan pendek, nama sumber, waktu terbit (WIB), dan tautan “Baca selengkapnya di ANTARA”; isi artikel sumber tidak disalin.
+- Gambar lokal bertema berita, tidak lagi placeholder gunung. Semua kartu memakai foto lokal milik website; tidak ada placeholder khusus berita pihak ketiga.
+- Seluruh berita: tulisan redaksi di `assets/js/data.js` dan unggahan CMS di `assets/js/posts.json` → beranda/`berita.html`/kategori/pencarian/News Ticker. Tidak ada `news.json` dan tidak ada konten RSS pihak ketiga.
 - Unggah postingan dari CMS: form admin → GitHub Contents API → `posts.json` + foto → tampil di beranda, `berita.html`, pencarian, dan halaman artikel.
 - Media sosial hanya Instagram `@faisalakbar0423`; Facebook, X/Twitter, dan YouTube dihapus karena belum tersedia.
 - Halaman `tentang.html` berisi misi, prinsip redaksi, tim, pemilik, dan kontak.
@@ -167,12 +160,12 @@ Sebelum langkah 4 selesai, halaman publik tetap berfungsi dengan catatan "Supaba
 8. **Analitik & iklan** — slot iklan masih placeholder; belum ada integrasi ads/analytics.
 9. **QA lanjutan** — audit Lighthouse otomatis sudah dijalankan (aksesibilitas, best practices, SEO = 100 pada halaman utama, artikel, kategori, dan dasbor; light & dark). Namun uji pembaca layar manual dan tinjauan visual manusia pada 1440/768/390 belum dilakukan.
 10. **Desain yang belum tersalin penuh** — layout tablet admin 768 dan beberapa state UI baru belum direbuild di file desain setelah perubahan warna.
-11. **Lisensi foto** — foto ANTARA tidak ditampilkan di publik secara default; yang muncul adalah nama sumber, waktu terbit, dan tautan ke artikel asli. Hak cipta tetap pada ANTARA/fotografer; untuk publikasi komersial atau penggunaan ulang, periksa izin dan kredit yang disyaratkan. Foto profil pemilik adalah file yang Anda kirim.
+11. **Lisensi foto** — seluruh kartu memakai foto lokal milik website. Foto profil pemilik adalah file yang Anda kirim. Bila pemilik menambahkan foto pihak lain melalui CMS, kredit dan izin penggunaan tetap menjadi tanggung jawab pemilik.
 12. **Terjemahan mesin** — terjemahan dihasilkan otomatis oleh Google Translate (atau MyMemory bila Google tidak dapat diakses) dan dapat salah pada istilah khusus; teks asli bahasa Indonesia tetap menjadi rujukan. Pembaca juga bisa membuka versi Google Translate penuh lewat tautan di footer atau opsi "Bahasa lain"; tautan itu sengaja dibuka di tab yang sama agar bekerja di browser dalam aplikasi.
 
 ## Lisensi
 
-Lihat `HAK-CIPTA.md`. Repo ini memakai **All Rights Reserved** (tanpa file `LICENSE`). Konten berita/foto ANTARA tetap menjadi hak ANTARA dan tidak termasuk izin penggunaan kembali.
+Lihat `HAK-CIPTA.md`. Repo ini memakai **All Rights Reserved** (tanpa file `LICENSE`). Seluruh berita dan foto yang tampil adalah materi redaksi Faisal; tidak ada konten RSS pihak ketiga yang disalin ke website.
 
 ## Catatan
 
