@@ -123,7 +123,12 @@
             respons = await fetch(cfg.url + '/functions/v1/kirim-notifikasi-', opsiFetch);
           }
           const hasil = await respons.json();
-          if (!respons.ok) throw new Error(hasil.error || ('HTTP ' + respons.status));
+          if (!respons.ok) {
+            const rincian = [hasil.error || ('HTTP ' + respons.status)];
+            if (hasil.tahap) rincian.push('tahap: ' + hasil.tahap);
+            if (hasil.detail) rincian.push(hasil.detail);
+            throw new Error(rincian.join(' — '));
+          }
           pesanSukses.textContent = 'Notifikasi terkirim ke ' + hasil.dikirim + ' dari ' + hasil.total + ' perangkat.';
           pesanSukses.classList.remove('hidden');
         } catch (err) {
