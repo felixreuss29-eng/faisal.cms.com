@@ -249,9 +249,20 @@
                   body: JSON.stringify(isiNotif)
                 });
               }
-              if (!notif.ok) throw new Error('HTTP ' + notif.status);
+              if (!notif.ok) {
+                let rincian = 'HTTP ' + notif.status;
+                try {
+                  const j = await notif.json();
+                  rincian = j.error || rincian;
+                  if (j.tahap) rincian += ' (tahap: ' + j.tahap + ')';
+                } catch (e) { /* balasan bukan JSON */ }
+                if (notif.status === 401 || notif.status === 403) {
+                  rincian += ' — masuk lagi ke CMS, lalu coba kirim ulang dari halaman "Kirim ulang notifikasi".';
+                }
+                throw new Error(rincian);
+              }
               const hasil = await notif.json();
-              box.innerHTML += '<p class="meta">Notifikasi berita dikirim ke ' + escNotif(String(hasil.dikirim || 0)) + ' perangkat.</p>';
+              box.innerHTML += '<p class="meta">Notifikasi berita otomatis dikirim ke ' + escNotif(String(hasil.dikirim || 0)) + ' perangkat.</p>';
             }
           }
         } catch (errNotif) {
