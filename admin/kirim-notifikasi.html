@@ -51,6 +51,8 @@
             <p class="alert error hidden" id="notif-error" role="alert"></p>
             <p class="alert success hidden" id="notif-sukses" role="status"></p>
             <button class="btn btn-primary" type="submit">Kirim notifikasi sekarang</button>
+            <button class="btn btn-outline" type="button" id="cek-koneksi" style="margin-left:8px">Uji koneksi Supabase</button>
+            <p class="alert hidden" id="hasil-cek" role="status" style="margin-top:12px"></p>
           </form>
         </section>
       </main>
@@ -70,6 +72,24 @@
       const pesanSukses = document.getElementById('notif-sukses');
       const tombol = form.querySelector('button[type="submit"]');
       if (!form) return;
+      const tombolCek = document.getElementById('cek-koneksi');
+      const hasilCek = document.getElementById('hasil-cek');
+      tombolCek.addEventListener('click', async () => {
+        hasilCek.className = 'alert hidden';
+        const cfg = window.FAISAL_SUPABASE;
+        try {
+          const r = await fetch(cfg.url + '/functions/v1/kirim-notifikasi-', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', apikey: cfg.anonKey },
+            body: JSON.stringify({ judul: 'uji koneksi', id: 'uji' })
+          });
+          hasilCek.textContent = 'Koneksi OK, HTTP ' + r.status + '. ' + (await r.text()).slice(0, 120);
+          hasilCek.className = 'alert success';
+        } catch (e) {
+          hasilCek.textContent = 'Koneksi gagal: ' + e.message;
+          hasilCek.className = 'alert error';
+        }
+      });
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
         pesanError.classList.add('hidden');
