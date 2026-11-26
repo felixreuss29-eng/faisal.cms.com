@@ -252,7 +252,7 @@
   function statusIkuti(nama) {
     const penulis = validPenulis(nama);
     if (!siap()) return Promise.resolve(Boolean(bacaLokal(KUNCI_IKUTI, {})[penulis]));
-    return minta('/rpc/faisal_status_ikuti', {
+    return minta('/rest/v1/rpc/faisal_status_ikuti', {
       method: 'POST',
       body: { p_pengunjung: idPengunjung(), p_penulis: penulis }
     }).then((hasil) => hasil === true);
@@ -260,7 +260,7 @@
   function jumlahPengikut(nama) {
     const penulis = validPenulis(nama);
     if (!siap()) return Promise.resolve(Number(Boolean(bacaLokal(KUNCI_IKUTI, {})[penulis])));
-    return minta('/rpc/faisal_jumlah_pengikut', {
+    return minta('/rest/v1/rpc/faisal_jumlah_pengikut', {
       method: 'POST',
       body: { p_penulis: penulis }
     }).then((hasil) => Number(hasil) || 0);
@@ -271,7 +271,7 @@
     if (aktif) daftar[penulis] = 1; else delete daftar[penulis];
     tulisLokal(KUNCI_IKUTI, daftar);
     if (!siap()) return Number(Boolean(daftar[penulis]));
-    const hasil = await minta('/rpc/faisal_simpan_ikuti', {
+    const hasil = await minta('/rest/v1/rpc/faisal_simpan_ikuti', {
       method: 'POST',
       body: { p_pengunjung: idPengunjung(), p_penulis: penulis, p_aktif: Boolean(aktif) }
     });
@@ -334,7 +334,7 @@
         if (langganan) await langganan.unsubscribe();
       }
       if (siap()) {
-        await minta('/rpc/faisal_hapus_langganan', {
+        await minta('/rest/v1/rpc/faisal_hapus_langganan', {
           method: 'POST',
           body: { p_pengunjung: idPengunjung() }
         });
