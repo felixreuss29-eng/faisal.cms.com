@@ -796,7 +796,7 @@ function initOverlays() {
       toast('Preferensi cookie disimpan.');
     }));
   }
-  if (!localStorage.getItem('faisal-push') && Math.random() > 0.5) {
+  if (!localStorage.getItem('faisal-push')) {
     const el = document.createElement('aside');
     el.className = 'push-prompt';
     el.innerHTML = `<h4>Izin notifikasi</h4><p>Terima berita baru langsung di perangkat Anda, walau web sedang tertutup.</p><div class="overlay-actions"><button class="btn btn-primary" data-push="izin">Izinkan</button><button class="btn btn-outline" data-push="nanti">Nanti saja</button></div>`;
