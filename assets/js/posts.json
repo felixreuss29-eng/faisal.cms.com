@@ -1,6 +1,57 @@
 {
   "posts": [
     {
+      "id": "post-1795675771194",
+      "title": "AS Usulkan Tarif Impor Baru hingga 18 Persen untuk Indonesia, 13 Negara Lain Ikut Disasar",
+      "category": "Internasional",
+      "excerpt": "Perwakilan Dagang AS (USTR) mengusulkan tarif baru hingga 18 persen untuk semua barang dari Indonesia, bersama 13 negara dan kawasan lain. Usulan ini masih berupa rencana, belum keputusan final.",
+      "image": "upload/post-1795675771194.jpeg",
+      "alt": "Grafis berita tentang usulan tarif impor baru Amerika Serikat hingga 18 persen untuk Indonesia, disertai daftar negara lain yang ikut disasar.",
+      "sumberRujukan": "ANTARA News, \"AS usulkan tarif impor baru hingga 18 persen untuk Indonesia\" (25 Nov 2026)",
+      "kreditFoto": "TIME timemagazine",
+      "author": {
+        "name": "Faisal Akbar",
+        "role": "Pemilik & Pemimpin Redaksi",
+        "photo": "pemilik-profil-rapi.jpg"
+      },
+      "published": "2026-11-26T06:49:34.438Z",
+      "updated": "2026-11-26T06:49:34.438Z",
+      "body": [
+        {
+          "type": "p",
+          "text": "JAKARTA – Indonesia kembali masuk daftar negara yang akan dikenai tarif impor baru oleh Amerika Serikat. Perwakilan Dagang AS (USTR) mengusulkan tarif baru hingga 18 persen terhadap Indonesia, serta 13 negara dan kawasan lain dengan besaran berbeda-beda. Usulan itu diumumkan pada Rabu (25/11/2026) dan masih berupa rencana yang akan dipertimbangkan."
+        },
+        {
+          "type": "p",
+          "text": "Apa isi usulannya"
+        },
+        {
+          "type": "p",
+          "text": "USTR mengusulkan tarif hingga 18 persen untuk semua barang dari Indonesia, dengan memperhitungkan tarif berdasarkan Pasal 301 yang sudah ada, serta pengecualian untuk barang tertentu."
+        },
+        {
+          "type": "p",
+          "text": "Mengapa Indonesia disasar"
+        },
+        {
+          "type": "p",
+          "text": "USTR menyoroti sejumlah aspek ekonomi Indonesia yang dinilai merugikan AS, yaitu implementasi UU ketenagakerjaan yang dinilai masih kurang, belum terlihatnya upaya mengatasi kelebihan kapasitas dan produksi, serta kebijakan hilirisasi. Menurut Wakil Dagang AS Jamieson Greer, kondisi itu tampak di sektor tekstil dan pakaian, tambang dan produksi besi, serta energi terbarukan."
+        },
+        {
+          "type": "p",
+          "text": "Negara lain yang disasar"
+        },
+        {
+          "type": "p",
+          "text": "Selain Indonesia, usulan serupa ditujukan kepada China, Uni Eropa, Singapura, Swiss, Malaysia, Kamboja, Thailand, Korea Selatan, Vietnam, Taiwan, Bangladesh, Jepang, dan India. Besarannya berbeda-beda:\n18 persen untuk Indonesia, Bangladesh, Malaysia, Kamboja, dan Thailand. \n15 persen untuk Uni Eropa, Jepang, Korea Selatan, Swiss, dan Taiwan. \n20 persen untuk China dan Singapura. \nHingga 25 persen untuk India dan hingga 35 persen untuk Vietnam."
+        },
+        {
+          "type": "p",
+          "text": "USTR juga menyebut Meksiko dan Norwegia, tetapi belum membuat keputusan apa pun terkait kedua negara itu."
+        }
+      ]
+    },
+    {
       "id": "post-1795663454477",
       "title": "Prabowo Ajukan Andi Amran Sulaiman dan Sugiono sebagai Calon Wakil Presiden Pengganti Gibran",
       "category": "Nasional",
