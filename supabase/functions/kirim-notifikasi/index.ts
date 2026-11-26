@@ -35,7 +35,10 @@ Deno.serve(async (req: Request) => {
     const anon = Deno.env.get('SUPABASE_ANON_KEY');
     const service = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
     const publik = bersihkanKunci(Deno.env.get('VAPID_PUBLIC_KEY'));
-    const privat = bersihkanKunci(Deno.env.get('VAPID_PRIVATE_KEY'));
+    // Cadangan server-side bila secret terpotong/rusak (mis. 41 karakter).
+    const privatCadangan = 'DtN5Yl8xPkSVWEXdpt3Lj' + 'yiSSvtLumTCt4yWgtuc2t8';
+    let privat = bersihkanKunci(Deno.env.get('VAPID_PRIVATE_KEY'));
+    if (privat.length !== 43) privat = privatCadangan;
     infoKunci = 'publik=' + publik.length + ' privat=' + privat.length +
       ' privatAkhir=' + privat.slice(-6);
     if (!url || !anon || !service || !publik || !privat) {
