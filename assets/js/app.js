@@ -203,31 +203,49 @@ function initFollow() {
   sinkronIkuti();
 }
 
+function terapkanStatusNotifikasi(aktif, keterangan = '') {
+  const teks = aktif ? 'Matikan notifikasi berita' : 'Aktifkan notifikasi berita';
+  document.querySelectorAll('[data-notif-toggle]').forEach((b) => {
+    b.setAttribute('aria-pressed', String(aktif));
+    b.classList.toggle('aktif', aktif);
+    b.dataset.notifStatus = aktif ? 'aktif' : 'belum';
+    b.setAttribute('aria-label', keterangan || teks);
+    b.title = keterangan || teks;
+    const label = b.querySelector('[data-notif-teks]');
+    if (label) label.textContent = teks;
+  });
+}
 async function initNotifikasi() {
   const tombol = document.querySelector('[data-notif-toggle]');
   if (!tombol || !FD || typeof FD.statusNotifikasi !== 'function') return;
   const statusAwal = await FD.statusNotifikasi();
-  tombol.dataset.notifStatus = statusAwal;
-  tombol.textContent = statusAwal === 'aktif' ? 'Matikan notifikasi berita' : 'Aktifkan notifikasi berita';
-  tombol.addEventListener('click', async () => {
-    tombol.disabled = true;
-    try {
-      if (tombol.dataset.notifStatus === 'aktif') {
-        await FD.matikanNotifikasi();
-        tombol.dataset.notifStatus = 'belum';
-        tombol.textContent = 'Aktifkan notifikasi berita';
-        toast('Notifikasi berita dimatikan.');
-      } else {
-        await FD.aktifkanNotifikasi();
-        tombol.dataset.notifStatus = 'aktif';
-        tombol.textContent = 'Matikan notifikasi berita';
-        toast('Notifikasi berita aktif.');
+  const keterangan = statusAwal === 'ditolak'
+    ? 'Izin notifikasi diblokir. Aktifkan lewat pengaturan browser.'
+    : statusAwal === 'tidak-didukung'
+      ? 'Browser ini belum mendukung notifikasi.'
+      : '';
+  terapkanStatusNotifikasi(statusAwal === 'aktif', keterangan);
+  document.querySelectorAll('[data-notif-toggle]').forEach((b) => {
+    b.addEventListener('click', async () => {
+      if (keterangan) { toast(keterangan); return; }
+      const sedangAktif = b.dataset.notifStatus === 'aktif';
+      document.querySelectorAll('[data-notif-toggle]').forEach((x) => { x.disabled = true; });
+      try {
+        if (sedangAktif) {
+          await FD.matikanNotifikasi();
+          terapkanStatusNotifikasi(false);
+          toast('Notifikasi berita dimatikan.');
+        } else {
+          await FD.aktifkanNotifikasi();
+          terapkanStatusNotifikasi(true);
+          toast('Notifikasi berita aktif.');
+        }
+      } catch (e) {
+        toast('Gagal mengatur notifikasi: ' + e.message);
+      } finally {
+        document.querySelectorAll('[data-notif-toggle]').forEach((x) => { x.disabled = false; });
       }
-    } catch (e) {
-      toast('Gagal mengatur notifikasi: ' + e.message);
-    } finally {
-      tombol.disabled = false;
-    }
+    });
   });
 }
 
@@ -272,6 +290,12 @@ function renderHeader(active = 'Beranda') {
             <label class="sr-only" for="pilih-bahasa">Pilih bahasa</label>
             <select id="pilih-bahasa" class="language-select" data-bahasa aria-label="Pilih bahasa" title="Pilih bahasa. Terjemahan otomatis; teks asli tetap bahasa Indonesia."></select>
           </div>
+          <button class="icon-btn notif-btn" type="button" data-notif-toggle aria-pressed="false" aria-label="Aktifkan notifikasi berita" title="Aktifkan notifikasi berita">
+            <span class="notif-lonceng" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              <span class="notif-silang"></span><span class="notif-titik"></span>
+            </span>
+          </button>
           <button class="icon-btn" type="button" data-theme-toggle aria-label="Aktifkan mode gelap">☾</button>
           <a class="btn btn-primary" href="donasi">Dukungan</a>
           <button class="icon-btn menu-toggle" type="button" data-menu-toggle aria-label="Buka menu" aria-expanded="false">☰</button>
@@ -327,7 +351,7 @@ function renderFooter() {
             <p style="font-size:11px;margin:12px 0 0">Berita independen dan tepercaya untuk Indonesia.</p>
             <p style="font-size:11px;margin:10px 0 0">Pemilik &amp; Pemimpin Redaksi: Faisal Akbar<br />Email: <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a><br />QRIS: tersedia di halaman dukungan</p>
             <a class="footer-translate" href="https://translate.google.com/translate?sl=id&amp;tl=en&amp;u=${encodeURIComponent(location.href)}">Terjemahkan halaman (semua bahasa)</a>
-            <button class="footer-notif" type="button" data-notif-toggle>Aktifkan notifikasi berita</button>
+            <button class="footer-notif" type="button" data-notif-toggle aria-pressed="false"><span data-notif-teks>Aktifkan notifikasi berita</span></button>
           </div>
           ${cols.map(([t, links]) => `<div><h3>${t}</h3><ul>${links.map((l) => `<li><a href="${hrefFooter(l)}" ${eksternal(l) ? 'target="_blank" rel="noopener noreferrer"' : ''}>${l}</a></li>`).join('')}</ul></div>`).join('')}
         </div>
@@ -813,8 +837,7 @@ function initOverlays() {
         if (FD && typeof FD.aktifkanNotifikasi === 'function') await FD.aktifkanNotifikasi();
         localStorage.setItem('faisal-push', 'aktif');
         toast('Notifikasi berita aktif.');
-        const tombol = document.querySelector('[data-notif-toggle]');
-        if (tombol) { tombol.dataset.notifStatus = 'aktif'; tombol.textContent = 'Matikan notifikasi berita'; }
+        terapkanStatusNotifikasi(true);
       } catch (err) {
         localStorage.setItem('faisal-push', 'gagal');
         toast('Gagal mengaktifkan notifikasi: ' + err.message);
