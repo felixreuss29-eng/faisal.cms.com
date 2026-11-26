@@ -25,6 +25,7 @@
         <a href="daftar-artikel.html">▤ Artikel</a>
         <a href="editor.html">✎ Editor</a>
         <a class="active" href="posting.html">↑ Tulis Postingan</a>
+        <a href="kirim-notifikasi.html">◔ Kirim ulang notifikasi</a>
         <a href="../">← Lihat situs</a>
       </nav>
     </aside>
@@ -244,7 +245,8 @@
           box.innerHTML += '<p class="meta">Berita tersimpan, tetapi notifikasi gagal: ' + escNotif(errNotif.message) + '</p>';
         }
         box.classList.remove('hidden');
-        box.innerHTML = '<h3>Postingan berhasil diunggah</h3><p><strong>' + judul + '</strong> sudah masuk ke repository <code>' + c.owner + '/' + c.repo + '</code>.</p><p><a class="btn btn-primary" href="../artikel?id=' + id + '" target="_blank" rel="noopener noreferrer">Lihat postingan</a></p><p class="meta">GitHub Pages perlu 1–3 menit untuk mempublish ulang. Jika halaman belum berubah, tunggu sebentar lalu muat ulang.</p>';
+        const catatanNotif = box.innerHTML;
+        box.innerHTML = '<h3>Postingan berhasil diunggah</h3><p><strong>' + judul + '</strong> sudah masuk ke repository <code>' + c.owner + '/' + c.repo + '</code>.</p><p><a class="btn btn-primary" href="../artikel?id=' + id + '" target="_blank" rel="noopener noreferrer">Lihat postingan</a></p><p class="meta">GitHub Pages perlu 1–3 menit untuk mempublish ulang. Jika halaman belum berubah, tunggu sebentar lalu muat ulang.</p>' + catatanNotif;
         el('form-posting').reset();
         el('post-preview').hidden = true;
         toast('Postingan berhasil diunggah.');

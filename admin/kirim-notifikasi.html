@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="theme-color" content="#b91c1c" />
+  <link rel="icon" href="../assets/img/favicon.ico?v=30" />
+  <link rel="icon" type="image/png" sizes="64x64" href="../assets/img/favicon.png?v=30" />
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/img/apple-touch-icon.png?v=30" />
+  <link rel="manifest" href="../site.webmanifest?v=30" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <title>Kirim ulang notifikasi — Faisal CMS</title>
+  <meta name="description" content="Kirim ulang notifikasi berita untuk pembaca yang sudah mengaktifkan lonceng." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/style.css?v=36" />
+</head>
+<body data-admin="1">
+  <div class="admin-shell">
+    <aside class="admin-sidebar">
+      <span class="brand-name">Faisal CMS</span>
+      <nav aria-label="Navigasi admin">
+        <a href="dasbor.html">▦ Dasbor</a>
+        <a href="daftar-artikel.html">▤ Artikel</a>
+        <a href="editor.html">✎ Editor</a>
+        <a href="posting.html">↑ Tulis Postingan</a>
+        <a href="../">← Lihat situs</a>
+      </nav>
+    </aside>
+    <div class="admin-main">
+      <header class="admin-topbar"><button class="icon-btn" type="button" data-sidebar-toggle aria-label="Ciutkan sidebar" aria-expanded="true">☰</button><h1>Kirim ulang notifikasi</h1><div class="spacer"></div></header>
+      <main class="admin-content">
+        <nav class="breadcrumb" aria-label="Breadcrumb">Admin › Kirim ulang notifikasi</nav>
+        <section class="admin-card">
+          <h2>Notifikasi berita</h2>
+          <p class="meta">Halaman ini mengirim notifikasi ke perangkat pembaca yang sudah mengaktifkan lonceng. Tidak mengubah isi artikel dan tidak memerlukan unggah ulang.</p>
+          <form id="form-notif" novalidate style="max-width:680px">
+            <div class="form-field">
+              <label for="notif-judul">Judul berita</label>
+              <input id="notif-judul" name="judul" type="text" maxlength="160" value="Rupiah Cetak Rekor Terlemah Sepanjang Sejarah, Sempat Tembus Rp18.400 per Dolar AS" required />
+            </div>
+            <div class="form-field">
+              <label for="notif-id">ID artikel</label>
+              <input id="notif-id" name="id" type="text" maxlength="120" value="post-1795701465163" required />
+            </div>
+            <div class="form-field">
+              <label for="notif-ringkasan">Ringkasan notifikasi</label>
+              <textarea id="notif-ringkasan" name="ringkasan" rows="3" maxlength="240">Rupiah kembali mencetak rekor terlemah sepanjang sejarah. Setelah ditutup di Rp18.332 pada Rabu, rupiah sempat menembus Rp18.400 per dolar AS pada Kamis.</textarea>
+            </div>
+            <p class="alert error hidden" id="notif-error" role="alert"></p>
+            <p class="alert success hidden" id="notif-sukses" role="status"></p>
+            <button class="btn btn-primary" type="submit">Kirim notifikasi sekarang</button>
+          </form>
+        </section>
+      </main>
+    </div>
+  </div>
+  <div class="toast" role="status" aria-live="polite"></div>
+  <script src="../assets/js/supabase-config.js?v=36"></script>
+  <script src="../assets/js/config.js?v=36"></script>
+  <script src="../assets/js/supabase.js?v=36"></script>
+  <script src="../assets/js/data.js?v=36"></script>
+  <script src="../assets/js/app.js?v=36"></script>
+  <script>
+    (function () {
+      'use strict';
+      const form = document.getElementById('form-notif');
+      const pesanError = document.getElementById('notif-error');
+      const pesanSukses = document.getElementById('notif-sukses');
+      const tombol = form.querySelector('button[type="submit"]');
+      if (!form) return;
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        pesanError.classList.add('hidden');
+        pesanSukses.classList.add('hidden');
+        const FD = window.FaisalData;
+        const cfg = window.FAISAL_SUPABASE;
+        if (!FD || !cfg) return;
+        tombol.disabled = true;
+        tombol.textContent = 'Mengirim…';
+        try {
+          if (!await FD.sesiPemilik()) throw new Error('Sesi pemilik tidak dapat diverifikasi. Masuk lagi ke CMS.');
+          const respons = await fetch(cfg.url + '/functions/v1/kirim-notifikasi-', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              apikey: cfg.anonKey,
+              Authorization: 'Bearer ' + FD.tokenPemilik()
+            },
+            body: JSON.stringify({
+              judul: document.getElementById('notif-judul').value.trim(),
+              id: document.getElementById('notif-id').value.trim(),
+              ringkasan: document.getElementById('notif-ringkasan').value.trim()
+            })
+          });
+          const hasil = await respons.json();
+          if (!respons.ok) throw new Error(hasil.error || ('HTTP ' + respons.status));
+          pesanSukses.textContent = 'Notifikasi terkirim ke ' + hasil.dikirim + ' dari ' + hasil.total + ' perangkat.';
+          pesanSukses.classList.remove('hidden');
+        } catch (err) {
+          pesanError.textContent = err.message;
+          pesanError.classList.remove('hidden');
+        } finally {
+          tombol.disabled = false;
+          tombol.textContent = 'Kirim notifikasi sekarang';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
