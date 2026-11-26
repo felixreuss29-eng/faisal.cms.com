@@ -1,6 +1,62 @@
 {
   "posts": [
     {
+      "id": "post-1795663454477",
+      "title": "Prabowo Ajukan Andi Amran Sulaiman dan Sugiono sebagai Calon Wakil Presiden Pengganti Gibran",
+      "category": "Nasional",
+      "excerpt": "Setelah Gibran Rakabuming Raka mundur pada 12 November, Presiden Prabowo mengajukan dua calon wakil presiden kepada MPR, yaitu Andi Amran Sulaiman dan Sugiono. Sidang paripurna pemilihan dijadwalkan 11 Desember 2026, di tengah polemik soal tenggat waktu pengajuan calon.",
+      "image": "upload/post-1795663454477.jpg",
+      "alt": "Ketua MPR Ahmad Muzani memberikan keterangan pers di kompleks parlemen, Senayan, Jakarta, terkait dua nama calon wakil presiden pengganti Gibran.",
+      "author": {
+        "name": "Faisal Akbar",
+        "role": "Pemilik & Pemimpin Redaksi",
+        "photo": "pemilik-profil-rapi.jpg"
+      },
+      "published": "2026-11-26T03:24:17.952Z",
+      "body": [
+        {
+          "type": "p",
+          "text": "JAKARTA – Kursi Wakil Presiden Indonesia kini kosong dan proses pengisiannya sedang berjalan. Presiden Prabowo Subianto telah menyerahkan dua nama calon pengganti kepada MPR, sementara jadwal sidang pemilihan sempat menjadi bahan perdebatan."
+        },
+        {
+          "type": "p",
+          "text": "Awal mula: Gibran mengundurkan diri"
+        },
+        {
+          "type": "p",
+          "text": "Persoalan ini bermula dari pengunduran diri Gibran Rakabuming Raka. Ia menyerahkan surat pengunduran diri kepada pimpinan MPR di Jakarta pada Kamis, 12 November 2026. Menurut Prabowo, Gibran lebih dulu menyerahkan surat pernyataan berhenti kepada Presiden pada pukul 10.15, sebelum menghadap MPR. Prabowo menegaskan akan tetap mendukung Gibran. Pada hari yang sama, MPR menyatakan terjadi kekosongan jabatan Wakil Presiden dan mulai membahas mekanisme pengisiannya\nDua nama yang diajukan"
+        },
+        {
+          "type": "p",
+          "text": "Prabowo mengantarkan langsung surat berisi dua nama calon ke Kompleks Parlemen, Senayan, pada Senin (23/11/2026) sore. Dua nama itu adalah Andi Amran Sulaiman dan Sugiono. Amran saat ini menjabat Menteri Pertanian. Kewenangan mengusulkan calon ada pada Presiden, sedangkan yang memilih adalah MPR. Menteri Hukum Yusril Ihza Mahendra menegaskan bahwa kewenangan mengusulkan calon sepenuhnya di tangan Presiden.\nAturan konstitusinya"
+        },
+        {
+          "type": "p",
+          "text": "Mekanisme ini diatur dalam konstitusi. Pasal 8 ayat (2) UUD 1945 menyebut, apabila Wakil Presiden berhalangan atau jabatannya kosong, MPR menyelenggarakan sidang untuk memilih Wakil Presiden dari dua calon yang diusulkan Presiden, paling lambat dalam waktu 60 hari. Artinya, proses ini punya batas waktu yang jelas.\nPolemik jadwal sidang"
+        },
+        {
+          "type": "p",
+          "text": "Soal jadwal, sempat muncul perbedaan. Ketua MPR Ahmad Muzani sebelumnya mengumumkan sidang paripurna digelar pada 9 Desember 2026. Pakar hukum tata negara Mahfud MD lalu mengingatkan adanya potensi masalah. Menurutnya, sidang 9 Desember berpotensi tidak sah jika Presiden tidak mengajukan calon paling lambat 14 hari sebelum sidang. Ia menekankan bahwa yang dimaksud adalah 14 hari kerja, bukan hari kalender. Mahfud menyarankan agar sidang disesuaikan menjadi 14 hari kerja setelah MPR menerima dua nama, dengan tetap memperhatikan batas 60 hari sejak Gibran menyatakan berhenti.\nMasukan itu dibahas oleh MPR. Pada 23 November, MPR mengumumkan perubahan jadwal sidang paripurna pemilihan Wakil Presiden menjadi 11 Desember 2026.\nApa yang terjadi selanjutnya"
+        },
+        {
+          "type": "p",
+          "text": "Hingga kini belum ada Wakil Presiden pengganti yang ditetapkan. Pemilihan, pengesahan, dan pelantikan dijadwalkan dalam sidang paripurna MPR pada Jumat, 11 Desember 2026. Sebelumnya, pemerintah menargetkan proses ini selesai sebelum akhir Desember 2026.\nKlaim yang belum terkonfirmasi"
+        },
+        {
+          "type": "p",
+          "text": "Di tengah proses ini, muncul klaim dari luar pemerintah. Mantan Wamenkumham Denny Indrayana menyebut dalam unggahan media sosialnya bahwa Presiden telah memutuskan Andi Amran Sulaiman sebagai pengganti Gibran, dan bahwa Amran akan mundur dari kursi Menteri Pertanian. Ia juga mengklaim posisi Menteri Pertanian akan diisi Sudaryono. Klaim ini belum dikonfirmasi oleh Istana maupun MPR, dan keputusan akhir tetap berada di tangan MPR dalam sidang paripurna."
+        },
+        {
+          "type": "p",
+          "text": "Redaksi akan memperbarui berita ini seiring perkembangan terbaru."
+        },
+        {
+          "type": "p",
+          "text": "Penulis: Redaksi faisal.cms.com\nDirangkum dari VIVA, CNA Indonesia, detikcom, Suara.com, Okezone, dan Warta Belanegara."
+        }
+      ]
+    },
+    {
       "id": "post-1795627244371",
       "title": "Indonesia dan Korea Selatan Perkuat Kerja Sama Pengembangan Teknologi AI",
       "category": "Teknologi",
