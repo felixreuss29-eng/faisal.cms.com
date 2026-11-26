@@ -227,15 +227,26 @@
           if (fd && cfg && fd.siap() && typeof fd.tokenPemilik === 'function') {
             const token = fd.tokenPemilik();
             if (token) {
-              const notif = await fetch(cfg.url + '/functions/v1/kirim-notifikasi-', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  apikey: cfg.anonKey,
-                  Authorization: 'Bearer ' + token
-                },
-                body: JSON.stringify({ judul, id, ringkasan: baru.excerpt })
-              });
+              const isiNotif = { judul, id, ringkasan: baru.excerpt };
+              const alamatNotif = cfg.url + '/functions/v1/kirim-notifikasi-';
+              let notif;
+              try {
+                notif = await fetch(alamatNotif, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    apikey: cfg.anonKey,
+                    Authorization: 'Bearer ' + token
+                  },
+                  body: JSON.stringify(isiNotif)
+                });
+              } catch (e) {
+                notif = await fetch(alamatNotif, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json', apikey: cfg.anonKey },
+                  body: JSON.stringify(Object.assign({}, isiNotif, { token: token }))
+                });
+              }
               if (!notif.ok) throw new Error('HTTP ' + notif.status);
               const hasil = await notif.json();
               box.innerHTML += '<p class="meta">Notifikasi berita dikirim ke ' + escNotif(String(hasil.dikirim || 0)) + ' perangkat.</p>';

@@ -101,26 +101,35 @@
         tombol.textContent = 'Mengirim…';
         try {
           if (!await FD.sesiPemilik()) throw new Error('Sesi pemilik tidak dapat diverifikasi. Masuk lagi ke CMS.');
-          const opsiFetch = {
+          const token = FD.tokenPemilik();
+          const isi = {
+            judul: document.getElementById('notif-judul').value.trim(),
+            id: document.getElementById('notif-id').value.trim(),
+            ringkasan: document.getElementById('notif-ringkasan').value.trim()
+          };
+          const alamat = cfg.url + '/functions/v1/kirim-notifikasi-';
+          // Cara standar: token di header Authorization.
+          const opsiStandar = {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               apikey: cfg.anonKey,
-              Authorization: 'Bearer ' + FD.tokenPemilik()
+              Authorization: 'Bearer ' + token
             },
-            body: JSON.stringify({
-              judul: document.getElementById('notif-judul').value.trim(),
-              id: document.getElementById('notif-id').value.trim(),
-              ringkasan: document.getElementById('notif-ringkasan').value.trim()
-            })
+            body: JSON.stringify(isi)
+          };
+          // Cadangan: sebagian browser/jaringan memblokir header Authorization
+          // lintas situs. Token sesi yang sama dikirim lewat body saja.
+          const opsiCadangan = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', apikey: cfg.anonKey },
+            body: JSON.stringify(Object.assign({}, isi, { token: token }))
           };
           let respons;
           try {
-            respons = await fetch(cfg.url + '/functions/v1/kirim-notifikasi-', opsiFetch);
+            respons = await fetch(alamat, opsiStandar);
           } catch (e) {
-            // Cold start / jaringan sekali gagal: coba ulang satu kali.
-            await new Promise((r) => setTimeout(r, 900));
-            respons = await fetch(cfg.url + '/functions/v1/kirim-notifikasi-', opsiFetch);
+            respons = await fetch(alamat, opsiCadangan);
           }
           const hasil = await respons.json();
           if (!respons.ok) {

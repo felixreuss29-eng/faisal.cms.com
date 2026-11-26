@@ -28,19 +28,24 @@ Deno.serve(async (req: Request) => {
       return json({ error: 'Konfigurasi server belum lengkap.', tahap }, 500);
     }
 
-    tahap = 'verifikasi pemilik';
-    const token = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '').trim();
-    const { data: sesi } = await createClient(url, anon).auth.getUser(token);
-    if (String(sesi?.user?.email || '').toLowerCase() !== 'felixreuss29@gmail.com') {
-      return json({ error: 'Hanya pemilik Faisal yang boleh mengirim notifikasi.', tahap }, 403);
-    }
-
     tahap = 'baca isi permintaan';
     const isi = await req.json();
     const judul = String(isi?.judul || '').trim().slice(0, 160);
     const id = String(isi?.id || '').trim().slice(0, 120);
     const ringkasan = String(isi?.ringkasan || '').trim().slice(0, 240);
     if (!judul) return json({ error: 'Judul wajib diisi.', tahap }, 400);
+
+    // Token sesi pemilik boleh datang lewat header Authorization (standar)
+    // maupun lewat field "token" pada body (cadangan untuk browser/jaringan
+    // yang memblokir header Authorization lintas situs).
+    tahap = 'verifikasi pemilik';
+    const dariHeader = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '').trim();
+    const token = dariHeader || String(isi?.token || '').trim();
+    if (!token) return json({ error: 'Token pemilik belum dikirim.', tahap }, 401);
+    const { data: sesi } = await createClient(url, anon).auth.getUser(token);
+    if (String(sesi?.user?.email || '').toLowerCase() !== 'felixreuss29@gmail.com') {
+      return json({ error: 'Hanya pemilik Faisal yang boleh mengirim notifikasi.', tahap }, 403);
+    }
 
     tahap = 'siapkan VAPID';
     webpush.setVapidDetails('mailto:felixreuss29@gmail.com', publik, privat);
