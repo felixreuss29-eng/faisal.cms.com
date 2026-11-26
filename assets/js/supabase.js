@@ -299,6 +299,25 @@
       return langganan ? 'aktif' : 'belum';
     } catch { return 'belum'; }
   }
+  async function simpanLangganan(langganan) {
+    const data = { pengunjung: idPengunjung(), langganan: langganan.toJSON() };
+    try {
+      await minta('/rest/v1/faisal_push_langganan', {
+        method: 'POST',
+        prefer: 'return=minimal',
+        body: data
+      });
+    } catch (e) {
+      if (!/duplicate key|23505|unique constraint/i.test(e.message)) throw e;
+      // Baris sudah ada. Upsert (on_conflict) tidak dipakai karena anon sengaja
+      // tidak punya hak SELECT; RLS menolaknya. PATCH memakai policy UPDATE.
+      await minta('/rest/v1/faisal_push_langganan?pengunjung=eq.' + encodeURIComponent(data.pengunjung), {
+        method: 'PATCH',
+        prefer: 'return=minimal',
+        body: { langganan: data.langganan }
+      });
+    }
+  }
   async function aktifkanNotifikasi() {
     if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
       throw new Error('Browser ini belum mendukung notifikasi.');
@@ -316,13 +335,7 @@
         applicationServerKey: base64UrlKeArray(kunci)
       });
     }
-    if (siap()) {
-      await minta('/rest/v1/faisal_push_langganan?on_conflict=pengunjung', {
-        method: 'POST',
-        prefer: 'resolution=merge-duplicates,return=minimal',
-        body: { pengunjung: idPengunjung(), langganan: langganan.toJSON() }
-      });
-    }
+    if (siap()) await simpanLangganan(langganan);
     try { localStorage.setItem(KUNCI_PUSH, 'aktif'); } catch { /* abai */ }
     return true;
   }
