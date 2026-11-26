@@ -529,6 +529,12 @@ function renderArticle() {
   const a = ARTICLES.find((x) => x.id === params.get('id'))
     || POSTINGAN.find((x) => x.id === params.get('id'))
     || ARTICLES[0];
+  document.body.dataset.page = KATEGORI.includes(a.category) ? a.category : 'Beranda';
+  document.title = `${a.title} — Faisal`;
+  document.querySelectorAll('.site-nav a, .mobile-nav a').forEach((link) => {
+    if (link.textContent.trim() === a.category) link.setAttribute('aria-current', 'page');
+    else link.removeAttribute('aria-current');
+  });
   const dariAdmin = POSTINGAN.some((p) => p.id === a.id);
   const penulis = namaPenulis(a);
   const peran = peranPenulis(a);
