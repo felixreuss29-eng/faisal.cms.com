@@ -130,9 +130,9 @@ Jalankan ulang seluruh `supabase-setup.sql` setelah perubahan ini agar tabel `fa
 Untuk mengaktifkan notifikasi ke perangkat pembaca:
 
 1. Pasang Supabase CLI dan login (`supabase login`), lalu hubungkan project (`supabase link --project-ref ywvdmicxhnbgzomvgman`).
-2. Kunci VAPID publik sudah ada di `assets/js/config.js`. Kunci privat ada di `supabase/functions/kirim-notifikasi/.env` (file ini **diabaikan git**). Jangan pernah memasukkan kunci privat ke repository.
-3. Set rahasia server: `supabase secrets set --env-file supabase/functions/kirim-notifikasi/.env` cukup untuk 3 kunci `VAPID_*`. `SUPABASE_URL`, `SUPABASE_ANON_KEY`, dan `SUPABASE_SERVICE_ROLE_KEY` otomatis tersedia di runtime Edge Function (dashboard menolak nama rahasia berawalan `SUPABASE_`). `service_role` hanya dipakai Edge Function, tidak pernah dikirim ke browser.
-4. Deploy: `supabase functions deploy kirim-notifikasi`. Di dashboard function terpasang sebagai `kirim-notifikasi-` (ada tanda minus di akhir); CMS memanggil nama persis itu supaya URL-nya cocok.
+2. Kunci VAPID publik sudah ada di `assets/js/config.js`. Kunci privat ada di `supabase/functions/kirim-notifikasi-/.env` (file ini **diabaikan git**). Jangan pernah memasukkan kunci privat ke repository.
+3. Set rahasia server: `supabase secrets set --env-file supabase/functions/kirim-notifikasi-/.env` cukup untuk 3 kunci `VAPID_*`. `SUPABASE_URL`, `SUPABASE_ANON_KEY`, dan `SUPABASE_SERVICE_ROLE_KEY` otomatis tersedia di runtime Edge Function (dashboard menolak nama rahasia berawalan `SUPABASE_`). `service_role` hanya dipakai Edge Function, tidak pernah dikirim ke browser.
+4. Deploy: `supabase functions deploy kirim-notifikasi-`. Nama fungsi sengaja berakhir dengan tanda minus karena CMS memanggil `/functions/v1/kirim-notifikasi-`.
 5. Setiap kali pemilik menekan **Unggah & terbitkan** di CMS, Edge Function dipanggil dengan token sesi pemilik dan mengirim notifikasi ke semua langganan. Pembaca mengaktifkan notifikasi lewat pop-up atau tombol **Aktifkan notifikasi berita** di footer; iPhone perlu menambahkan web ke Home Screen dulu (Safari iOS 16.4+).
 
 Untuk mengaktifkan unggahan CMS tanpa PAT di browser:
