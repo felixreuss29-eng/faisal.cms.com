@@ -288,7 +288,7 @@
   }
   function alamatSW() {
     const skrip = [...document.scripts].find((s) => /app\.js/.test(s.src || ''));
-    return skrip ? new URL('../../sw.js?v=37', skrip.src).href : new URL('sw.js?v=37', document.baseURI).href;
+    return skrip ? new URL('../../sw.js?v=38', skrip.src).href : new URL('sw.js?v=38', document.baseURI).href;
   }
   async function statusNotifikasi() {
     if (!('Notification' in window)) return 'tidak-didukung';
@@ -413,7 +413,7 @@
   }
   function faktorTOTP(user) {
     const daftar = (user && Array.isArray(user.factors)) ? user.factors : [];
-    return daftar.filter((f) => f && f.factor_type === 'totp' && f.status === 'verified');
+    return daftar.filter((f) => f && f.id && f.factor_type === 'totp' && f.status === 'verified');
   }
   // AAL bukan field user: Supabase menyimpannya sebagai klaim "aal" di JWT.
   function aalDariToken(token) {
@@ -466,8 +466,20 @@
       simpanSesi(sesi, Boolean(ingat));
       return { status: 'lengkap' };
     }
+    // Daftar faktor tidak selalu ikut di respons token. Sumber yang pasti
+    // adalah endpoint /auth/v1/user, sama seperti auth.mfa.listFactors().
+    let faktor = faktorTOTP(user);
+    if (!faktor.length) {
+      let pengguna;
+      try {
+        pengguna = await minta('/auth/v1/user', { token: hasil.access_token });
+      } catch (e) {
+        throw new Error('Gagal memeriksa autentikator: ' + e.message);
+      }
+      faktor = faktorTOTP(pengguna);
+    }
     simpan2FA(sesi, ingat);
-    return { status: faktorTOTP(user).length ? 'tantang' : 'daftar' };
+    return { status: faktor.length ? 'tantang' : 'daftar' };
   }
 
   async function daftarFaktor2FA() {
