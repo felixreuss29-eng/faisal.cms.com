@@ -929,144 +929,40 @@ function initAuth() {
   const login = document.querySelector('#form-login');
   if (login) {
     const pesan = document.querySelector('#login-error');
-    const panelSandi = document.querySelector('#panel-sandi');
-    const panelTantang = document.querySelector('#panel-tantang');
-    const panelDaftar = document.querySelector('#panel-daftar');
-    const tampil = (panel) => {
-      [panelSandi, panelTantang, panelDaftar].forEach((p) => {
-        if (p) p.classList.toggle('hidden', p !== panel);
-      });
-    };
-    const gagal = (elemen, teks) => {
-      if (elemen) {
-        elemen.textContent = teks;
-        elemen.classList.remove('hidden');
+    const gagal = (teks) => {
+      if (pesan) {
+        pesan.textContent = teks;
+        pesan.classList.remove('hidden');
       } else toast(teks);
     };
-    const bersihkanError = () => {
-      document.querySelectorAll('#tantang-error, #daftar-error').forEach((e) => e.classList.add('hidden'));
-    };
-    let faktorId = '';
-
-    const selesaiMasuk = async () => {
-      if (!await FD.sesiPemilik()) throw new Error('Sesi pemilik tidak dapat diverifikasi. Coba lagi.');
-      localStorage.removeItem('faisal-account');
-      location.href = 'dasbor.html';
-    };
-
-    const muatQR = async () => {
-      const err = document.querySelector('#daftar-error');
-      const wadah = document.querySelector('#qr-2fa');
-      const rahasia = document.querySelector('#rahasia-2fa');
-      const form = document.querySelector('#form-daftar-2fa');
-      err?.classList.add('hidden');
-      form?.classList.add('hidden');
-      if (wadah) wadah.textContent = '';
-      if (rahasia) rahasia.textContent = '';
-      try {
-        // Pendaftaran yang dibatalkan dibuang supaya tidak menumpuk.
-        const semua = await FD.daftarFaktor2FA();
-        for (const f of semua) {
-          if (f.factor_type === 'totp' && f.status !== 'verified') {
-            try { await FD.hapusFaktor2FA(f.id); } catch { /* abai */ }
-          }
-        }
-        const f = await FD.mulaiDaftar2FA();
-        faktorId = f.id || '';
-        const qr = f.totp && f.totp.qr_code;
-        if (wadah && qr) {
-          const img = document.createElement('img');
-          img.src = /^data:image\//.test(qr) ? qr : 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(qr);
-          img.alt = 'Kode QR pendaftaran autentikator';
-          wadah.appendChild(img);
-        }
-        if (rahasia && f.totp && f.totp.secret) {
-          rahasia.textContent = 'Tidak bisa memindai? Masukkan kode ini secara manual: ' + f.totp.secret;
-        }
-        form?.classList.remove('hidden');
-        document.querySelector('#kode-daftar')?.focus();
-      } catch (e) {
-        gagal(err, 'Gagal menyiapkan autentikator: ' + e.message);
-      }
-    };
-
     login.addEventListener('submit', async (e) => {
       e.preventDefault();
       pesan?.classList.add('hidden');
-      bersihkanError();
       const email = login.email.value.trim();
       const sandi = login.password.value;
       const ingat = Boolean(login.querySelector('[name="ingat"]')?.checked);
       if (email.toLowerCase() !== OWNER_EMAIL.toLowerCase()) {
-        return gagal(pesan, 'Hanya akun pemilik Faisal yang dapat mengakses CMS.');
+        return gagal('Hanya akun pemilik Faisal yang dapat mengakses CMS.');
       }
-      if (!sandi) return gagal(pesan, 'Kata sandi wajib diisi.');
+      if (!sandi) return gagal('Kata sandi wajib diisi.');
       if (!FD.siap()) {
-        return gagal(pesan, 'Supabase belum terhubung. Isi Project URL dan anon key di assets/js/supabase-config.js terlebih dahulu.');
+        return gagal('Supabase belum terhubung. Isi Project URL dan anon key di assets/js/supabase-config.js terlebih dahulu.');
       }
       const tombol = login.querySelector('button[type="submit"]');
       if (tombol) { tombol.disabled = true; tombol.textContent = 'Memeriksa kata sandi…'; }
       try {
-        const hasil = await FD.masukPemilik(email, sandi, ingat);
-        if (hasil.status === 'lengkap') return await selesaiMasuk();
-        if (hasil.status === 'tantang') {
-          const f = hasil.faktor && hasil.faktor[0];
-          faktorId = (f && f.id) || '';
-          if (!faktorId) throw new Error('Faktor autentikator tidak ditemukan.');
-          tampil(panelTantang);
-          document.querySelector('#kode-tantang')?.focus();
-          return;
-        }
-        tampil(panelDaftar);
-        await muatQR();
+        await FD.masukPemilik(email, sandi, ingat);
+        if (!await FD.sesiPemilik()) throw new Error('Sesi pemilik tidak dapat diverifikasi. Coba lagi.');
+        localStorage.removeItem('faisal-account');
+        location.href = 'dasbor.html';
       } catch (err) {
         FD.keluarPemilik();
-        gagal(pesan, 'Masuk gagal: ' + err.message);
-        tampil(panelSandi);
+        gagal('Masuk gagal: ' + err.message);
       } finally {
-        if (tombol) { tombol.disabled = false; tombol.textContent = 'Lanjut ke verifikasi →'; }
+        if (tombol) { tombol.disabled = false; tombol.textContent = 'Masuk ke ruang redaksi →'; }
       }
     });
-
-    document.querySelectorAll('[data-kembali-2fa]').forEach((b) => b.addEventListener('click', () => {
-      FD.keluarPemilik();
-      faktorId = '';
-      bersihkanError();
-      tampil(panelSandi);
-    }));
-
-    const tombolQR = document.querySelector('#muat-ulang-qr');
-    tombolQR?.addEventListener('click', async () => {
-      tombolQR.disabled = true;
-      try { await muatQR(); } finally { tombolQR.disabled = false; }
-    });
-
-    const pasangVerifikasi = (formId, errorId, label) => {
-      const form = document.querySelector(formId);
-      if (!form) return;
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const err = document.querySelector(errorId);
-        err?.classList.add('hidden');
-        const input = form.querySelector('input[name="kode"]');
-        const tombol = form.querySelector('button[type="submit"]');
-        if (tombol) { tombol.disabled = true; tombol.textContent = 'Memverifikasi…'; }
-        try {
-          await FD.selesaikan2FA(faktorId, input.value);
-          await selesaiMasuk();
-        } catch (e2) {
-          gagal(err, e2.message || 'Kode tidak valid. Coba lagi.');
-          input.value = '';
-          input.focus();
-        } finally {
-          if (tombol) { tombol.disabled = false; tombol.textContent = label; }
-        }
-      });
-    };
-    pasangVerifikasi('#form-tantang-2fa', '#tantang-error', 'Verifikasi & masuk →');
-    pasangVerifikasi('#form-daftar-2fa', '#daftar-error', 'Aktifkan & masuk →');
-  }
-  const lupa = document.querySelector('#form-lupa');
+  }  const lupa = document.querySelector('#form-lupa');
   if (lupa) lupa.addEventListener('submit', (e) => {
     e.preventDefault();
     document.querySelector('#sukses-kirim').classList.remove('hidden');
@@ -1204,10 +1100,7 @@ async function initModerasi() {
     const email = masuk.querySelector('[data-email-pemilik]').value;
     const sandi = masuk.querySelector('[data-sandi-pemilik]').value;
     try {
-      const hasil = await FD.masukPemilik(email, sandi, false);
-      if (hasil.status !== 'lengkap') {
-        throw new Error('Akun pemilik memakai verifikasi dua langkah. Masuk melalui admin/login.html.');
-      }
+      await FD.masukPemilik(email, sandi, false);
       if (!await FD.sesiPemilik()) throw new Error('Sesi pemilik tidak dapat diverifikasi.');
       masuk.reset();
       await perbaruiStatus();

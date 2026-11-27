@@ -430,10 +430,6 @@ th { font-size: 10px; text-transform: uppercase; letter-spacing: .04em; color: v
 .auth-links { display: flex; justify-content: space-between; gap: 12px; margin: 18px 0; font-size: 11px; }
 .auth-links a { color: var(--admin-accent); font-weight: 600; }
 .secure-note { font-size: 10px; color: var(--muted); }
-.auth-card .kode-2fa { font-size: 22px; letter-spacing: .32em; text-align: center; font-variant-numeric: tabular-nums; }
-.qr-2fa { display: grid; place-items: center; min-height: 180px; margin: 0 0 10px; padding: 14px; background: #fff; border: 1px solid var(--border); border-radius: 8px; }
-.qr-2fa img { width: 180px; height: 180px; object-fit: contain; }
-.qr-2fa:empty::before { content: 'Menyiapkan kode QR…'; color: #64748b; font-size: 12px; }
 
 /* Halaman akun pembaca */
 .akun-tabs { display: flex; gap: 6px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }

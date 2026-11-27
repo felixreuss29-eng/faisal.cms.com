@@ -15,7 +15,6 @@
   const KUNCI_IKUTI = 'faisal-ikuti-';
   const KUNCI_PUSH = 'faisal-push';
   const KUNCI_PEMBACA = 'faisal-pembaca-sesi';
-  const KUNCI_2FA = 'faisal-2fa-sementara';
   const PEMILIK = 'felixreuss29@gmail.com';
 
   function konfigurasi() {
@@ -288,7 +287,7 @@
   }
   function alamatSW() {
     const skrip = [...document.scripts].find((s) => /app\.js/.test(s.src || ''));
-    return skrip ? new URL('../../sw.js?v=38', skrip.src).href : new URL('sw.js?v=38', document.baseURI).href;
+    return skrip ? new URL('../../sw.js?v=39', skrip.src).href : new URL('sw.js?v=39', document.baseURI).href;
   }
   async function statusNotifikasi() {
     if (!('Notification' in window)) return 'tidak-didukung';
@@ -383,56 +382,6 @@
   }
   function statusPemilik() { return Boolean(tokenPemilik()); }
 
-  /* ---------- 2FA (TOTP) -------------------------------------------------
-     Kata sandi hanya menghasilkan sesi AAL1. Sesi itu ditaruh di
-     sessionStorage sebagai "sedang menunggu 2FA" dan BELUM bisa dipakai
-     untuk membuka CMS. Akses penuh baru diberikan setelah kode 6 digit
-     dari aplikasi autentikator terverifikasi (AAL2). */
-
-  function dataSesi(hasil, email) {
-    return {
-      access_token: hasil.access_token,
-      refresh_token: hasil.refresh_token || '',
-      expires_at: Date.now() + (Number(hasil.expires_in) || 3600) * 1000,
-      email: email
-    };
-  }
-  function simpan2FA(sesi, ingat) {
-    try {
-      sessionStorage.setItem(KUNCI_2FA, JSON.stringify(Object.assign({}, sesi, { ingat: Boolean(ingat) })));
-    } catch { /* abai */ }
-  }
-  function baca2FA() {
-    try {
-      const s = JSON.parse(sessionStorage.getItem(KUNCI_2FA) || 'null');
-      return s && s.access_token ? s : null;
-    } catch { return null; }
-  }
-  function hapus2FA() {
-    try { sessionStorage.removeItem(KUNCI_2FA); } catch { /* abai */ }
-  }
-  function faktorTOTP(user) {
-    const daftar = (user && Array.isArray(user.factors)) ? user.factors : [];
-    return daftar.filter((f) => f && f.id && f.factor_type === 'totp' && f.status === 'verified');
-  }
-  // AAL bukan field user: Supabase menyimpannya sebagai klaim "aal" di JWT.
-  function aalDariToken(token) {
-    try {
-      const bagian = String(token || '').split('.');
-      if (bagian.length < 2 || typeof atob !== 'function') return '';
-      const isi = atob(bagian[1].replace(/-/g, '+').replace(/_/g, '/'));
-      return String((JSON.parse(isi) || {}).aal || '');
-    } catch { return ''; }
-  }
-  function butuh2FA(user, token) {
-    return faktorTOTP(user).length > 0 && aalDariToken(token) !== 'aal2';
-  }
-  function token2FA() {
-    const s = baca2FA();
-    if (!s) throw new Error('Sesi masuk habis. Masuk lagi dengan kata sandi.');
-    return s.access_token;
-  }
-
   async function masukPemilik(email, password, ingat = false) {
     const c = konfigurasi();
     if (!siap()) throw new Error('Supabase belum terhubung');
@@ -457,72 +406,14 @@
       throw new Error(hasil.msg || hasil.message || hasil.error_description || 'Kata sandi salah atau akun belum dikonfirmasi.');
     }
     if (!hasil.access_token) throw new Error('Supabase tidak mengembalikan sesi masuk.');
-    const user = hasil.user || {};
-    const emailSesi = String(user.email || alamat).toLowerCase();
+    const emailSesi = String((hasil.user && hasil.user.email) || alamat).toLowerCase();
     if (emailSesi !== PEMILIK) throw new Error('Akun ini bukan pemilik Faisal.');
-    const sesi = dataSesi(hasil, emailSesi);
-    hapus2FA();
-    if (aalDariToken(hasil.access_token) === 'aal2') {
-      simpanSesi(sesi, Boolean(ingat));
-      return { status: 'lengkap' };
-    }
-    // Daftar faktor tidak selalu ikut di respons token. Sumber yang pasti
-    // adalah endpoint /auth/v1/user, sama seperti auth.mfa.listFactors().
-    let faktor = faktorTOTP(user);
-    if (!faktor.length) {
-      let pengguna;
-      try {
-        pengguna = await minta('/auth/v1/user', { token: hasil.access_token });
-      } catch (e) {
-        throw new Error('Gagal memeriksa autentikator: ' + e.message);
-      }
-      faktor = faktorTOTP(pengguna);
-    }
-    simpan2FA(sesi, ingat);
-    return { status: faktor.length ? 'tantang' : 'daftar' };
-  }
-
-  async function daftarFaktor2FA() {
-    const user = await minta('/auth/v1/user', { token: token2FA() });
-    return (user && Array.isArray(user.factors)) ? user.factors : [];
-  }
-
-  async function mulaiDaftar2FA() {
-    return minta('/auth/v1/factors', {
-      method: 'POST',
-      token: token2FA(),
-      body: { friendly_name: 'Autentikator Faisal', factor_type: 'totp', issuer: 'Faisal CMS' }
-    });
-  }
-
-  async function hapusFaktor2FA(id) {
-    if (!id) return false;
-    await minta('/auth/v1/factors/' + encodeURIComponent(id), { method: 'DELETE', token: token2FA() });
-    return true;
-  }
-
-  // Membuat tantangan baru lalu memverifikasi kode 6 digit.
-  // Dipakai baik untuk pendaftaran pertama maupun setiap kali masuk.
-  async function selesaikan2FA(factorId, kode) {
-    if (!factorId) throw new Error('Faktor autentikator belum dipilih.');
-    const kodeBersih = String(kode || '').replace(/\D/g, '');
-    if (kodeBersih.length !== 6) throw new Error('Kode harus terdiri dari 6 angka.');
-    const token = token2FA();
-    const tantangan = await minta('/auth/v1/factors/' + encodeURIComponent(factorId) + '/challenge', {
-      method: 'POST', token: token, body: {}
-    });
-    if (!tantangan || !tantangan.id) throw new Error('Supabase tidak mengembalikan tantangan. Coba lagi.');
-    const hasil = await minta('/auth/v1/factors/' + encodeURIComponent(factorId) + '/verify', {
-      method: 'POST',
-      token: token,
-      body: { challenge_id: tantangan.id, code: kodeBersih }
-    });
-    if (!hasil || !hasil.access_token) throw new Error('Verifikasi gagal. Periksa kode dan coba lagi.');
-    const email = String(((hasil.user || {}).email) || PEMILIK).toLowerCase();
-    if (email !== PEMILIK) throw new Error('Akun ini bukan pemilik Faisal.');
-    const pending = baca2FA();
-    simpanSesi(dataSesi(hasil, email), Boolean(pending && pending.ingat));
-    hapus2FA();
+    simpanSesi({
+      access_token: hasil.access_token,
+      refresh_token: hasil.refresh_token || '',
+      expires_at: Date.now() + (Number(hasil.expires_in) || 3600) * 1000,
+      email: emailSesi
+    }, Boolean(ingat));
     return true;
   }
 
@@ -560,13 +451,13 @@
     try {
       const user = await minta('/auth/v1/user', { token: sesi.access_token });
       const email = String((user && user.email) || '').toLowerCase();
-      if (email === PEMILIK && !butuh2FA(user, sesi.access_token)) return email;
+      if (email === PEMILIK) return email;
     } catch { /* coba perbarui sesi */ }
     if (await perbaruiSesi()) {
       try {
         const user = await minta('/auth/v1/user', { token: tokenPemilik() });
         const email = String((user && user.email) || '').toLowerCase();
-        if (email === PEMILIK && !butuh2FA(user, tokenPemilik())) return email;
+        if (email === PEMILIK) return email;
       } catch { /* gagal juga */ }
     }
     keluarPemilik();
@@ -580,7 +471,6 @@
       localStorage.removeItem(KUNCI_TOKEN);
       sessionStorage.removeItem(KUNCI_TOKEN);
       localStorage.removeItem('faisal-account');
-      hapus2FA();
     } catch { /* abai */ }
   }
 
@@ -751,10 +641,6 @@
     statusPemilik,
     tokenPemilik,
     sesiPemilik,
-    daftarFaktor2FA,
-    mulaiDaftar2FA,
-    hapusFaktor2FA,
-    selesaikan2FA,
     daftarPembaca,
     masukPembaca,
     keluarPembaca,
