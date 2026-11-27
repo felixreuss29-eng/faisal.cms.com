@@ -4,9 +4,9 @@
       "id": "post-1795792723805",
       "title": "Korban Tambang Emas Ilegal Bogor Jadi 27 Orang, 13 Tewas dan 14 Masih Dicari",
       "category": "Nasional",
-      "excerpt": "Tim SAR belum bisa menjangkau 14 penambang yang masih terjebak di tambang ilegal di Kabupaten Bogor. Lorong tertutup lumpur dan lubang lainnya terendam air.",
+      "excerpt": "Tim SAR belum bisa menjangkau 14 penambang yang masih terjebak di tambang ilegal di Kabupaten Bogor. Lorong tertutup lumpur dan lubang lain terendam air.",
       "image": "upload/post-1795792723805.png",
-      "alt": "Korban Tambang Emas Ilegal Bogor Jadi 27 Orang, 13 Tewas dan 14 Masih Dicari",
+      "alt": "Ilustrasi artikel korban tambang emas ilegal di Kabupaten Bogor, Jawa Barat.",
       "sumberRujukan": "https://www.viva.co.id/",
       "kreditFoto": "Foto ilustrasi",
       "author": {
@@ -19,11 +19,31 @@
       "body": [
         {
           "type": "p",
-          "text": "Bogor – Upaya penyelamatan para penambang yang terjebak di kawasan Tambang Ciguha, Kabupaten Bogor, Jawa Barat, belum menunjukkan perkembangan berarti. Hingga Jumat (27/11/2026), jumlah korban yang terdata bertambah menjadi 27 orang, dengan 13 penambang ditemukan meninggal dunia dan 14 lainnya masih dicari.\nKepala Kantor SAR Jakarta, Desiana Kartika Bahari, menyebut ada penambahan satu orang dalam pendataan, dari sebelumnya 26 menjadi 27 korban. Ke-13 korban meninggal sudah dievakuasi, dan identitas seluruhnya telah dipastikan oleh tim Disaster Victim Identification (DVI) Polda Jawa Barat.\nPencarian terhadap 14 penambang lainnya terkendala kondisi jalur masuk. Di Lubang A, lorong makin sempit akibat endapan lumpur dan strukturnya berubah sehingga tidak bisa dilalui, sementara Lubang B terendam air. Kedalaman lubang yang mencapai sekitar 100 meter, lorong sempit, minim penerangan, dan permukaan licin menambah risiko bagi petugas.\nKarena perubahan kondisi itu, tim SAR menyatakan memerlukan kajian dan rekomendasi tenaga ahli sebelum menentukan langkah pencarian dan evakuasi berikutnya."
+          "text": "BOGOR – Upaya penyelamatan penambang yang terjebak di kawasan Tambang Ciguha, Kabupaten Bogor, Jawa Barat, belum menunjukkan perkembangan berarti. Hingga Jumat (27/11/2026), jumlah korban yang terdata bertambah menjadi 27 orang: 13 penambang ditemukan meninggal dunia dan 14 lainnya masih dicari."
+        },
+        {
+          "type": "h2",
+          "text": "Jumlah korban bertambah"
         },
         {
           "type": "p",
-          "text": "Data di atas per Jumat (27/11/2026) malam dan masih dapat berubah seiring proses pencarian."
+          "text": "Kepala Kantor SAR Jakarta Desiana Kartika Bahari menyebut pendataan bertambah satu orang, dari sebelumnya 26 menjadi 27. Ke-13 jenazah sudah dievakuasi dan identitasnya dipastikan oleh tim Disaster Victim Identification (DVI) Polda Jawa Barat."
+        },
+        {
+          "type": "h2",
+          "text": "Lorong sempit dan lubang terendam"
+        },
+        {
+          "type": "p",
+          "text": "Pencarian terhadap 14 penambang lain terkendala kondisi jalur masuk. Di Lubang A, lorong menyempit akibat endapan lumpur dan perubahan struktur sehingga tidak bisa dilalui. Lubang B terendam air. Kedalaman mencapai sekitar 100 meter, lorong sempit, minim penerangan, dan permukaan licin menambah risiko bagi petugas."
+        },
+        {
+          "type": "h2",
+          "text": "Menunggu kajian tenaga ahli"
+        },
+        {
+          "type": "p",
+          "text": "Tim SAR menyatakan perlu kajian dan rekomendasi tenaga ahli sebelum menentukan langkah pencarian dan evakuasi berikutnya. Data per Jumat (27/11/2026) malam masih dapat berubah seiring proses pencarian."
         }
       ]
     },

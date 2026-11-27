@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/css/style.css?v=61" />
+  <link rel="stylesheet" href="../assets/css/style.css?v=62" />
 </head>
 <body data-admin="1">
   <div class="admin-shell">
@@ -62,7 +62,7 @@
               <div class="post-preview" id="post-preview" hidden><img id="post-preview-img" alt="Pratinjau foto postingan" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" /></div>
               <div class="form-field"><label for="post-alt">Teks alternatif foto</label><input id="post-alt" type="text" placeholder="Jelaskan isi foto untuk pembaca tunanetra" /></div>
               <div class="form-field"><label for="post-kredit">Kredit foto (opsional)</label><input id="post-kredit" type="text" placeholder="Contoh: Dokumentasi Faisal / Nama fotografer" /><span class="meta">Isi bila foto berasal dari pihak lain dan izin penggunaannya sudah Anda miliki. Kredit tampil di bawah foto artikel.</span></div>
-              <div class="form-field"><label for="post-isi">Isi postingan</label><textarea id="post-isi" rows="8" placeholder="Tulis paragraf. Pisahkan antarparagraf dengan baris kosong." required></textarea><span class="meta">Tulis rangkuman dengan bahasa sendiri dan sertakan rujukan di atas. Jangan menyalin isi artikel sumber secara utuh; untuk perkara hukum yang belum diputus, gunakan kata “diduga” dan sebutkan sumber keterangan.</span></div>
+              <div class="form-field"><label for="post-isi">Isi postingan</label><textarea id="post-isi" rows="8" placeholder="Tulis paragraf. Pisahkan antarparagraf dengan menekan Enter." required></textarea><span class="meta">Tulis rangkuman dengan bahasa sendiri dan sertakan rujukan di atas. Jangan menyalin isi artikel sumber secara utuh; untuk perkara hukum yang belum diputus, gunakan kata “diduga” dan sebutkan sumber keterangan.</span></div>
               <span class="error hidden" id="post-error" role="alert"></span>
               <div class="form-actions"><button class="btn btn-primary" type="submit" id="post-kirim">Unggah &amp; terbitkan</button></div>
             </form>
@@ -80,12 +80,12 @@
     </div>
   </div>
   <div class="toast" role="status" aria-live="polite"></div>
-  <script src="../assets/js/supabase-config.js?v=61"></script>
-  <script src="../assets/js/config.js?v=61"></script>
-  <script src="../assets/js/supabase.js?v=61"></script>
-  <script src="../assets/js/data.js?v=61"></script>
-  <script src="../assets/js/i18n.js?v=61"></script>
-  <script src="../assets/js/app.js?v=61"></script>
+  <script src="../assets/js/supabase-config.js?v=62"></script>
+  <script src="../assets/js/config.js?v=62"></script>
+  <script src="../assets/js/supabase.js?v=62"></script>
+  <script src="../assets/js/data.js?v=62"></script>
+  <script src="../assets/js/i18n.js?v=62"></script>
+  <script src="../assets/js/app.js?v=62"></script>
   <script>
   (function () {
     try { localStorage.removeItem('faisal-github'); } catch { /* abai */ }
@@ -175,7 +175,7 @@
           author: { name: 'Faisal Akbar', role: 'Pemilik & Pemimpin Redaksi', photo: 'pemilik-profil-rapi.jpg' },
           published: new Date().toISOString(),
           updated: new Date().toISOString(),
-          body: el('post-isi').value.trim().split(/\n\s*\n/).filter(Boolean).map((p) => ({ type: 'p', text: p.trim() }))
+          body: el('post-isi').value.trim().split(/\n+/).filter(Boolean).map((p) => ({ type: 'p', text: p.trim() }))
         };
         await tulisFile('assets/js/posts.json', await base64DariBytes(new TextEncoder().encode(JSON.stringify({ posts: [baru, ...daftar] }, null, 2))), 'Tambah postingan: ' + judul, lama && lama.sha);
         try {

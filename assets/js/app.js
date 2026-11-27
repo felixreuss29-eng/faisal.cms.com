@@ -750,7 +750,9 @@ function renderArticle() {
   const isi = a.body.map((b) => {
     if (b.type === 'h2') return `<h2>${esc(b.text)}</h2>`;
     if (b.type === 'quote') return `<blockquote class="pull-quote"><p>“${esc(b.text)}”</p><cite>— ${esc(b.cite)}</cite></blockquote>`;
-    return `<p>${esc(b.text)}</p>`;
+    // CMS menerima satu baris per paragraf. Pisahkan juga bila penulis
+    // menekan Enter sekali agar artikel tidak jadi satu blok panjang.
+    return String(b.text).split(/\n+/).map((bagian) => `<p>${esc(bagian.trim())}</p>`).join('');
   }).join('');
   host.innerHTML = `
     <div class="breadcrumb"><a href="./">Beranda</a> › <a href="kategori?k=${encodeURIComponent(a.category)}">${esc(a.category)}</a> › ${esc(a.title)}</div>
