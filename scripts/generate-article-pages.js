@@ -52,6 +52,8 @@ function isiArtikel(a) {
 
 function artikelStatik(a) {
   const gambar = gambarArtikel(a);
+  const alamat = urlArtikel(a.id);
+  const pesan = a.title + '\n' + alamat;
   const penulis = namaPenulis(a);
   const peran = peranPenulis(a);
   const terkait = posts.filter((x) => x.id !== a.id).slice(0, 4).map((x) => `
@@ -67,6 +69,7 @@ function artikelStatik(a) {
             <img src="/assets/img/${esc((a.author && a.author.photo) || 'pemilik-profil-rapi.jpg')}" alt="Foto ${esc(penulis)}" />
             <div class="byline-penulis"><strong>${esc(penulis)}</strong><span class="meta">${esc(peran)}</span></div>
             <div class="byline-waktu meta">${esc(waktuTerbit(a.published))} · ${menitBaca(a.body)} menit baca</div>
+            <div class="share"><span>Bagikan</span><a href="${esc('https://api.whatsapp.com/send?text=' + encodeURIComponent(pesan))}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp — bagikan artikel lewat WhatsApp">WhatsApp</a><a href="${esc('https://t.me/share/url?url=' + encodeURIComponent(alamat) + '&text=' + encodeURIComponent(a.title))}" target="_blank" rel="noopener noreferrer" aria-label="Telegram — bagikan artikel lewat Telegram">Telegram</a><a href="${esc('mailto:?subject=' + encodeURIComponent(a.title) + '&body=' + encodeURIComponent(alamat))}" aria-label="Email — bagikan lewat email">Email</a><a href="#" data-bagikan="link" aria-label="Link — salin tautan artikel">Link</a></div>
           </div>
           <div class="postingan-info">
             <span>Penulis: <strong>Redaksi faisal.cms.com</strong></span>

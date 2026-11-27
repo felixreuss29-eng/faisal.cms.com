@@ -774,7 +774,7 @@ function renderArticle() {
             <img src="${img(a.author.photo)}" alt="Foto ${esc(penulis)}" />
             <div class="byline-penulis"><strong>${esc(penulis)}</strong><span class="meta">${esc(peran)}</span></div>
             <div class="byline-waktu meta"><span data-relative="${a.published}">${waktuRelatif(a.published)}</span> · <span data-view="${esc(a.id)}">Dilihat …</span> · <b data-reading="${a.id}">${readingMinutes(a.body)} menit baca</b></div>
-            <div class="share"><span>Bagikan</span><a href="#" data-bagikan="email" aria-label="Email — bagikan lewat email">Email</a><a href="#" data-bagikan="link" aria-label="Link — salin tautan artikel">Link</a></div>
+            <div class="share"><span>Bagikan</span><a href="#" data-bagikan="whatsapp" aria-label="WhatsApp — bagikan artikel lewat WhatsApp">WhatsApp</a><a href="#" data-bagikan="telegram" aria-label="Telegram — bagikan artikel lewat Telegram">Telegram</a><a href="#" data-bagikan="email" aria-label="Email — bagikan lewat email">Email</a><a href="#" data-bagikan="link" aria-label="Link — salin tautan artikel">Link</a></div>
           </div>
           ${dariAdmin ? infoPostinganHTML(a) : ''}
         </header>
@@ -807,8 +807,13 @@ function renderArticle() {
   if (figcaption) figcaption.textContent = `Foto: ${kreditFoto(a)}.`;
   host.querySelectorAll('[data-bagikan]').forEach((b) => b.addEventListener('click', (e) => {
     e.preventDefault();
-    const url = location.href;
-    if (b.dataset.bagikan === 'email') location.href = 'mailto:?subject=' + encodeURIComponent(a.title) + '&body=' + encodeURIComponent(url);
+    // Selalu bagikan URL bersih, bukan URL legacy/Parameter cache.
+    const url = location.origin + '/artikel/' + encodeURIComponent(a.id) + '/';
+    const pesan = a.title + '\n' + url;
+    const cara = b.dataset.bagikan;
+    if (cara === 'whatsapp') window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(pesan), '_blank', 'noopener,noreferrer');
+    else if (cara === 'telegram') window.open('https://t.me/share/url?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(a.title), '_blank', 'noopener,noreferrer');
+    else if (cara === 'email') location.href = 'mailto:?subject=' + encodeURIComponent(a.title) + '&body=' + encodeURIComponent(url);
     else navigator.clipboard.writeText(url).then(() => toast('Tautan artikel disalin.')).catch(() => toast(url));
   }));
   const artikelId = a.id;
