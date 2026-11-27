@@ -134,14 +134,27 @@ function halamanArtikel(a) {
 }
 
 function perbaruiSitemap() {
+  // Entri lama dibuang agar generate berulang tidak menumpuk URL artikel.
   const barisLama = fs.readFileSync(sitemapPath, 'utf8').split(/\r?\n/)
-    .filter((baris) => baris.trim() && !baris.trim().startsWith('<?xml') && !baris.includes('<urlset') && !baris.includes('</urlset>') && !baris.includes('/artikel?id='));
+    .filter((baris) => baris.trim()
+      && !baris.trim().startsWith('<?xml')
+      && !baris.includes('<urlset')
+      && !baris.includes('</urlset>')
+      && !baris.includes('/artikel?id=')
+      && !baris.includes('/artikel/'));
   const barisArtikel = posts.map((a) => `  <url><loc>${urlArtikel(a.id)}</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>`);
+  const dilihat = new Set();
+  const semuaBaris = [...barisLama, ...barisArtikel].filter((baris) => {
+    const cocok = baris.match(/<loc>(.*?)<\/loc>/);
+    if (!cocok) return true;
+    if (dilihat.has(cocok[1])) return false;
+    dilihat.add(cocok[1]);
+    return true;
+  });
   fs.writeFileSync(sitemapPath, [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    ...barisLama,
-    ...barisArtikel,
+    ...semuaBaris,
     '</urlset>',
     ''
   ].join('\n'));
