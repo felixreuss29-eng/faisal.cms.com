@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/css/style.css?v=53" />
+  <link rel="stylesheet" href="../assets/css/style.css?v=54" />
 </head>
 <body data-admin="1">
   <main class="auth-page">
@@ -29,25 +29,56 @@
     </section>
     <section class="auth-form-side">
       <div class="auth-card">
-        <span class="kicker">Halaman masuk</span>
-        <h2>Masuk ke ruang redaksi</h2>
-        <p class="subtitle">Akses hanya untuk pemilik: <strong>felixreuss29@gmail.com</strong>. Kata sandi diverifikasi langsung oleh Supabase.</p>
-        <form id="form-login" novalidate>
-          <div class="form-field"><label for="email">Alamat email</label><input id="email" name="email" type="email" placeholder="nama@faisal.id" value="felixreuss29@gmail.com" autocomplete="username" required /></div>
-          <div class="form-field"><label for="password">Kata sandi</label><input id="password" name="password" type="password" placeholder="Masukkan kata sandi" autocomplete="current-password" required /></div>
-          <p class="error hidden" id="login-error" role="alert" style="margin:0 0 12px"></p>
-          <label style="font-size:11px;display:flex;gap:8px;align-items:center"><input type="checkbox" name="ingat" checked style="width:auto;min-height:auto" /> Ingat sesi di perangkat ini</label>
-          <div class="auth-links"><a href="lupa-password.html">Lupa kata sandi?</a></div>
-          <button class="btn btn-primary btn-block" type="submit">Masuk ke ruang redaksi →</button>
-        </form>
-        <p class="secure-note" style="margin-top:18px">Kata sandi yang salah ditolak. Sesi pemeriksaan ulang ke Supabase saat membuka halaman admin; tanpa itu, tidak ada yang bisa masuk.</p>
+        <div id="panel-sandi">
+          <span class="kicker">Halaman masuk</span>
+          <h2>Masuk ke ruang redaksi</h2>
+          <p class="subtitle">Akses hanya untuk pemilik: <strong>felixreuss29@gmail.com</strong>. Kata sandi diverifikasi langsung oleh Supabase.</p>
+          <form id="form-login" novalidate>
+            <div class="form-field"><label for="email">Alamat email</label><input id="email" name="email" type="email" placeholder="nama@faisal.id" value="felixreuss29@gmail.com" autocomplete="username" required /></div>
+            <div class="form-field"><label for="password">Kata sandi</label><input id="password" name="password" type="password" placeholder="Masukkan kata sandi" autocomplete="current-password" required /></div>
+            <p class="error hidden" id="login-error" role="alert" style="margin:0 0 12px"></p>
+            <label style="font-size:11px;display:flex;gap:8px;align-items:center"><input type="checkbox" name="ingat" checked style="width:auto;min-height:auto" /> Ingat sesi di perangkat ini</label>
+            <div class="auth-links"><a href="lupa-password.html">Lupa kata sandi?</a></div>
+            <button class="btn btn-primary btn-block" type="submit">Lanjut ke verifikasi →</button>
+          </form>
+          <p class="secure-note" style="margin-top:18px">Setelah kata sandi diterima, kode 6 digit dari aplikasi autentikator wajib dimasukkan sebelum halaman admin dapat dibuka.</p>
+        </div>
+
+        <div id="panel-tantang" class="hidden">
+          <span class="kicker">Langkah kedua</span>
+          <h2>Verifikasi dua langkah</h2>
+          <p class="subtitle">Kata sandi sudah benar. Buka aplikasi autentikator (Google Authenticator, Aegis, atau serupa), lalu masukkan kode 6 digit yang sedang ditampilkan.</p>
+          <form id="form-tantang-2fa" novalidate>
+            <div class="form-field"><label for="kode-tantang">Kode dari autentikator</label><input id="kode-tantang" name="kode" class="kode-2fa" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000" required /></div>
+            <p class="error hidden" id="tantang-error" role="alert" style="margin:0 0 12px"></p>
+            <button class="btn btn-primary btn-block" type="submit">Verifikasi & masuk →</button>
+          </form>
+          <div class="auth-links"><button type="button" class="btn btn-outline btn-block" data-kembali-2fa>← Kembali ke kata sandi</button></div>
+          <p class="secure-note">Kode berganti setiap 30 detik. Sesi CMS hanya aktif setelah kode ini terverifikasi.</p>
+        </div>
+
+        <div id="panel-daftar" class="hidden">
+          <span class="kicker">Pengamanan akun</span>
+          <h2>Aktifkan autentikator</h2>
+          <p class="subtitle">Akun pemilik wajib memakai verifikasi dua langkah. Pindai kode QR dengan aplikasi autentikator, lalu masukkan kode 6 digit untuk mengaktifkannya.</p>
+          <div id="qr-2fa" class="qr-2fa" aria-live="polite"></div>
+          <p class="secure-note" id="rahasia-2fa"></p>
+          <button type="button" class="btn btn-outline btn-block" id="muat-ulang-qr" style="margin-bottom:14px">Tampilkan kode QR ulang</button>
+          <form id="form-daftar-2fa" novalidate>
+            <div class="form-field"><label for="kode-daftar">Kode dari autentikator</label><input id="kode-daftar" name="kode" class="kode-2fa" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000" required /></div>
+            <p class="error hidden" id="daftar-error" role="alert" style="margin:0 0 12px"></p>
+            <button class="btn btn-primary btn-block" type="submit">Aktifkan & masuk →</button>
+          </form>
+          <div class="auth-links"><button type="button" class="btn btn-outline btn-block" data-kembali-2fa>← Kembali ke kata sandi</button></div>
+          <p class="secure-note">Simpan cadangan kode pemulihan dari Supabase di tempat aman. Tanpa autentikator, pemilik dapat reset lewat email terdaftar.</p>
+        </div>
       </div>
     </section>
   </main>
   <div class="toast" role="status" aria-live="polite"></div>
-  <script src="../assets/js/supabase-config.js?v=53"></script>
-  <script src="../assets/js/config.js?v=53"></script>
-  <script src="../assets/js/supabase.js?v=53"></script>
-  <script src="../assets/js/data.js?v=53"></script><script src="../assets/js/app.js?v=53"></script>
+  <script src="../assets/js/supabase-config.js?v=54"></script>
+  <script src="../assets/js/config.js?v=54"></script>
+  <script src="../assets/js/supabase.js?v=54"></script>
+  <script src="../assets/js/data.js?v=54"></script><script src="../assets/js/app.js?v=54"></script>
 </body>
 </html>

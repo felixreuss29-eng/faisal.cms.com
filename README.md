@@ -84,14 +84,14 @@ Tidak ada workflow penjadwalan berita lagi; satu-satunya GitHub Actions yang dip
 
 Buka `admin/posting.html` → menu **Tulis Postingan** di sidebar CMS.
 
-1. Isi **Pemilik repository**, **Nama repository**, **Cabang** (`main`), dan **Personal Access Token**, lalu **Simpan pengaturan** dan **Cek koneksi**.
-2. Buat token di GitHub → *Settings → Developer settings → Tokens*. Token klasik perlu izin **repo**; fine-grained perlu **Contents: read & write** + **Metadata: read**.
+1. Isi **Pemilik repository** (`felixreuss29-eng`), **Nama repository** (`faisal.cms.com`), dan **Cabang** (`main`), lalu **Cek koneksi**.
+2. Token GitHub **tidak diisi di browser**. Simpan token sebagai Supabase Secret `GITHUB_TOKEN` (token klasik dengan izin **repo**, atau fine-grained dengan **Contents: read & write** + **Metadata: read**). Edge Function `simpan-postingan` memakai secret itu di server.
 3. Isi judul, kategori, ringkasan, foto (opsional, ada pratinjau), teks alternatif, dan isi postingan.
 4. Klik **Unggah & terbitkan**. Website akan menyimpan foto ke `assets/img/upload/` dan menambah data ke `assets/js/posts.json` lewat GitHub Contents API.
 5. Tunggu 1–3 menit sampai GitHub Pages selesai deploy. Postingan muncul di beranda, `berita.html`, hasil pencarian, dan `artikel.html?id=…`.
 6. Untuk menghapus, buka bagian **Kelola postingan** pada halaman yang sama → **Muat daftar postingan** → **Hapus** pada judul yang dimaksud → konfirmasi. Postingan dan fotonya dihapus dari repository lewat GitHub Contents API.
 
-**Keamanan:** token disimpan di `localStorage` browser perangkat ini. Pakai hanya di perangkat pemilik, jangan di komputer bersama, dan cabut token di GitHub bila perlu. Ini bukan sistem login produksi — hanya cara praktis satu pemilik mengirim konten ke repository statis.
+**Keamanan:** browser tidak menyimpan token GitHub. CMS mengirim judul/isi lewat Edge Function Supabase memakai `apikey` publishable + token sesi pemilik; fungsi memakai Secret `GITHUB_TOKEN` untuk menulis ke repository. Pastikan **Verify JWT with legacy secret = OFF** pada kedua Edge Function (`simpan-postingan` / slug aktifnya, dan `kirim-notifikasi-`). Cabut token di GitHub bila perlu.
 
 ## Dukungan sukarela untuk pemilik
 
@@ -119,7 +119,7 @@ Komentar dan angka kunjungan baru sama di semua perangkat setelah Supabase dihub
    ```
 
    **Jangan** memasukkan `service_role` / `secret key` ke repo; kunci itu hanya untuk server. `Publishable key` memang boleh dipublikasikan dan akan dipakai browser sebagai `apikey`. Kunci `anon` lama (diawali `eyJ`) juga masih berfungsi sampai awal 2027.
-5. Commit dan push. Setelah deploy, buka `admin/login.html`, masukkan email + kata sandi Supabase pemilik, lalu **Masuk ke ruang redaksi**. Buka dasbor admin → **Moderasi komentar** untuk menghapus komentar. Angka di dasbor dan "Dilihat N kali" langsung memakai data Supabase. Sesi dicek ulang ke Supabase setiap kali membuka halaman admin; centang **Ingat sesi** menyimpannya di perangkat itu; tanpa centangan, sesi berhenti saat browser ditutup.
+5. Commit dan push. Setelah deploy, buka `admin/login.html`, masukkan email + kata sandi Supabase pemilik, lalu **Lanjut ke verifikasi**. Pemilik wajib memasang aplikasi autentikator TOTP (Google Authenticator/Aegis): pada masuk pertama, pindai kode QR yang muncul dan masukkan kode 6 digit; pada masuk berikutnya cukup masukkan kode 6 digit. Verifikasi dua langkah (`aal2`) diwajibkan sebelum halaman admin dibuka. Buka dasbor admin → **Moderasi komentar** untuk menghapus komentar. Angka di dasbor dan "Dilihat N kali" langsung memakai data Supabase. Centang **Ingat sesi** menyimpannya di perangkat itu; tanpa centangan, sesi berhenti saat browser ditutup.
 
 Sebelum langkah 4 selesai, halaman publik tetap berfungsi dengan catatan "Supabase belum terhubung": komentar dan kunjungan tersimpan lokal di browser masing-masing. **Halaman admin tidak bisa dimasuki siapa pun** sampai konfigurasi dan user pemilik tersedia.
 
@@ -163,12 +163,12 @@ Untuk mengaktifkan unggahan CMS tanpa PAT di browser:
 - Foto profil pemilik dipakai di sidebar CMS, halaman masuk, dan halaman tentang kami.
 - Audit Lighthouse otomatis: skor 100/100 untuk aksesibilitas, best practices, dan SEO pada halaman utama, artikel, kategori, serta dasbor (light dan dark).
 - Dukungan sukarela: halaman `donasi.html` menampilkan QRIS (`assets/img/qris.jpg`) tanpa paket, nominal tetap, formulir, bukti wajib, status, atau riwayat. Email pemilik `felixreuss29@gmail.com` hanya sebagai kontak opsional. Semua artikel terbuka gratis tanpa kode akses.
-- Formulir rangkuman harian memakai checkbox persetujuan wajib dan mengirim permintaan lewat aplikasi email pengguna; alamat email tidak disimpan di file publik repositori. Halaman hukum: `tentang.html`, `kebijakan-privasi.html`, `disclaimer.html`, `koreksi.html`.
+- Tidak ada newsletter atau formulir langganan email di website maupun dokumentasi. Halaman hukum: `tentang.html`, `kebijakan-privasi.html`, `disclaimer.html`, `koreksi.html`.
 
 ## Yang masih kurang / perlu ditambahkan
 
 1. **Backend & CMS penuh** — tidak ada lagi artikel contoh di `assets/js/data.js`; seluruh berita berasal dari `assets/js/posts.json`. Unggahan admin memakai Edge Function `simpan-postingan` dengan token GitHub sebagai Supabase Secret (bukan disimpan di browser). Belum ada versioning konten, penjadwalan terbit, atau pengelolaan media yang lengkap.
-2. **Autentikasi nyata** — kata sandi login dan sesi admin diverifikasi Supabase Auth; email selain `felixreuss29@gmail.com`, kata sandi salah, dan penanda buatan di browser ditolak. Alur 2 langkah lama yang menerima enam digit apa pun sudah dihapus beserta halaman `login-2fa.html`. Unggah postingan memakai token sesi pemilik, bukan PAT di browser.
+2. **Autentikasi nyata + 2FA** — kata sandi login dan sesi admin diverifikasi Supabase Auth; email selain `felixreuss29@gmail.com`, kata sandi salah, dan penanda buatan di browser ditolak. Alur 2 langkah lama yang menerima enam digit apa pun sudah dihapus beserta halaman `login-2fa.html`. Sekarang pemilik mendaftar TOTP lewat kode QR di `admin/login.html`, lalu setiap masuk wajib mengirim kode 6 digit; sesi `aal1` tidak bisa membuka CMS. Unggah postingan memakai token sesi pemilik, bukan PAT di browser.
 3. **WYSIWYG & upload media** — editor lama masih `textarea` dan berlabel pratinjau; unggah foto nyata ada di `posting.html`, tetapi belum ada rich text atau pengelola aset.
 4. **Alur persetujuan persisten** — tabel alur hanya contoh; tombol "Kirim review" belum mengubah data/status di server maupun menyimpan riwayat.
 5. **Komentar & statistik bersama** — kode dan SQL sudah siap, tetapi `assets/js/supabase-config.js` masih kosong dan `supabase-setup.sql` belum dijalankan. Sebelum dihubungkan, komentar dan angka kunjungan hanya tersimpan di perangkat masing-masing. Panel moderasi juga baru bisa menghapus komentar setelah akun pemilik Supabase dibuat. Belum ada anti-spam otomatis selain batas panjang teks/nama.
