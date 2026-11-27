@@ -10,7 +10,7 @@ berita.html             Seluruh berita redaksi + filter kategori
 artikel.html            Halaman artikel + estimasi baca otomatis
 kategori.html           Halaman kategori/daftar berita
 pencarian.html          Hasil pencarian (termasuk empty state)
-donasi.html             Dukungan sukarela untuk pemilik + QRIS
+donasi.html             Dukungan sukarela untuk pemilik via DANA
 tentang.html            Tentang Faisal, prinsip redaksi, pemilik & kontak
 statis.html             Pedoman Media Siber, redaksi, hak jawab, privasi, cookie & peta situs
 404.html                Halaman tidak ditemukan
@@ -95,12 +95,12 @@ Buka `admin/posting.html` → menu **Tulis Postingan** di sidebar CMS.
 
 ## Dukungan sukarela untuk pemilik
 
-1. Pembaca membuka `donasi.html` dan memindai QRIS (Store baju faisal, NMID IDI 026596688139).
+1. Pembaca membuka `donasi.html` dan mengirim dukungan lewat DANA ke `0895323964130` a/n Faisal Akbar.
 2. Nominal terserah pembaca; tidak ada paket, formulir, bukti transfer wajib, status pengajuan, atau riwayat di perangkat.
 3. Jika ingin, pembaca dapat mengirim email ke `felixreuss29@gmail.com`. Ini opsional dan tidak dipakai untuk membuka artikel.
 4. Seluruh artikel tetap gratis dan terbuka tanpa kode akses atau paywall.
 
-Nomor telepon pribadi pemilik tidak ditampilkan di website maupun dokumentasi. Tidak ada data donasi yang ditulis ke repository atau ke Supabase.
+Nomor yang ditampilkan adalah nomor akun DANA penerima dukungan, bukan nomor kontak pribadi untuk keperluan lain. Tidak ada data donasi yang ditulis ke repository atau ke Supabase.
 
 ## Menghubungkan komentar & statistik kunjungan (Supabase)
 
@@ -162,7 +162,7 @@ Untuk mengaktifkan unggahan CMS tanpa PAT di browser:
 - Halaman `tentang.html` berisi misi, prinsip redaksi, tim, pemilik, dan kontak.
 - Foto profil pemilik dipakai di sidebar CMS, halaman masuk, dan halaman tentang kami.
 - Audit Lighthouse otomatis: skor 100/100 untuk aksesibilitas, best practices, dan SEO pada halaman utama, artikel, kategori, serta dasbor (light dan dark).
-- Dukungan sukarela: halaman `donasi.html` menampilkan QRIS (`assets/img/qris.jpg`) tanpa paket, nominal tetap, formulir, bukti wajib, status, atau riwayat. Email pemilik `felixreuss29@gmail.com` hanya sebagai kontak opsional. Semua artikel terbuka gratis tanpa kode akses.
+- Dukungan sukarela: halaman `donasi.html` menampilkan nomor DANA `0895323964130` a/n Faisal Akbar tanpa paket, nominal tetap, formulir, bukti wajib, status, atau riwayat. Email pemilik `felixreuss29@gmail.com` hanya sebagai kontak opsional. Semua artikel terbuka gratis tanpa kode akses.
 - Tidak ada newsletter atau formulir langganan email di website maupun dokumentasi. Halaman hukum: `tentang.html`, `kebijakan-privasi.html`, `disclaimer.html`, `koreksi.html`.
 
 ## Yang masih kurang / perlu ditambahkan
@@ -185,6 +185,6 @@ Lihat `HAK-CIPTA.md`. Repo ini memakai **All Rights Reserved** (tanpa file `LICE
 
 ## Catatan
 
-Email pemilik yang dipakai untuk akun admin dan kontak opsional dukungan: `felixreuss29@gmail.com`. Nomor telepon/WhatsApp pribadi sengaja tidak dicantumkan. Dukungan sukarela: QRIS statis di `assets/img/qris.jpg` (Store baju faisal, NMID IDI 026596688139). Instagram: `@faisalakbar0423`. TikTok: `@wangtaouzi0411` (nama tampil `felix reuss`). Nama yang ditampilkan di profil admin: Faisal Akbar.
+Email pemilik yang dipakai untuk akun admin dan kontak opsional dukungan: `felixreuss29@gmail.com`. Dukungan sukarela: DANA `0895323964130` a/n Faisal Akbar (nomor akun penerima, bukan kontak pribadi). Instagram: `@faisalakbar0423`. TikTok: `@wangtaouzi0411` (nama tampil `felix reuss`). Nama yang ditampilkan di profil admin: Faisal Akbar.
 
-Karena situs ini statis di GitHub Pages, permintaan rangkuman dibuka di aplikasi email pengguna dan dikirim oleh mereka sendiri. Tidak ada pembayaran yang diproses otomatis oleh website, dan tidak ada data donasi yang disimpan. Faisal belum terdaftar sebagai perusahaan pers di Dewan Pers dan tidak menyatakan diri sebagai badan hukum; lihat `disclaimer.html`.
+Karena situs ini statis di GitHub Pages, tidak ada pembayaran yang diproses otomatis oleh website, dan tidak ada data donasi yang disimpan. Faisal belum terdaftar sebagai perusahaan pers di Dewan Pers dan tidak menyatakan diri sebagai badan hukum; lihat `disclaimer.html`.

@@ -7,7 +7,7 @@ delete from public.faisal_komentar
 where lower(nama) in ('test', 'testing', 'uji', 'coba', 'admin')
    or lower(teks) like '%test%' or lower(teks) like '%coba%';
 
--- 2. Hapus tabel langganan lama (donasi kini QRIS sukarela, tanpa formulir).
+-- 2. Hapus tabel langganan lama (donasi kini DANA sukarela, tanpa formulir).
 drop table if exists public.subscriptions cascade;
 
 -- 3. Bucket "bukti" tidak boleh dihapus lewat SQL langsung.
