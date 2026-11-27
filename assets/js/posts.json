@@ -2,12 +2,12 @@
   "posts": [
     {
       "id": "post-1795803487362",
-      "title": "Dua Teknisi Italia Tewas dalam Serangan Drone di Kuwait, Iran Bantah Terlibat",
+      "title": "Dua Teknisi Italia Tewas dalam Serangan Drone di Kuwait; Iran Bantah Terlibat",
       "category": "Internasional",
       "excerpt": "Dua warga Italia tewas setelah drone menyerang fasilitas pertahanan udara di Kuwait. Kuwait dan Italia menuding Iran, sementara Teheran membantah dan menawarkan penyelidikan bersama.",
       "image": "upload/post-1795803487362.png",
-      "alt": "Dua Teknisi Italia Tewas dalam Serangan Drone di Kuwait, Iran Bantah Terlibat",
-      "sumberRujukan": "https://news.republika.co.id",
+      "alt": "Ilustrasi serangan drone yang menewaskan dua teknisi Italia di Kuwait.",
+      "sumberRujukan": "Republika, Al Jazeera, dan Reuters",
       "kreditFoto": "Ilustrasi",
       "author": {
         "name": "Faisal Akbar",
@@ -19,23 +19,35 @@
       "body": [
         {
           "type": "p",
-          "text": "Kuwait – Dua warga negara Italia tewas setelah serangan drone menghantam sebuah fasilitas pemantauan pertahanan udara di Kuwait pada Kamis (26/11/2026). Pemerintah Kuwait dan Italia menuding Iran berada di balik serangan tersebut, tetapi Teheran membantah keras dan menyatakan tidak melakukan operasi militer di kawasan itu."
+          "text": "KUWAIT – Dua warga Italia tewas setelah serangan drone menghantam fasilitas pemantauan pertahanan udara di Kuwait pada Kamis (26/11/2026). Pemerintah Kuwait dan Italia menuding Iran berada di balik serangan itu, tetapi Teheran membantah tegas dan menyatakan tidak melakukan operasi militer di kawasan tersebut."
+        },
+        {
+          "type": "h2",
+          "text": "Korban dan lokasi serangan"
         },
         {
           "type": "p",
-          "text": "Kedua korban adalah teknisi Rheinmetall Italia, anak perusahaan kelompok pertahanan Jerman Rheinmetall, yang sedang bertugas di stasiun pemantauan tersebut. Menteri Luar Negeri Italia Antonio Tajani mengonfirmasi kematian mereka di hadapan Senat Italia, dan menyebut ledakan dahsyat terjadi di lokasi. Dua orang lain terluka, yaitu seorang warga Pakistan dan seorang kapten militer Kuwait."
+          "text": "Kedua korban adalah teknisi Rheinmetall Italia, anak perusahaan grup pertahanan Jerman Rheinmetall, yang sedang bertugas di stasiun pemantauan itu. Menteri Luar Negeri Italia Antonio Tajani mengonfirmasi kematian mereka di hadapan Senat Italia dan menyebut ledakan dahsyat terjadi di lokasi. Dua orang lain terluka, yakni seorang warga Pakistan dan seorang kapten militer Kuwait."
         },
         {
           "type": "p",
-          "text": "Kementerian Pertahanan Kuwait menyatakan militernya mendeteksi dan menangani sejumlah drone yang memasuki wilayah udaranya, dan insiden itu merusak fasilitas yang disebut sebagai lokasi vital. Menurut Aljazirah yang dikutip Republika, kejadian berlangsung saat militer dan Garda Nasional Kuwait sedang bertemu delegasi Italia yang berkunjung."
+          "text": "Kementerian Pertahanan Kuwait menyatakan militernya mendeteksi dan menangani sejumlah drone yang memasuki wilayah udara negara itu. Insiden tersebut merusak fasilitas yang disebut sebagai lokasi vital. Menurut Al Jazeera yang dikutip Republika, kejadian berlangsung saat militer dan Garda Nasional Kuwait bertemu delegasi Italia yang sedang berkunjung."
+        },
+        {
+          "type": "h2",
+          "text": "Iran membantah keterlibatan"
         },
         {
           "type": "p",
-          "text": "Iran menolak tudingan itu. Juru bicara militer Iran, Jenderal Abolfazl Shekarchi, menyatakan tidak ada operasi ofensif oleh pasukan Iran di kawasan, dan menyinggung kemungkinan operasi \"bendera palsu\". Menurut Reuters, Menlu Iran Abbas Araqchi menyampaikan belasungkawa kepada Tajani dan menawarkan penyelidikan bersama dengan Kuwait untuk memastikan asal serangan. Tajani menyatakan Italia akan menyampaikan protes resmi kepada Kedutaan Besar Iran, dan Sekjen Dewan Kerja Sama Teluk (GCC) mengecam serangan itu."
+          "text": "Iran menolak tudingan itu. Juru bicara militer Iran Jenderal Abolfazl Shekarchi menyatakan tidak ada operasi ofensif pasukan Iran di kawasan itu dan menyinggung kemungkinan operasi “bendera palsu”. Menurut Reuters, Menteri Luar Negeri Iran Abbas Araqchi menyampaikan belasungkawa kepada Tajani serta menawarkan penyelidikan bersama dengan Kuwait untuk memastikan asal serangan. Tajani menyatakan Italia akan menyampaikan protes resmi kepada Kedutaan Besar Iran. Sekretaris Jenderal Dewan Kerja Sama Teluk (GCC) juga mengecam serangan itu."
+        },
+        {
+          "type": "h2",
+          "text": "Konteks konflik"
         },
         {
           "type": "p",
-          "text": "Insiden ini terjadi di tengah konflik Iran dengan Amerika Serikat dan Israel yang berlangsung sejak akhir Februari 2026 dan telah beberapa kali menyentuh wilayah negara-negara Teluk."
+          "text": "Insiden ini terjadi di tengah konflik Iran dengan Amerika Serikat dan Israel yang berlangsung sejak akhir Februari 2026. Konflik itu beberapa kali menyentuh wilayah negara-negara Teluk."
         }
       ]
     },
