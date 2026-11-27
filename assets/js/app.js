@@ -302,16 +302,18 @@ async function initNotifikasi() {
 }
 
 /* ---------- Header & footer ---------- */
-const KATEGORI = ['Politik', 'Nasional', 'Ekonomi', 'Olahraga', 'Hukum', 'Teknologi', 'Internasional', 'Pendidikan'];
+const KATEGORI = ['Nasional', 'Olahraga', 'Teknologi', 'Internasional', 'Pendidikan'];
+// Tautan lama tetap masuk ke Nasional agar tidak menghasilkan halaman kosong.
+const KATEGORI_LAMA = { Politik: 'Nasional', Ekonomi: 'Nasional', Hukum: 'Nasional' };
 function kategoriAktif() {
   const pilihan = new URLSearchParams(location.search).get('k');
-  return KATEGORI.includes(pilihan) ? pilihan : 'Politik';
+  if (KATEGORI_LAMA[pilihan]) return KATEGORI_LAMA[pilihan];
+  return KATEGORI.includes(pilihan) ? pilihan : 'Nasional';
 }
 const NAV = ['Beranda', 'Berita Terkini', ...KATEGORI];
 const NAV_HREF = {
-  'Beranda': './', 'Berita Terkini': 'berita', 'Politik': 'kategori?k=Politik',
-  'Nasional': 'kategori?k=Nasional', 'Ekonomi': 'kategori?k=Ekonomi', 'Olahraga': 'kategori?k=Olahraga',
-  'Hukum': 'kategori?k=Hukum', 'Teknologi': 'kategori?k=Teknologi',
+  'Beranda': './', 'Berita Terkini': 'berita', 'Nasional': 'kategori?k=Nasional',
+  'Olahraga': 'kategori?k=Olahraga', 'Teknologi': 'kategori?k=Teknologi',
   'Internasional': 'kategori?k=Internasional', 'Pendidikan': 'kategori?k=Pendidikan'
 };
 function renderHeader(active = 'Beranda') {
@@ -671,7 +673,7 @@ function cardHTML(a) {
     </div>
   </article>`;
 }
-function rankedHTML(list, label = 'Politik') {
+function rankedHTML(list, label = 'Nasional') {
   return `<ol class="ranked-list">${list.map((t, i) => `<li><span class="rank">${String(i + 1).padStart(2, '0')}</span><div><h3>${esc(t)}</h3><span class="meta">${esc(label)}</span></div></li>`).join('')}</ol>`;
 }
 
@@ -700,13 +702,13 @@ function renderHome() {
       <div class="home-about-copy">
         <span class="kicker">Kenali Faisal</span>
         <h2 id="judul-tentang-web">Berita yang jelas, sumber yang terang.</h2>
-        <p class="home-about-lead">Faisal adalah portal berita Indonesia yang menyajikan kabar politik, nasional, ekonomi, olahraga, hukum, teknologi, internasional, dan pendidikan.</p>
+        <p class="home-about-lead">Faisal adalah portal berita Indonesia yang menyajikan kabar nasional, olahraga, teknologi, internasional, dan pendidikan.</p>
         <div class="home-about-list">
           <article class="home-about-item">
             <div><h3>Tentang website ini</h3><p>Faisal menghadirkan berita Indonesia dan dunia dengan bahasa yang jelas, rujukan yang disebutkan, dan pembaruan bila ada perkembangan.</p></div>
           </article>
           <article class="home-about-item">
-            <div><h3>Cakupan berita</h3><p>Faisal menyajikan kabar politik, nasional, ekonomi, olahraga, hukum, teknologi, internasional, dan pendidikan dari Indonesia serta dunia.</p></div>
+            <div><h3>Cakupan berita</h3><p>Faisal menyajikan kabar nasional, olahraga, teknologi, internasional, dan pendidikan dari Indonesia serta dunia.</p></div>
           </article>
           <article class="home-about-item">
             <div><h3>Komitmen redaksi</h3><p>Informasi kami rangkum dari sumber yang kredibel. Untuk perkara hukum yang belum diputus pengadilan, kami menjunjung asas praduga tak bersalah.</p></div>

@@ -11,13 +11,11 @@
   <url><loc>https://faisalnews.web.id/disclaimer</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
   <url><loc>https://faisalnews.web.id/statis</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
   <url><loc>https://faisalnews.web.id/kategori?k=Nasional</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://faisalnews.web.id/kategori?k=Politik</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://faisalnews.web.id/kategori?k=Ekonomi</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://faisalnews.web.id/kategori?k=Olahraga</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://faisalnews.web.id/kategori?k=Hukum</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://faisalnews.web.id/kategori?k=Teknologi</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://faisalnews.web.id/kategori?k=Internasional</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://faisalnews.web.id/kategori?k=Pendidikan</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://faisalnews.web.id/artikel?id=post-1795792723805</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://faisalnews.web.id/artikel?id=post-1795760907859</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://faisalnews.web.id/artikel?id=post-1795701465163</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://faisalnews.web.id/artikel?id=post-1795697499652</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
