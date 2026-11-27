@@ -674,19 +674,15 @@ function renderHome() {
         <p class="home-about-lead">Faisal adalah portal berita Indonesia yang menyajikan kabar politik, nasional, ekonomi, olahraga, hukum, teknologi, internasional, dan pendidikan.</p>
         <div class="home-about-list">
           <article class="home-about-item">
-            <span class="home-about-num" aria-hidden="true">I</span>
             <div><h3>Tentang website ini</h3><p>Faisal menghadirkan berita Indonesia dan dunia dengan bahasa yang jelas, rujukan yang disebutkan, dan pembaruan bila ada perkembangan.</p></div>
           </article>
           <article class="home-about-item">
-            <span class="home-about-num" aria-hidden="true">II</span>
             <div><h3>Cakupan berita</h3><p>Faisal menyajikan kabar politik, nasional, ekonomi, olahraga, hukum, teknologi, internasional, dan pendidikan dari Indonesia serta dunia.</p></div>
           </article>
           <article class="home-about-item">
-            <span class="home-about-num" aria-hidden="true">III</span>
             <div><h3>Komitmen redaksi</h3><p>Informasi kami rangkum dari sumber yang kredibel. Untuk perkara hukum yang belum diputus pengadilan, kami menjunjung asas praduga tak bersalah.</p></div>
           </article>
           <article class="home-about-item">
-            <span class="home-about-num" aria-hidden="true">IV</span>
             <div><h3>Koreksi &amp; hak jawab</h3><p>Jika menemukan kesalahan atau keberatan atas pemberitaan kami, silakan hubungi redaksi. Koreksi dicatat terbuka dan hak jawab kami beri ruang.</p></div>
           </article>
         </div>
