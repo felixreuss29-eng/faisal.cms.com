@@ -1,6 +1,45 @@
 {
   "posts": [
     {
+      "id": "post-1795803487362",
+      "title": "Dua Teknisi Italia Tewas dalam Serangan Drone di Kuwait, Iran Bantah Terlibat",
+      "category": "Internasional",
+      "excerpt": "Dua warga Italia tewas setelah drone menyerang fasilitas pertahanan udara di Kuwait. Kuwait dan Italia menuding Iran, sementara Teheran membantah dan menawarkan penyelidikan bersama.",
+      "image": "upload/post-1795803487362.png",
+      "alt": "Dua Teknisi Italia Tewas dalam Serangan Drone di Kuwait, Iran Bantah Terlibat",
+      "sumberRujukan": "https://news.republika.co.id",
+      "kreditFoto": "Ilustrasi",
+      "author": {
+        "name": "Faisal Akbar",
+        "role": "Pemilik & Pemimpin Redaksi",
+        "photo": "pemilik-profil-rapi.jpg"
+      },
+      "published": "2026-11-27T18:18:13.270Z",
+      "updated": "2026-11-27T18:18:13.270Z",
+      "body": [
+        {
+          "type": "p",
+          "text": "Kuwait – Dua warga negara Italia tewas setelah serangan drone menghantam sebuah fasilitas pemantauan pertahanan udara di Kuwait pada Kamis (26/11/2026). Pemerintah Kuwait dan Italia menuding Iran berada di balik serangan tersebut, tetapi Teheran membantah keras dan menyatakan tidak melakukan operasi militer di kawasan itu."
+        },
+        {
+          "type": "p",
+          "text": "Kedua korban adalah teknisi Rheinmetall Italia, anak perusahaan kelompok pertahanan Jerman Rheinmetall, yang sedang bertugas di stasiun pemantauan tersebut. Menteri Luar Negeri Italia Antonio Tajani mengonfirmasi kematian mereka di hadapan Senat Italia, dan menyebut ledakan dahsyat terjadi di lokasi. Dua orang lain terluka, yaitu seorang warga Pakistan dan seorang kapten militer Kuwait."
+        },
+        {
+          "type": "p",
+          "text": "Kementerian Pertahanan Kuwait menyatakan militernya mendeteksi dan menangani sejumlah drone yang memasuki wilayah udaranya, dan insiden itu merusak fasilitas yang disebut sebagai lokasi vital. Menurut Aljazirah yang dikutip Republika, kejadian berlangsung saat militer dan Garda Nasional Kuwait sedang bertemu delegasi Italia yang berkunjung."
+        },
+        {
+          "type": "p",
+          "text": "Iran menolak tudingan itu. Juru bicara militer Iran, Jenderal Abolfazl Shekarchi, menyatakan tidak ada operasi ofensif oleh pasukan Iran di kawasan, dan menyinggung kemungkinan operasi \"bendera palsu\". Menurut Reuters, Menlu Iran Abbas Araqchi menyampaikan belasungkawa kepada Tajani dan menawarkan penyelidikan bersama dengan Kuwait untuk memastikan asal serangan. Tajani menyatakan Italia akan menyampaikan protes resmi kepada Kedutaan Besar Iran, dan Sekjen Dewan Kerja Sama Teluk (GCC) mengecam serangan itu."
+        },
+        {
+          "type": "p",
+          "text": "Insiden ini terjadi di tengah konflik Iran dengan Amerika Serikat dan Israel yang berlangsung sejak akhir Februari 2026 dan telah beberapa kali menyentuh wilayah negara-negara Teluk."
+        }
+      ]
+    },
+    {
       "id": "post-1795792723805",
       "title": "Korban Tambang Emas Ilegal Bogor Jadi 27 Orang, 13 Tewas dan 14 Masih Dicari",
       "category": "Nasional",
