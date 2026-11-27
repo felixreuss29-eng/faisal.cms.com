@@ -1,6 +1,53 @@
 {
   "posts": [
     {
+      "id": "post-1795808496216",
+      "title": "Prabowo Janjikan Kenaikan Gaji Guru pada Hari Guru Nasional 2026, Kapan Direalisasikan?",
+      "category": "Nasional",
+      "excerpt": "Presiden Prabowo Subianto menyampaikan rencana kenaikan gaji guru dalam peringatan Hari Guru Nasional 2026. Pernyataan tersebut menjadi harapan baru bagi tenaga pendidik di Indonesia.",
+      "image": "upload/post-1795808496216.jpeg",
+      "alt": "Presiden Prabowo Subianto menyampaikan pidato dalam peringatan Hari Guru Nasional 2026 di Bogor, Jawa Barat.",
+      "sumberRujukan": "Sekretariat Negara RI — https://www.setneg.go.id/baca/index/presiden_prabowo_tegaskan_komitmen_pemerintah_tingkatkan_kualitas_pendidikan_dan_kesejahteraan_guru",
+      "kreditFoto": "Dokumentasi Faisal",
+      "author": {
+        "name": "Faisal Akbar",
+        "role": "Pemilik & Pemimpin Redaksi",
+        "photo": "pemilik-profil-rapi.jpg"
+      },
+      "published": "2026-11-27T19:41:39.591Z",
+      "updated": "2026-11-27T19:41:39.591Z",
+      "body": [
+        {
+          "type": "p",
+          "text": "BOGOR – Presiden Prabowo Subianto menyampaikan rencana kenaikan gaji guru dalam puncak peringatan Hari Guru Nasional (HGN) 2026 yang berlangsung di Sentul International Convention Centre (SICC), Bogor, Jawa Barat, Kamis (26/11/2026)."
+        },
+        {
+          "type": "p",
+          "text": "Pernyataan tersebut disampaikan melalui pantun yang dibacakan Prabowo pada penghujung pidatonya. Ia menyampaikan harapan agar kesejahteraan para guru dapat terus ditingkatkan melalui kenaikan penghasilan."
+        },
+        {
+          "type": "p",
+          "text": "Pernyataan tersebut disambut tepuk tangan para guru yang hadir dalam acara tersebut."
+        },
+        {
+          "type": "p",
+          "text": "**Menunggu Realisasi Kebijakan**"
+        },
+        {
+          "type": "p",
+          "text": "Meski mendapat sambutan positif, rencana kenaikan gaji tersebut masih menunggu penjelasan lebih lanjut dari pemerintah. Besaran kenaikan, mekanisme pelaksanaan, serta waktu realisasinya belum dipastikan dalam pernyataan tersebut."
+        },
+        {
+          "type": "p",
+          "text": "Peningkatan kesejahteraan guru menjadi salah satu isu penting dalam dunia pendidikan Indonesia. Guru memiliki peran besar dalam membangun kualitas sumber daya manusia dan menciptakan generasi penerus bangsa."
+        },
+        {
+          "type": "p",
+          "text": "Masyarakat, khususnya tenaga pendidik, kini menantikan langkah konkret pemerintah agar rencana tersebut dapat diwujudkan."
+        }
+      ]
+    },
+    {
       "id": "post-1795803487362",
       "title": "Dua Teknisi Italia Tewas dalam Serangan Drone di Kuwait; Iran Bantah Terlibat",
       "category": "Internasional",
