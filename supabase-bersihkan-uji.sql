@@ -10,9 +10,10 @@ where lower(nama) in ('test', 'testing', 'uji', 'coba', 'admin')
 -- 2. Hapus tabel langganan lama (donasi kini QRIS sukarela, tanpa formulir).
 drop table if exists public.subscriptions cascade;
 
--- 3. Hapus bucket penyimpanan bukti lama dan isinya.
-delete from storage.objects where bucket_id = 'bukti';
-delete from storage.buckets where id = 'bukti';
+-- 3. Bucket "bukti" tidak boleh dihapus lewat SQL langsung.
+-- Hapus manual di Dashboard → Storage → bucket "bukti":
+--    pilih semua file → Delete → lalu hapus bucket-nya.
+-- Ini mencegah penghapusan tidak sengaja oleh storage.protect_delete().
 
 -- 4. Pastikan tidak ada akun pembaca uji yang tertinggal selain pemilik.
 -- periksa dulu di Authentication → Users, lalu hapus manual akun uji di sana.
