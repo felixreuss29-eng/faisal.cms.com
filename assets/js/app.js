@@ -345,6 +345,10 @@ function renderHeader(active = 'Beranda') {
       </div>
     </div>
     <nav class="mobile-nav hidden" aria-label="Navigasi mobile">
+      <div class="mobile-nav-head">
+        <span class="brand-name">Faisal</span>
+        <button class="icon-btn" type="button" data-menu-tutup aria-label="Tutup menu">✕</button>
+      </div>
       ${NAV.map((n) => `<a href="${NAV_HREF[n]}">${n}</a>`).join('')}
       <a href="akun">Akun pembaca</a>
       <a href="donasi">Dukungan</a>
@@ -366,11 +370,19 @@ function renderHeader(active = 'Beranda') {
     const q = host.querySelector('#site-search').value.trim();
     location.href = `pencarian${q ? '?q=' + encodeURIComponent(q) : ''}`;
   });
-  host.querySelector('[data-menu-toggle]').addEventListener('click', (e) => {
-    const menu = host.querySelector('.mobile-nav');
-    menu.classList.toggle('hidden');
-    e.currentTarget.setAttribute('aria-expanded', String(!menu.classList.contains('hidden')));
+  const menu = host.querySelector('.mobile-nav');
+  const tombolMenu = host.querySelector('[data-menu-toggle]');
+  const tutupMenu = () => {
+    menu.classList.add('hidden');
+    tombolMenu.setAttribute('aria-expanded', 'false');
+  };
+  tombolMenu.addEventListener('click', () => {
+    const buka = menu.classList.contains('hidden');
+    menu.classList.toggle('hidden', !buka);
+    tombolMenu.setAttribute('aria-expanded', String(buka));
   });
+  menu.querySelector('[data-menu-tutup]').addEventListener('click', tutupMenu);
+  menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', tutupMenu));
   updateThemeButton();
 }
 
@@ -876,18 +888,10 @@ function renderSearch() {
 
 /* ---------- Overlay ---------- */
 function initOverlays() {
-  if (!localStorage.getItem('faisal-cookie')) {
-    const el = document.createElement('aside');
-    el.className = 'cookie-banner';
-    el.innerHTML = `<h4>Kami menggunakan cookie</h4><p>Untuk mengukur pembaca dan meningkatkan pengalaman Anda.</p><div class="overlay-actions"><button class="btn btn-primary" data-cookie="terima">Terima</button><button class="btn btn-outline" data-cookie="tolak">Tolak</button></div>`;
-    document.body.appendChild(el);
-    el.querySelectorAll('[data-cookie]').forEach((b) => b.addEventListener('click', () => {
-      localStorage.setItem('faisal-cookie', b.dataset.cookie);
-      el.remove();
-      toast('Preferensi cookie disimpan.');
-    }));
-  }
-  if (!localStorage.getItem('faisal-push')) {
+  // Satu overlay aktif pada satu waktu. Di layar HP dua panel sekaligus
+  // akan saling menimpa dan menutup isi halaman.
+  const tampilPush = () => {
+    if (localStorage.getItem('faisal-push') || document.querySelector('.push-prompt')) return;
     const el = document.createElement('aside');
     el.className = 'push-prompt';
     el.innerHTML = `<h4>Izin notifikasi</h4><p>Terima berita baru langsung di perangkat Anda, walau web sedang tertutup.</p><div class="overlay-actions"><button class="btn btn-primary" data-push="izin">Izinkan</button><button class="btn btn-outline" data-push="nanti">Nanti saja</button></div>`;
@@ -911,7 +915,22 @@ function initOverlays() {
       }
       el.remove();
     }));
+  };
+
+  if (!localStorage.getItem('faisal-cookie')) {
+    const el = document.createElement('aside');
+    el.className = 'cookie-banner';
+    el.innerHTML = `<h4>Kami menggunakan cookie</h4><p>Untuk mengukur pembaca dan meningkatkan pengalaman Anda.</p><div class="overlay-actions"><button class="btn btn-primary" data-cookie="terima">Terima</button><button class="btn btn-outline" data-cookie="tolak">Tolak</button></div>`;
+    document.body.appendChild(el);
+    el.querySelectorAll('[data-cookie]').forEach((b) => b.addEventListener('click', () => {
+      localStorage.setItem('faisal-cookie', b.dataset.cookie);
+      el.remove();
+      toast('Preferensi cookie disimpan.');
+      tampilPush();
+    }));
+    return;
   }
+  tampilPush();
 }
 
 /* ---------- Form umum ---------- */

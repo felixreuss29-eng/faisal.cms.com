@@ -359,6 +359,8 @@ main { padding-bottom: 64px; }
 
 /* ---------- Mobile nav ---------- */
 .mobile-nav { display: none; }
+.mobile-nav-head { display: flex; align-items: center; justify-content: space-between; min-height: 56px; padding: 0 16px; border-bottom: 1px solid var(--border); }
+.mobile-nav-head .brand-name { font-size: 24px; }
 
 /* ---------- Admin ---------- */
 .admin-shell { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-height: 100vh; background: var(--surface); }
@@ -473,7 +475,7 @@ body.guard-checking main, body.guard-checking .admin-shell { visibility: hidden;
   .akun-btn { min-width: 44px; padding: 0; justify-content: center; }
   .akun-teks { display: none; }
   .menu-toggle { display: inline-grid; }
-  .mobile-nav { display: flex; position: fixed; inset: 58px 0 auto; z-index: 40; flex-direction: column; gap: 0; max-height: calc(100vh - 58px); overflow-y: auto; background: var(--bg); border-bottom: 2px solid var(--accent); box-shadow: var(--shadow); }
+  .mobile-nav { display: flex; position: fixed; inset: 0 0 auto; z-index: 55; flex-direction: column; gap: 0; max-height: 100vh; overflow-y: auto; overscroll-behavior: contain; background: var(--bg); border-bottom: 2px solid var(--accent); box-shadow: var(--shadow); }
   .mobile-nav a { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 600; }
   .mobile-bahasa { padding: 12px 16px; border-bottom: 1px solid var(--border); }
   .mobile-bahasa select { width: 100%; min-height: 44px; padding: 0 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--text); font-size: 12px; }
@@ -496,7 +498,6 @@ body.guard-checking main, body.guard-checking .admin-shell { visibility: hidden;
   .hero-meta { gap: 8px; }
   .home-about { margin-top: 16px; }
   .home-about-copy { padding: 20px 18px; }
-  .home-about-item { grid-template-columns: 36px minmax(0, 1fr); gap: 10px; }
   .home-about-actions .btn { flex: 1 1 100%; }
   .card-meta { align-items: flex-start; }
   .inline-form { flex-direction: column; }
@@ -579,7 +580,7 @@ body.guard-checking main, body.guard-checking .admin-shell { visibility: hidden;
 @media (max-width: 760px) {
   html, body { overflow-x: hidden; }
   body { overflow-wrap: break-word; }
-  .utility .wrap { min-height: 32px; font-size: 10px; }
+  .utility .wrap { min-height: 32px; font-size: 11px; }
   .masthead .wrap { padding: 10px 0; }
   .section { margin-top: 30px; }
   .section-head { gap: 10px; margin-bottom: 16px; }
@@ -588,7 +589,7 @@ body.guard-checking main, body.guard-checking .admin-shell { visibility: hidden;
   .lihat-semua-wrap { margin-top: 16px; }
   .lihat-semua-wrap .btn { width: 100%; }
   .ticker { gap: 10px; font-size: 11px; }
-  .ticker-label { font-size: 9px; }
+  .ticker-label { font-size: 10px; }
   .ticker-toggle { min-width: 36px; }
   .ad-banner.ad-leaderboard { min-height: 104px; margin-top: 16px; padding: 12px 14px; gap: 8px; }
   .ad-banner .ad-judul { font-size: 15px; }
@@ -598,9 +599,9 @@ body.guard-checking main, body.guard-checking .admin-shell { visibility: hidden;
   .home-about-copy h2 { font-size: 26px; }
   .home-about-lead { font-size: 13px; line-height: 1.6; }
   .home-about-item { gap: 4px; }
-  .home-about-item h3, .home-about-item p { font-size: 12px; }
-  .home-about-tanpa-foto .home-about-copy::before { width: 180px; height: 180px; top: -20px; right: -18px; opacity: .7; }
-  .card h3 { font-size: 16px; }
+  .home-about-item h3, .home-about-item p { font-size: 13px; }
+  .home-about-tanpa-foto .home-about-copy::before { width: 180px; height: 180px; top: -20px; right: -18px; }
+  .card h3 { font-size: 17px; }
   .card-meta { gap: 6px; }
   .panel { padding: 18px 16px; }
   .panel-title { font-size: 18px; }
@@ -608,6 +609,6 @@ body.guard-checking main, body.guard-checking .admin-shell { visibility: hidden;
   .site-footer .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 16px; }
   .site-footer .footer-grid > div:first-child { grid-column: 1 / -1; }
   .site-footer .brand-name { font-size: 30px; }
-  .site-footer li { font-size: 11px; overflow-wrap: anywhere; }
-  .footer-bottom { font-size: 10px; gap: 8px; }
+  .site-footer li { font-size: 12px; overflow-wrap: anywhere; }
+  .footer-bottom { font-size: 11px; gap: 8px; }
 }
