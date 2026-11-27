@@ -605,7 +605,7 @@ function perbaruiTicker() {
     .slice(0, 6)
     .map((a) => ({ judul: a.title, id: a.id }));
   if (!daftar.length) return;
-  const isi = daftar.map((x) => `<a class="ticker-item" href="artikel?id=${encodeURIComponent(x.id)}">${esc(x.judul)}</a><span class="ticker-dot" aria-hidden="true">•</span>`).join('');
+  const isi = daftar.map((x) => `<a class="ticker-item" href="artikel/${encodeURIComponent(x.id)}/">${esc(x.judul)}</a><span class="ticker-dot" aria-hidden="true">•</span>`).join('');
   // Dua grup identik supaya animasi -50% kembali mulus tanpa jeda.
   // Grup kedua semi-transparan untuk pembaca layar, jadi tautannya tidak bisa difokuskan.
   const isiPasif = isi.replace(/<a /g, '<a tabindex="-1" ');
@@ -662,9 +662,9 @@ async function muatPostingan() {
 function cardHTML(a) {
   const penulis = namaPenulis(a);
   return `<article class="card">
-    <a href="artikel?id=${a.id}"><img src="${gambarArtikel(a)}" alt="${esc(a.alt || 'Ilustrasi: ' + a.title)}" loading="lazy" /></a>
+    <a href="artikel/${encodeURIComponent(a.id)}/"><img src="${gambarArtikel(a)}" alt="${esc(a.alt || 'Ilustrasi: ' + a.title)}" loading="lazy" /></a>
     <div class="card-tags"><span class="kicker">${esc(a.category)}</span> <span class="sumber-label">${esc(penulis)}</span></div>
-    <h3><a href="artikel?id=${a.id}">${esc(a.title)}</a></h3>
+    <h3><a href="artikel/${encodeURIComponent(a.id)}/">${esc(a.title)}</a></h3>
     ${a.excerpt ? `<p class="meta card-excerpt">${esc(a.excerpt)}</p>` : ''}
     ${a.sumberRujukan ? `<p class="meta postingan-sumber">Dirangkum dari: ${esc(sumberPostingan(a))}</p>` : ''}
     <div class="card-meta">
@@ -727,12 +727,18 @@ function renderHome() {
 }
 
 /* ---------- Artikel ---------- */
+function idArtikelDariURL() {
+  const dariQuery = new URLSearchParams(location.search).get('id');
+  if (dariQuery) return dariQuery;
+  const dariPath = location.pathname.match(/\/artikel\/([^/]+)\/?$/);
+  return dariPath ? decodeURIComponent(dariPath[1]) : null;
+}
 function renderArticle() {
   const host = document.querySelector('#article-root');
   if (!host) return;
-  const params = new URLSearchParams(location.search);
+  const id = idArtikelDariURL();
   const semua = postinganTerbaru();
-  const a = semua.find((x) => x.id === params.get('id')) || semua[0];
+  const a = semua.find((x) => x.id === id) || semua[0];
   if (!a) {
     host.innerHTML = '<div class="empty-state"><h3>Berita belum tersedia</h3><p>Unggah berita melalui <strong>Tulis Postingan</strong> di CMS.</p><a class="btn btn-outline" href="berita">Lihat berita</a></div>';
     return;
@@ -792,7 +798,7 @@ function renderArticle() {
       </div>
       <aside>
         <div class="sidebar-section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title" style="font-size:20px">Artikel Terkait</h2></div>
-          ${postinganTerbaru().filter((x) => x.id !== a.id).slice(0, 4).map((x) => `<div class="sidebar-item"><a href="artikel?id=${x.id}"><img src="${gambarArtikel(x)}" alt="Thumbnail ${esc(x.title)}" loading="lazy" /></a><div><span class="kicker">${esc(x.category)}</span><h3><a href="artikel?id=${x.id}">${esc(x.title)}</a></h3><span class="meta" data-relative="${x.published}">${waktuRelatif(x.published)}</span></div></div>`).join('')}
+          ${postinganTerbaru().filter((x) => x.id !== a.id).slice(0, 4).map((x) => `<div class="sidebar-item"><a href="artikel/${encodeURIComponent(x.id)}/"><img src="${gambarArtikel(x)}" alt="Thumbnail ${esc(x.title)}" loading="lazy" /></a><div><span class="kicker">${esc(x.category)}</span><h3><a href="artikel/${encodeURIComponent(x.id)}/">${esc(x.title)}</a></h3><span class="meta" data-relative="${x.published}">${waktuRelatif(x.published)}</span></div></div>`).join('')}
         </div>
         ${iklanHTML('ad-sidebar')}
       </aside>
@@ -805,7 +811,7 @@ function renderArticle() {
     if (b.dataset.bagikan === 'email') location.href = 'mailto:?subject=' + encodeURIComponent(a.title) + '&body=' + encodeURIComponent(url);
     else navigator.clipboard.writeText(url).then(() => toast('Tautan artikel disalin.')).catch(() => toast(url));
   }));
-  const artikelId = params.get('id') || a.id;
+  const artikelId = a.id;
   const wadahKomentar = host.querySelector('#daftar-komentar');
   const kosongKomentar = host.querySelector('#komentar-kosong');
   const judulKomentar = host.querySelector('.komentar-judul');
@@ -880,7 +886,7 @@ function renderCategory() {
     <div class="wrap">
       <div class="filter-bar">${daftarKategori.map((k) => `<a class="chip ${k === kategori ? 'active' : ''}" href="kategori?k=${encodeURIComponent(k)}">${k}</a>`).join('')}</div>
       ${utama ? `<div class="section"><h2 class="sr-only">Sorotan ${esc(kategori)}</h2><div class="split">
-        <article class="lead"><a href="artikel?id=${esc(utama.id)}"><img src="${gambarArtikel(utama)}" alt="${esc(utama.alt || 'Ilustrasi: ' + utama.title)}" /></a><span class="kicker">Utama</span><h3><a href="artikel?id=${esc(utama.id)}">${esc(utama.title)}</a></h3></article>
+        <article class="lead"><a href="artikel/${encodeURIComponent(utama.id)}/"><img src="${gambarArtikel(utama)}" alt="${esc(utama.alt || 'Ilustrasi: ' + utama.title)}" /></a><span class="kicker">Utama</span><h3><a href="artikel/${encodeURIComponent(utama.id)}/">${esc(utama.title)}</a></h3></article>
         <div>${rankedHTML(semua.slice(1, 4).map((a) => a.title), kategori)}</div>
       </div></div>` : ''}
       <div class="section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title">Berita ${esc(kategori)}</h2></div><div class="grid-3">${kartu.length ? kartu.join('') : '<p class="meta">Belum ada berita pada kategori ini. Unggah melalui menu <strong>Tulis Postingan</strong> di CMS.</p>'}</div></div>
@@ -1195,10 +1201,9 @@ function initSEO() {
     description: deskripsi
   };
   if (document.querySelector('#article-root')) {
-    const id = new URLSearchParams(location.search).get('id');
-    const a = postinganTerbaru().find((x) => x.id === id);
+    const a = postinganTerbaru().find((x) => x.id === idArtikelDariURL());
     if (a) {
-      alamat = asal + '/artikel?id=' + encodeURIComponent(a.id);
+      alamat = asal + '/artikel/' + encodeURIComponent(a.id) + '/';
       judul = a.title + ' — Faisal';
       deskripsi = a.excerpt || deskripsi;
       gambar = asal + '/' + gambarArtikel(a).replace(/^\//, '');
@@ -1225,12 +1230,17 @@ function initSEO() {
   let kanonik = document.head.querySelector('link[rel="canonical"]');
   if (!kanonik) { kanonik = document.createElement('link'); kanonik.rel = 'canonical'; document.head.appendChild(kanonik); }
   kanonik.href = alamat;
+  setMeta('description', deskripsi, 'name');
   setMeta('og:title', judul);
   setMeta('og:description', deskripsi);
   setMeta('og:type', skema['@type'] === 'NewsArticle' ? 'article' : 'website');
   setMeta('og:url', alamat);
   setMeta('og:image', gambar);
+  setMeta('og:site_name', 'Faisal');
   setMeta('twitter:card', 'summary_large_image', 'name');
+  setMeta('twitter:title', judul, 'name');
+  setMeta('twitter:description', deskripsi, 'name');
+  setMeta('twitter:image', gambar, 'name');
   let ld = document.head.querySelector('script[type="application/ld+json"][data-faisal-seo]');
   if (!ld) {
     ld = document.createElement('script');

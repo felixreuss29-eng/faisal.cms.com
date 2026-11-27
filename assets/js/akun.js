@@ -159,7 +159,7 @@
         .slice(0, 5);
       wadah.innerHTML = daftar.length
         ? `<ul class="akun-berita-list">${daftar.map((p) => `
-            <li><a href="artikel?id=${encodeURIComponent(p.id)}">
+            <li><a href="artikel/${encodeURIComponent(p.id)}/">
               <span class="kicker">${esc(p.category || 'Berita')}</span>
               <strong>${esc(p.title)}</strong>
               <span class="meta">${esc(waktu(p.published))}</span>

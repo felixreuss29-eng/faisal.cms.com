@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Ambil repository
         uses: actions/checkout@v4
+      - name: Bangun halaman artikel statis
+        run: node scripts/generate-article-pages.js
       - name: Siapkan artefak statis
         uses: actions/configure-pages@v5
       - name: Unggah artefak
@@ -30,6 +32,8 @@ jobs:
             Faisal_Portal_Design.figcraft
             .git
             .github
+            scripts
+            supabase
             README.md
             .gitignore
   deploy:

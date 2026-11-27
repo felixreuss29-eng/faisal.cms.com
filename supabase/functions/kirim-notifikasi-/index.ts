@@ -75,7 +75,7 @@ Deno.serve(async (req: Request) => {
     const payload = JSON.stringify({
       judul,
       ringkasan: ringkasan || 'Ada berita baru dari Faisal. Baca sekarang.',
-      url: 'https://faisalnews.web.id/artikel?id=' + encodeURIComponent(id)
+      url: 'https://faisalnews.web.id/artikel/' + encodeURIComponent(id) + '/'
     });
 
     tahap = 'kirim notifikasi';

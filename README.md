@@ -7,7 +7,9 @@ Versi web nyata dari desain `Faisal_Portal_Design.figcraft`. Statis, tanpa build
 ```
 index.html              Beranda (desktop/tablet/mobile, light & dark)
 berita.html             Seluruh berita redaksi + filter kategori
-artikel.html            Halaman artikel + estimasi baca otomatis
+artikel.html            Halaman artikel + estimasi baca otomatis (juga jadi dasar halaman statis)
+artikel/<id>/index.html Halaman artikel hasil generate saat deploy, lengkap dengan meta sharing
+scripts/generate-article-pages.js  Generator halaman artikel statis + sitemap
 kategori.html           Halaman kategori/daftar berita
 pencarian.html          Hasil pencarian (termasuk empty state)
 donasi.html             Dukungan sukarela untuk pemilik via DANA
@@ -88,7 +90,7 @@ Buka `admin/posting.html` → menu **Tulis Postingan** di sidebar CMS.
 2. Token GitHub **tidak diisi di browser**. Simpan token sebagai Supabase Secret `GITHUB_TOKEN` (token klasik dengan izin **repo**, atau fine-grained dengan **Contents: read & write** + **Metadata: read**). Edge Function `simpan-postingan` memakai secret itu di server.
 3. Isi judul, kategori, ringkasan, foto (opsional, ada pratinjau), teks alternatif, dan isi postingan.
 4. Klik **Unggah & terbitkan**. Website akan menyimpan foto ke `assets/img/upload/` dan menambah data ke `assets/js/posts.json` lewat GitHub Contents API.
-5. Tunggu 1–3 menit sampai GitHub Pages selesai deploy. Postingan muncul di beranda, `berita.html`, hasil pencarian, dan `artikel.html?id=…`.
+5. Tunggu 1–3 menit sampai GitHub Pages selesai deploy. Postingan muncul di beranda, `berita.html`, hasil pencarian, dan halaman statis `artikel/<id>/` yang dibuat otomatis saat deploy.
 6. Untuk menghapus, buka bagian **Kelola postingan** pada halaman yang sama → **Muat daftar postingan** → **Hapus** pada judul yang dimaksud → konfirmasi. Postingan dan fotonya dihapus dari repository lewat GitHub Contents API.
 
 **Keamanan:** browser tidak menyimpan token GitHub. CMS mengirim judul/isi lewat Edge Function Supabase memakai `apikey` publishable + token sesi pemilik; fungsi memakai Secret `GITHUB_TOKEN` untuk menulis ke repository. Pastikan **Verify JWT with legacy secret = OFF** pada kedua Edge Function (`simpan-postingan` / slug aktifnya, dan `kirim-notifikasi-`). Cabut token di GitHub bila perlu.
