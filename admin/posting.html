@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/css/style.css?v=52" />
+  <link rel="stylesheet" href="../assets/css/style.css?v=53" />
 </head>
 <body data-admin="1">
   <div class="admin-shell">
@@ -30,25 +30,18 @@
       </nav>
     </aside>
     <div class="admin-main">
-      <header class="admin-topbar"><button class="icon-btn" type="button" data-sidebar-toggle aria-label="Ciutkan sidebar" aria-expanded="true">☰</button><h1>Tulis Postingan</h1><div class="spacer"></div><span class="meta" data-clock></span><a class="btn btn-outline" href="../berita"" target="_blank" rel="noopener noreferrer">Lihat situs ↗</a></header>
+      <header class="admin-topbar"><button class="icon-btn" type="button" data-sidebar-toggle aria-label="Ciutkan sidebar" aria-expanded="true">☰</button><h1>Tulis Postingan</h1><div class="spacer"></div><span class="meta" data-clock></span><a class="btn btn-outline" href="../berita" target="_blank" rel="noopener noreferrer">Lihat situs ↗</a></header>
       <main class="admin-content">
         <nav class="breadcrumb" aria-label="Breadcrumb">Admin › Tulis Postingan</nav>
-        <div class="panel" style="margin-bottom:18px"><p class="meta"><strong>Cara cepat:</strong> ① Isi <em>Personal Access Token</em> di bawah → <b>Simpan pengaturan</b> → <b>Cek koneksi</b>. ② Isi judul, kategori, ringkasan, <b>sumber rujukan (wajib)</b>, foto beserta kreditnya (opsional), dan isi berita. ③ Klik <b>Unggah &amp; terbitkan</b>, tunggu 1–3 menit, lalu cek di <a href="../berita"" target="_blank" rel="noopener noreferrer">halaman Berita ↗</a>.</p></div>
+        <div class="panel" style="margin-bottom:18px"><p class="meta"><strong>Cara cepat:</strong> ① Masuk sebagai pemilik, lalu klik <b>Cek koneksi</b>. ② Isi judul, kategori, ringkasan, <b>sumber rujukan (wajib)</b>, foto beserta kreditnya (opsional), dan isi berita. ③ Klik <b>Unggah &amp; terbitkan</b>, tunggu 1–3 menit, lalu cek di <a href="../berita" target="_blank" rel="noopener noreferrer">halaman Berita ↗</a>.</p></div>
         <div class="two-col">
           <section class="admin-card">
-            <h2>1. Hubungkan ke GitHub</h2>
-            <p class="meta">Isi sekali saja. Pengaturan tersimpan di browser perangkat ini.</p>
-            <div class="form-field"><label for="gh-owner">Pemilik repository</label><input id="gh-owner" type="text" autocomplete="off" placeholder="nama-akun-github" value="felixreuss29-eng" /></div>
-            <div class="form-field"><label for="gh-repo">Nama repository</label><input id="gh-repo" type="text" autocomplete="off" placeholder="faisal.cms.com" value="faisal.cms.com" /><span class="meta">Tulis persis <code>faisal.cms.com</code> — pakai <strong>titik</strong> (<code>.</code>), <strong>bukan</strong> garis bawah (<code>_</code>). <button class="kicker" type="button" id="gh-repo-betulkan">Pakai nama benar</button></span></div>
-            <div class="form-field"><label for="gh-branch">Cabang</label><input id="gh-branch" type="text" value="main" autocomplete="off" /></div>
-            <div class="form-field"><label for="gh-token">Personal Access Token</label><input id="gh-token" type="password" autocomplete="off" placeholder="ghp_… atau github_pat_…" /></div>
-            <div class="form-actions">
-              <button class="btn btn-outline" type="button" id="gh-simpan">Simpan pengaturan</button>
-              <button class="btn btn-outline" type="button" id="gh-cek">Cek koneksi</button>
-            </div>
+            <h2>1. Koneksi aman ke GitHub</h2>
+            <p class="meta">Unggahan ditulis lewat Edge Function Supabase. Token GitHub disimpan sebagai <code>GITHUB_TOKEN</code> di Supabase Secrets — <strong>tidak ada token yang disimpan di browser</strong>.</p>
+            <p class="meta"><strong>Repository:</strong> <code>felixreuss29-eng/faisal.cms.com</code><br /><strong>Cabang:</strong> <code>main</code></p>
+            <div class="form-actions"><button class="btn btn-outline" type="button" id="gh-cek">Cek koneksi</button></div>
             <p class="meta" id="gh-status" role="status" aria-live="polite"></p>
-            <p class="meta"><strong>Catatan:</strong> <em>Cek koneksi</em> hanya memastikan token bisa <strong>membaca</strong>. Izin <strong>menulis</strong> baru teruji saat klik <em>Unggah &amp; terbitkan</em>.</p>
-            <p class="meta">Buat token di <a href="https://github.com/settings/tokens" target="_blank" rel="noopener noreferrer">GitHub → Settings → Developer settings → Tokens</a>. Token klasik perlu izin <strong>repo</strong>; fine-grained perlu <strong>Contents: read &amp; write</strong> dan <strong>Metadata: read</strong>. Simpan token hanya di perangkat pemilik dan cabut jika perlu.</p>
+            <p class="meta"><strong>Catatan:</strong> <em>Cek koneksi</em> hanya memastikan repository bisa dijangkau. Izin tulis diuji saat klik <em>Unggah &amp; terbitkan</em>.</p>
           </section>
 
           <section class="admin-card">
@@ -87,51 +80,35 @@
     </div>
   </div>
   <div class="toast" role="status" aria-live="polite"></div>
-  <script src="../assets/js/supabase-config.js?v=52"></script>
-  <script src="../assets/js/config.js?v=52"></script>
-  <script src="../assets/js/supabase.js?v=52"></script>
-  <script src="../assets/js/data.js?v=52"></script>
-  <script src="../assets/js/i18n.js?v=52"></script>
-  <script src="../assets/js/app.js?v=52"></script>
+  <script src="../assets/js/supabase-config.js?v=53"></script>
+  <script src="../assets/js/config.js?v=53"></script>
+  <script src="../assets/js/supabase.js?v=53"></script>
+  <script src="../assets/js/data.js?v=53"></script>
+  <script src="../assets/js/i18n.js?v=53"></script>
+  <script src="../assets/js/app.js?v=53"></script>
   <script>
   (function () {
-    const KUNCI = 'faisal-github';
+    try { localStorage.removeItem('faisal-github'); } catch { /* abai */ }
     const $ = (s) => document.querySelector(s);
     const el = (id) => document.getElementById(id);
-    const baca = () => { try { return JSON.parse(localStorage.getItem(KUNCI) || '{}'); } catch { return {}; } };
     const teksStatus = (pesan) => { el('gh-status').textContent = pesan; };
-    const kepala = (denganJson = false) => {
-      const c = baca();
-      if (!c.owner || !c.repo || !c.token) throw new Error('Lengkapi pemilik repository, nama repository, dan token terlebih dahulu.');
-      if (c.repo.includes('_')) throw new Error('Nama repository salah: "' + c.repo + '". Harus "faisal.cms.com" dengan titik, bukan garis bawah. Klik "Pakai nama benar" lalu Simpan pengaturan.');
-      const h = {
-        Authorization: 'Bearer ' + c.token,
-        Accept: 'application/vnd.github+json',
-        'X-GitHub-Api-Version': '2022-11-28'
-      };
-      if (denganJson) h['Content-Type'] = 'application/json';
-      return { c, h };
-    };
-    const pesanGagal = (r) => {
-      if (r.status === 401) return 'Token ditolak (401). Periksa atau buat token baru.';
-      if (r.status === 403) return 'Token hanya bisa membaca (403). Buat token klasik dengan izin "repo", atau fine-grained dengan Contents: Read and write pada repository faisal.cms.com. Tempel token barunya, Simpan pengaturan, lalu coba lagi.';
-      if (r.status === 404) return 'Repository tidak ditemukan (404). Periksa nama akun dan repository.';
-      return 'GitHub menolak permintaan (' + r.status + '): ' + (r.message || 'tidak diketahui');
-    };
-    const isiForm = () => {
-      const c = baca();
-      el('gh-owner').value = c.owner || 'felixreuss29-eng';
-      el('gh-repo').value = c.repo || 'faisal.cms.com';
-      el('gh-branch').value = c.branch || 'main';
-      el('gh-token').value = c.token || '';
-    };
-    const simpanForm = () => {
-      localStorage.setItem(KUNCI, JSON.stringify({
-        owner: el('gh-owner').value.trim(), repo: el('gh-repo').value.trim(),
-        branch: el('gh-branch').value.trim() || 'main', token: el('gh-token').value.trim()
-      }));
-      teksStatus('Pengaturan tersimpan di browser ini.');
-      toast('Pengaturan GitHub tersimpan.');
+    const config = () => window.FAISAL_SUPABASE || {};
+    const tokenPemilik = () => (window.FaisalData && typeof window.FaisalData.tokenPemilik === 'function')
+      ? window.FaisalData.tokenPemilik() : '';
+    const panggil = async (aksi, badan = {}) => {
+      const c = config();
+      const token = tokenPemilik();
+      if (!c.url || !c.anonKey) throw new Error('Konfigurasi Supabase belum tersedia.');
+      if (!token) throw new Error('Masuk ke CMS sebagai pemilik terlebih dahulu.');
+      const r = await fetch(c.url + '/functions/v1/simpan-postingan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: c.anonKey },
+        body: JSON.stringify(Object.assign({ aksi, token }, badan))
+      });
+      let j;
+      try { j = await r.json(); } catch { throw new Error('Balasan tidak dikenali (HTTP ' + r.status + ').'); }
+      if (!r.ok) throw new Error(j.error || 'GitHub menolak permintaan (' + r.status + ').');
+      return j.data;
     };
     const escNotif = (teks) => String(teks).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const base64DariBytes = async (bytes) => {
@@ -143,31 +120,9 @@
       const biner = atob((base64 || '').replace(/\s/g, ''));
       return new TextDecoder('utf-8').decode(Uint8Array.from(biner, (c) => c.charCodeAt(0)));
     };
-    const bacaFile = async (path) => {
-      const { c, h } = kepala();
-      const r = await fetch('https://api.github.com/repos/' + c.owner + '/' + c.repo + '/contents/' + path + '?ref=' + encodeURIComponent(c.branch), { headers: h });
-      if (r.status === 404) return null;
-      if (!r.ok) throw new Error(pesanGagal(await r.json().catch(() => ({}))));
-      return r.json();
-    };
-    const tulisFile = async (path, content, message, sha) => {
-      const { c, h } = kepala(true);
-      const body = { message, content, branch: c.branch };
-      if (sha) body.sha = sha;
-      const r = await fetch('https://api.github.com/repos/' + c.owner + '/' + c.repo + '/contents/' + path, {
-        method: 'PUT', headers: h, body: JSON.stringify(body)
-      });
-      if (!r.ok) throw new Error(pesanGagal(await r.json().catch(() => ({}))));
-      return r.json();
-    };
-    const hapusFile = async (path, sha, pesan) => {
-      const { c, h } = kepala(true);
-      const r = await fetch('https://api.github.com/repos/' + c.owner + '/' + c.repo + '/contents/' + path, {
-        method: 'DELETE', headers: h,
-        body: JSON.stringify({ message: pesan, sha, branch: c.branch })
-      });
-      if (!r.ok) throw new Error(pesanGagal(await r.json().catch(() => ({}))));
-    };
+    const bacaFile = (path) => panggil('baca', { path });
+    const tulisFile = (path, content, message, sha) => panggil('tulis', { path, content, message, sha });
+    const hapusFile = (path, sha, message) => panggil('hapus', { path, sha, message });
     const validasi = () => {
       const judul = el('post-judul').value.trim();
       const ringkasan = el('post-ringkasan').value.trim();
@@ -191,7 +146,7 @@
       const box = el('hasil-posting');
       box.classList.add('hidden');
       try {
-        const { c } = kepala();
+        const c = { owner: 'felixreuss29-eng', repo: 'faisal.cms.com', branch: 'main' };
         const judul = el('post-judul').value.trim();
         const id = 'post-' + Date.now();
         const file = el('post-gambar').files[0];
@@ -318,30 +273,10 @@
         toast('Postingan dihapus. Tunggu 1–3 menit untuk deploy.');
       } catch (err) { box.textContent = err.message; }
     };
-    el('gh-repo-betulkan').addEventListener('click', () => {
-      el('gh-repo').value = 'faisal.cms.com';
-      teksStatus('Nama repository diperbaiki menjadi faisal.cms.com. Klik Simpan pengaturan.');
-    });
-    el('gh-simpan').addEventListener('click', simpanForm);
     el('gh-cek').addEventListener('click', async () => {
       try {
-        const { c, h } = kepala();
-        const r = await fetch('https://api.github.com/repos/' + c.owner + '/' + c.repo, { headers: h });
-        if (!r.ok) throw new Error(pesanGagal(await r.json().catch(() => ({}))));
-        const scopes = r.headers.get('x-oauth-scopes') || '';
-        let izin = '';
-        if (scopes) {
-          izin = /(^|,)\s*(repo|public_repo)\s*(,|$)/.test(scopes)
-            ? ' Izin tulis: OK (scope: ' + scopes + ').'
-            : ' PERINGATAN: token klasik ini belum punya scope repo/public_repo (scope: ' + scopes + '), jadi unggah pasti gagal 403. Centang "repo" lalu perbarui token.';
-        } else if (c.token.indexOf('github_pat_') === 0) {
-          izin = ' PERINGATAN: token fine-grained terdeteksi. Pastikan Repository permissions → Contents = Read and write (bukan Read-only) pada ' + c.repo + '.';
-        } else if (c.token.indexOf('ghp_') === 0) {
-          izin = ' Token klasik terdeteksi. Pastikan saat dibuat centang "repo" (GitHub tidak mengirim daftar scope ke browser).';
-        } else {
-          izin = ' PERINGATAN: awalan token tidak dikenali. Pakai token klasik ghp_ dengan scope repo.';
-        }
-        teksStatus('Terhubung ke ' + c.owner + '/' + c.repo + ' pada cabang ' + c.branch + '.' + izin);
+        const info = await panggil('cek');
+        teksStatus('Terhubung ke ' + (info.full_name || 'felixreuss29-eng/faisal.cms.com') + ' pada cabang main. Izin tulis diuji saat unggah.');
         toast('Koneksi GitHub berhasil.');
       } catch (err) { teksStatus(err.message); }
     });
@@ -353,7 +288,6 @@
     });
     el('form-posting').addEventListener('submit', terbitkan);
     el('post-muat').addEventListener('click', muatDaftarPostingan);
-    isiForm();
   })();
   </script>
 </body>

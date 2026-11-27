@@ -77,7 +77,7 @@ function updateDynamicTime() {
     el.textContent = waktuRelatif(el.dataset.relative, sekarang);
   });
   document.querySelectorAll('[data-reading]').forEach((el) => {
-    const article = ARTICLES.find((a) => a.id === el.dataset.reading);
+    const article = postinganTerbaru().find((a) => a.id === el.dataset.reading);
     if (article) el.textContent = `${readingMinutes(article.body)} menit baca`;
   });
 }
@@ -457,11 +457,11 @@ function renderFooter() {
     </footer>`;
 }
 
-/* ---------- Konten redaksi: data contoh + unggahan CMS ---------- */
+/* ---------- Konten redaksi: seluruhnya berasal dari unggahan CMS pemilik ---------- */
 let POSTINGAN = [];
 
-/* Berita dari RSS pihak ketiga sudah tidak dipakai. Semua kartu dan artikel
-   berasal dari data contoh redaksi atau unggahan CMS pemilik. */
+/* Tidak ada berita contoh, RSS, atau konten pihak ketiga. Satu-satunya
+   sumber daftar berita adalah assets/js/posts.json yang ditulis dari CMS. */
 /* ---------- Jumlah tampilan & statistik kunjungan ---------- */
 async function perbaruiAngka() {
   if (!FD) return;
@@ -497,7 +497,7 @@ function catatKunjunganSekali() {
   if (!FD || document.body.dataset.admin === '1') return;
   FD.catatKunjungan('situs', 'situs').catch(() => {});
   if (document.querySelector('#article-root')) {
-    const id = new URLSearchParams(location.search).get('id') || 'pilkada-2027';
+    const id = new URLSearchParams(location.search).get('id') || (postinganTerbaru()[0] || {}).id || 'situs';
     FD.catatKunjungan(id, 'artikel').catch(() => {});
   }
 }
@@ -505,9 +505,7 @@ function kartuTerkiniHTML(a) {
   return cardHTML(a);
 }
 function gabunganTerkini() {
-  return [...postinganTerbaru(), ...ARTICLES]
-    .sort((a, b) => new Date(b.published || 0) - new Date(a.published || 0))
-    .slice(0, 12);
+  return postinganTerbaru().slice(0, 12);
 }
 function renderBeritaHarian() {
   const host = document.querySelector('#daftar-berita-harian');
@@ -554,9 +552,8 @@ function renderBeritaKategori() {
   const host = document.querySelector('#berita-kategori');
   if (!host) return;
   const kategori = kategoriAktif();
-  const tampil = [...postinganTerbaru(), ...ARTICLES]
+  const tampil = postinganTerbaru()
     .filter((a) => a.category === kategori)
-    .sort((a, b) => new Date(b.published || 0) - new Date(a.published || 0))
     .slice(0, 3);
   host.innerHTML = `<div class="section-head"><span class="section-mark"></span><h2 class="section-title">Berita ${esc(kategori.toLowerCase())} dari Redaksi Faisal</h2><a class="section-more" href="berita">Lihat semua →</a></div>
     <p class="meta">Berita pada kategori ini ditulis dan diterbitkan oleh redaksi Faisal.</p>
@@ -568,9 +565,8 @@ function renderBeritaKategori() {
 function perbaruiTicker() {
   const el = document.querySelector('[data-ticker]');
   if (!el) return;
-  // News Ticker tetap berjalan, tetapi isinya hanya berita redaksi Faisal.
-  const daftar = [...postinganTerbaru(), ...ARTICLES]
-    .sort((a, b) => new Date(b.published || 0) - new Date(a.published || 0))
+  // News Ticker tetap berjalan, tetapi isinya hanya berita unggahan pemilik.
+  const daftar = postinganTerbaru()
     .slice(0, 6)
     .map((a) => ({ judul: a.title, id: a.id }));
   if (!daftar.length) return;
@@ -620,6 +616,7 @@ async function muatPostingan() {
   } catch (e) {
     console.warn('Postingan admin tidak dapat dimuat:', e.message);
   }
+  renderHome();
   renderPostingan();
   if (document.querySelector('#article-root')) renderArticle();
   renderCategory();
@@ -697,19 +694,6 @@ function renderHome() {
         </div>
       </div>
     </section>`;
-
-  const latest = document.querySelector('#latest');
-  if (latest) latest.innerHTML = `<div class="grid-3">${ARTICLES.map(cardHTML).join('')}</div>`;
-
-  const politikUtama = ARTICLES[0];
-  document.querySelector('#politik').innerHTML = `
-    <div class="split">
-      <article class="lead"><a href="artikel?id=${politikUtama.id}"><img src="${img('politik3.jpg')}" alt="Ilustrasi suasana rapat politik" /></a><span class="kicker">Politik</span><h3><a href="artikel?id=${politikUtama.id}">${esc(politikUtama.title)}</a></h3></article>
-      <div>${rankedHTML(['Komisi II Minta Aturan Turunan Segera Ditetapkan', 'Pengamat: Stabilitas Aturan Jadi Kunci Pemilu 2027', 'KPU Buka Pendaftaran Tenaga Ad Hoc Pemilu', 'Warga Mulai Cek Daftar Pemilih di Kanal Daring'])}</div>
-    </div>`;
-
-  document.querySelector('#populer-list').innerHTML = `
-    <div class="populer-grid">${POPULAR.map((t, i) => `<div class="pop-row"><span class="num">${String(i + 1).padStart(2, '0')}</span><img src="${img(['andi-amran-sugiono.jpg', 'ekonomi1.jpg', 'politik1.jpg', 'politik2.jpg', 'ekonomi2.jpg'][i])}" alt="${esc(t)}" loading="lazy" /><h3>${esc(t)}</h3></div>`).join('')}</div>`;
 }
 
 /* ---------- Artikel ---------- */
@@ -717,9 +701,12 @@ function renderArticle() {
   const host = document.querySelector('#article-root');
   if (!host) return;
   const params = new URLSearchParams(location.search);
-  const a = ARTICLES.find((x) => x.id === params.get('id'))
-    || POSTINGAN.find((x) => x.id === params.get('id'))
-    || ARTICLES[0];
+  const semua = postinganTerbaru();
+  const a = semua.find((x) => x.id === params.get('id')) || semua[0];
+  if (!a) {
+    host.innerHTML = '<div class="empty-state"><h3>Berita belum tersedia</h3><p>Unggah berita melalui <strong>Tulis Postingan</strong> di CMS.</p><a class="btn btn-outline" href="berita">Lihat berita</a></div>';
+    return;
+  }
   document.body.dataset.page = KATEGORI.includes(a.category) ? a.category : 'Beranda';
   document.title = `${a.title} — Faisal`;
   document.querySelectorAll('.site-nav a, .mobile-nav a').forEach((link) => {
@@ -756,8 +743,7 @@ function renderArticle() {
         </header>
         <figure class="article-figure"><img src="${gambarArtikel(a)}" alt="${esc(a.alt || 'Ilustrasi: ' + a.title)}" /><figcaption>${dariAdmin ? 'Foto: ' + esc(kreditFoto(a)) + '.' : 'Ilustrasi artikel. Foto: Dokumentasi Faisal.'}</figcaption></figure>
         <div class="article-body" style="margin-top:28px">${isi}</div>
-        <div class="tags"><span class="tag">#Pilkada2027</span><span class="tag">#KPU</span><span class="tag">#Pemilih</span><span class="tag">#Demokrasi</span></div>
-        <div class="correction"><strong>Catatan redaksi</strong><br />Jadwal dan tahapan mengikuti kalender resmi penyelenggara pemilu, diperbarui pada <span data-clock></span>.</div>
+        <div class="tags"><span class="tag">#${esc(a.category)}</span><span class="tag">#Faisal</span></div>
         <div class="author-bio"><img src="${img(a.author.photo)}" alt="Foto ${esc(penulis)}" /><div><h3>${esc(penulis)}</h3><div class="meta">${esc(peran)} · Faisal</div><p class="meta">${esc(bioTeks)}</p></div>${tombolIkuti(penulis, 'btn btn-outline btn-follow', true)}</div>
         <section class="comments"><h3 class="komentar-judul">Komentar</h3>
           <p class="meta" data-komentar-status>Komentar tampil untuk semua pembaca dan dapat dimoderasi pemilik.</p>
@@ -775,19 +761,13 @@ function renderArticle() {
       </div>
       <aside>
         <div class="sidebar-section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title" style="font-size:20px">Artikel Terkait</h2></div>
-          ${ARTICLES.filter((x) => x.id !== a.id).slice(0, 4).map((x) => `<div class="sidebar-item"><a href="artikel?id=${x.id}"><img src="${img(x.image)}" alt="Thumbnail ${esc(x.title)}" loading="lazy" /></a><div><span class="kicker">${esc(x.category)}</span><h3><a href="artikel?id=${x.id}">${esc(x.title)}</a></h3><span class="meta" data-relative="${x.published}">${waktuRelatif(x.published)}</span></div></div>`).join('')}
+          ${postinganTerbaru().filter((x) => x.id !== a.id).slice(0, 4).map((x) => `<div class="sidebar-item"><a href="artikel?id=${x.id}"><img src="${gambarArtikel(x)}" alt="Thumbnail ${esc(x.title)}" loading="lazy" /></a><div><span class="kicker">${esc(x.category)}</span><h3><a href="artikel?id=${x.id}">${esc(x.title)}</a></h3><span class="meta" data-relative="${x.published}">${waktuRelatif(x.published)}</span></div></div>`).join('')}
         </div>
         ${iklanHTML('ad-sidebar')}
-        <div class="sidebar-section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title" style="font-size:20px">Terpopuler</h2></div>${rankedHTML(POPULAR)}</div>
       </aside>
     </div>`;
-  if (dariAdmin) {
-    host.querySelector('.correction')?.remove();
-    const tags = host.querySelector('.tags');
-    if (tags) tags.innerHTML = `<span class="tag">#${esc(a.category)}</span><span class="tag">#Faisal</span>`;
-    const figcaption = host.querySelector('.article-figure figcaption');
-    if (figcaption) figcaption.textContent = `Foto: ${kreditFoto(a)}.`;
-  }
+  const figcaption = host.querySelector('.article-figure figcaption');
+  if (figcaption) figcaption.textContent = `Foto: ${kreditFoto(a)}.`;
   host.querySelectorAll('[data-bagikan]').forEach((b) => b.addEventListener('click', (e) => {
     e.preventDefault();
     const url = location.href;
@@ -861,9 +841,7 @@ function renderCategory() {
     if (a.textContent.trim() === kategori) a.setAttribute('aria-current', 'page');
     else a.removeAttribute('aria-current');
   });
-  const semua = [...ARTICLES, ...POSTINGAN]
-    .filter((a) => a.category === kategori)
-    .sort((a, b) => new Date(b.published || 0) - new Date(a.published || 0));
+  const semua = postinganTerbaru().filter((a) => a.category === kategori);
   const utama = semua[0];
   const kartu = semua.map(cardHTML);
   host.innerHTML = `
@@ -887,16 +865,13 @@ function renderSearch() {
   if (!host) return;
   const q = new URLSearchParams(location.search).get('q') || '';
   const kunci = q.toLowerCase();
-  const hasil = q ? ARTICLES.filter((a) => (a.title + a.category + a.excerpt).toLowerCase().includes(kunci)) : [];
-  const hasilAdmin = q ? POSTINGAN.filter((a) => (a.title + a.category + a.excerpt).toLowerCase().includes(kunci)) : [];
-  const jumlah = hasil.length + hasilAdmin.length;
+  const hasil = q ? postinganTerbaru().filter((a) => (a.title + a.category + a.excerpt).toLowerCase().includes(kunci)) : [];
   host.innerHTML = `
     <div class="wrap" style="padding-top:32px">
       <h1 style="font-family:var(--font-display);font-size:32px;margin:0">Pencarian</h1>
-      <p class="result-meta">${q ? `${jumlah} hasil untuk “${esc(q)}”` : 'Masukkan kata kunci pada kolom pencarian di atas.'}</p>
-      ${q && !jumlah ? `<div class="empty-state"><h3>Tidak ada hasil</h3><p>Coba kata kunci lain atau lihat berita terkini.</p><a class="btn btn-outline" href="berita">Lihat berita terkini</a></div>` : `
-        ${hasilAdmin.length ? `<section class="section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title">Postingan pemilik</h2></div><div class="grid-3">${hasilAdmin.map(cardHTML).join('')}</div></section>` : ''}
-        ${hasil.length ? `<section class="section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title">Arsip redaksi</h2></div><div class="grid-3">${hasil.map(cardHTML).join('')}</div></section>` : ''}`}
+      <p class="result-meta">${q ? `${hasil.length} hasil untuk “${esc(q)}”` : 'Masukkan kata kunci pada kolom pencarian di atas.'}</p>
+      ${q && !hasil.length ? `<div class="empty-state"><h3>Tidak ada hasil</h3><p>Coba kata kunci lain atau lihat berita terkini.</p><a class="btn btn-outline" href="berita">Lihat berita terkini</a></div>` : ''}
+      ${hasil.length ? `<section class="section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title">Hasil pencarian</h2></div><div class="grid-3">${hasil.map(cardHTML).join('')}</div></section>` : ''}
     </div>`;
   updateDynamicTime();
 }
@@ -1034,7 +1009,6 @@ function initAdminProfile() {
 async function initAdminGuard() {
   if (document.body.dataset.admin !== '1') return;
   const halaman = location.pathname.split('/').pop();
-  if (halaman === 'login-2fa.html') { location.replace('login.html'); return; }
   if (['login.html', 'lupa-password.html'].includes(halaman)) return;
   document.body.classList.add('guard-checking');
   try {
@@ -1166,6 +1140,70 @@ function sinkronBahasaHP() {
   });
 }
 
+/* ---------- SEO: canonical, Open Graph, dan data terstruktur ---------- */
+function initSEO() {
+  if (document.body.dataset.admin === '1') return;
+  const asal = 'https://faisalnews.web.id';
+  const bersih = location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+  let alamat = asal + (bersih === '/' ? '/' : bersih);
+  let judul = document.title || 'Faisal — Berita Independen & Terpercaya';
+  let deskripsi = document.querySelector('meta[name="description"]')?.content
+    || 'Portal berita independen dan tepercaya dari Faisal.';
+  let gambar = asal + '/assets/img/hero.jpg';
+  let skema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Faisal',
+    url: asal + '/',
+    description: deskripsi
+  };
+  if (document.querySelector('#article-root')) {
+    const id = new URLSearchParams(location.search).get('id');
+    const a = postinganTerbaru().find((x) => x.id === id);
+    if (a) {
+      alamat = asal + '/artikel?id=' + encodeURIComponent(a.id);
+      judul = a.title + ' — Faisal';
+      deskripsi = a.excerpt || deskripsi;
+      gambar = asal + '/' + gambarArtikel(a).replace(/^\//, '');
+      skema = {
+        '@context': 'https://schema.org',
+        '@type': 'NewsArticle',
+        headline: a.title,
+        description: deskripsi,
+        image: gambar,
+        url: alamat,
+        datePublished: a.published,
+        dateModified: a.updated || a.published,
+        author: { '@type': 'Person', name: namaPenulis(a) },
+        publisher: { '@type': 'Organization', name: 'Faisal' },
+        mainEntityOfPage: alamat
+      };
+    }
+  }
+  const setMeta = (nama, nilai, atribut = 'property') => {
+    let el = document.head.querySelector(`meta[${atribut}="${nama}"]`);
+    if (!el) { el = document.createElement('meta'); el.setAttribute(atribut, nama); document.head.appendChild(el); }
+    el.setAttribute('content', nilai);
+  };
+  let kanonik = document.head.querySelector('link[rel="canonical"]');
+  if (!kanonik) { kanonik = document.createElement('link'); kanonik.rel = 'canonical'; document.head.appendChild(kanonik); }
+  kanonik.href = alamat;
+  setMeta('og:title', judul);
+  setMeta('og:description', deskripsi);
+  setMeta('og:type', skema['@type'] === 'NewsArticle' ? 'article' : 'website');
+  setMeta('og:url', alamat);
+  setMeta('og:image', gambar);
+  setMeta('twitter:card', 'summary_large_image', 'name');
+  let ld = document.head.querySelector('script[type="application/ld+json"][data-faisal-seo]');
+  if (!ld) {
+    ld = document.createElement('script');
+    ld.type = 'application/ld+json';
+    ld.dataset.faisalSeo = '1';
+    document.head.appendChild(ld);
+  }
+  ld.textContent = JSON.stringify(skema);
+}
+
 /* ---------- Inisialisasi ---------- */
 document.addEventListener('DOMContentLoaded', () => {
   initAdminGuard();
@@ -1177,10 +1215,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(rapikanNav);
   initTickerToggle();
   renderFooter();
-  renderHome();
-  renderArticle();
-  renderCategory();
-  renderSearch();
   if (document.body.dataset.page) initOverlays();
   initForms();
   initFollow();
@@ -1203,6 +1237,7 @@ document.addEventListener('DOMContentLoaded', () => {
       perbaruiTicker();
       renderBeritaHarian();
       renderBeritaPage();
+      initSEO();
       perbaruiAngka();
       sinkronIkuti();
     });

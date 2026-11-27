@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/css/style.css?v=52" />
+  <link rel="stylesheet" href="../assets/css/style.css?v=53" />
 </head>
 <body data-admin="1">
   <div class="admin-shell">
@@ -33,21 +33,39 @@
         <section class="admin-card" style="margin-top:0">
           <table>
             <thead><tr><th scope="col">Judul</th><th scope="col">Kategori</th><th scope="col">Penulis</th><th scope="col">Status</th><th scope="col">Dilihat</th><th scope="col">Diperbarui</th><th scope="col"><span class="sr-only">Aksi</span></th></tr></thead>
-            <tbody>
-              <tr data-status="Terbit"><td>KPU Tetapkan Jadwal Pilkada 2027, Ini Rangkaian Tahapannya</td><td>Politik</td><td>Faisal Akbar</td><td><span class="badge published">Terbit</span></td><td><span class="meta" data-view="pilkada-2027">—</span></td><td><span data-relative="2026-11-25T09:12:00+07:00"></span></td><td><a class="kicker" href="editor.html">Ubah</a></td></tr>
-              <tr data-status="Review"><td>Inflasi November Turun ke 2,8 Persen</td><td>Ekonomi</td><td>Faisal Akbar</td><td><span class="badge review">Review</span></td><td><span class="meta" data-view="inflasi-november">—</span></td><td><span data-relative="2026-11-25T07:40:00+07:00"></span></td><td><a class="kicker" href="editor.html">Ubah</a></td></tr>
-              <tr data-status="Disetujui"><td>Timnas Indonesia Taklukkan Jepang 2-0</td><td>Olahraga</td><td>Faisal Akbar</td><td><span class="badge approved">Disetujui</span></td><td><span class="meta" data-view="timnas-jepang">—</span></td><td><span data-relative="2026-11-25T05:20:00+07:00"></span></td><td><a class="kicker" href="editor.html">Ubah</a></td></tr>
-              <tr data-status="Draf"><td>MK Gelar Sidang Sengketa Hasil Pilkada</td><td>Hukum</td><td>Faisal Akbar</td><td><span class="badge draft">Draf</span></td><td><span class="meta" data-view="mk-sengketa">—</span></td><td><span data-relative="2026-11-25T04:10:00+07:00"></span></td><td><a class="kicker" href="editor.html">Ubah</a></td></tr>
-            </tbody>
+            <tbody id="daftar-artikel-rows"><tr><td colspan="7" class="meta">Memuat postingan…</td></tr></tbody>
           </table>
         </section>
       </main>
     </div>
   </div>
   <div class="toast" role="status" aria-live="polite"></div>
-  <script src="../assets/js/supabase-config.js?v=52"></script>
-  <script src="../assets/js/config.js?v=52"></script>
-  <script src="../assets/js/supabase.js?v=52"></script>
-  <script src="../assets/js/data.js?v=52"></script><script src="../assets/js/app.js?v=52"></script>
+  <script src="../assets/js/supabase-config.js?v=53"></script>
+  <script src="../assets/js/config.js?v=53"></script>
+  <script src="../assets/js/supabase.js?v=53"></script>
+  <script src="../assets/js/data.js?v=53"></script><script src="../assets/js/app.js?v=53"></script>
+  <script>
+  (async function () {
+    const wadah = document.getElementById('daftar-artikel-rows');
+    try {
+      const r = await fetch('../assets/js/posts.json', { cache: 'no-store' });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const data = await r.json();
+      const daftar = Array.isArray(data.posts) ? data.posts : [];
+      wadah.innerHTML = daftar.length ? daftar.map((p) => `<tr data-status="Terbit">
+        <td>${String(p.title || '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]))}</td>
+        <td>${String(p.category || '')}</td><td>Faisal Akbar</td>
+        <td><span class="badge published">Terbit</span></td>
+        <td><span class="meta" data-view="${encodeURIComponent(p.id)}">—</span></td>
+        <td><span data-relative="${String(p.updated || p.published || '')}"></span></td>
+        <td><a class="kicker" href="../artikel?id=${encodeURIComponent(p.id)}">Lihat</a></td>
+      </tr>`).join('') : '<tr><td colspan="7" class="meta">Belum ada postingan. Unggah melalui menu Tulis Postingan.</td></tr>';
+      if (typeof window.updateDynamicTime === 'function') window.updateDynamicTime();
+      if (window.FaisalData && typeof window.FaisalData.ringkasan === 'function') window.FaisalData.ringkasan().catch(() => {});
+    } catch (e) {
+      wadah.innerHTML = '<tr><td colspan="7" class="meta">Daftar artikel tidak dapat dimuat: ' + e.message + '</td></tr>';
+    }
+  })();
+  </script>
 </body>
 </html>

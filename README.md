@@ -16,14 +16,13 @@ statis.html             Pedoman Media Siber, redaksi, hak jawab, privasi, cookie
 404.html                Halaman tidak ditemukan
 admin/
   login.html            Masuk
-  login-2fa.html        Halaman lama, otomatis dialihkan ke login.html
   lupa-password.html    Reset kata sandi + state sukses
   dasbor.html           Dasbor ringkas
-  daftar-artikel.html   Daftar artikel + status berlabel
+  daftar-artikel.html   Daftar artikel dari posts.json + filter status
   editor.html           Editor + estimasi baca langsung + alur persetujuan
-  posting.html          Unggah postingan dan foto ke GitHub
+  posting.html          Unggah postingan dan foto lewat Edge Function Supabase
 assets/css/style.css    Design token, komponen, responsive, dark mode
-assets/js/data.js       Contoh konten (placeholder API/CMS)
+assets/js/data.js       Kompatibilitas lama; tidak berisi berita contoh
 assets/js/posts.json    Postingan yang diunggah dari admin CMS
 assets/js/app.js        Perilaku: jam, waktu relatif, tema, toast, form, cookie, push
 assets/js/i18n.js       Pilihan bahasa + terjemahan otomatis seluruh teks halaman
@@ -136,6 +135,12 @@ Untuk mengaktifkan notifikasi ke perangkat pembaca:
 4. Deploy: `supabase functions deploy kirim-notifikasi`. Di dashboard function terpasang sebagai `kirim-notifikasi-` (ada tanda minus di akhir); CMS memanggil nama persis itu supaya URL-nya cocok.
 5. Setiap kali pemilik menekan **Unggah & terbitkan** di CMS, Edge Function dipanggil dengan token sesi pemilik dan mengirim notifikasi ke semua langganan. Pembaca mengaktifkan notifikasi lewat pop-up atau tombol **Aktifkan notifikasi berita** di footer; iPhone perlu menambahkan web ke Home Screen dulu (Safari iOS 16.4+).
 
+Untuk mengaktifkan unggahan CMS tanpa PAT di browser:
+
+1. Buat GitHub token klasik dengan scope `repo` (atau fine-grained dengan **Contents: Read and write** untuk repo `faisal.cms.com`), lalu simpan sebagai Supabase Secret `GITHUB_TOKEN` di **Dashboard → Project Settings → Edge Functions → Secrets**. Token ini tidak pernah dikirim ke browser.
+2. Deploy fungsi: `supabase functions deploy simpan-postingan`.
+3. Di `admin/posting.html`, klik **Cek koneksi**. Fungsi memverifikasi token sesi pemilik sebelum membaca/menulis `assets/js/posts.json`.
+
 ## Hal yang sudah berfungsi
 
 - Waktu nyata: tanggal, jam WIB (`Asia/Jakarta`) dan waktu relatif dihitung ulang tiap 30 detik dari `Date` dan `Intl.DateTimeFormat('id-ID')`.
@@ -162,12 +167,12 @@ Untuk mengaktifkan notifikasi ke perangkat pembaca:
 
 ## Yang masih kurang / perlu ditambahkan
 
-1. **Backend & CMS penuh** — artikel contoh masih di `assets/js/data.js`, dan unggahan admin memakai GitHub Contents API (bukan database). Belum ada versioning Konten, penjadwalan terbit, atau pengelolaan media yang lengkap.
-2. **Autentikasi nyata** — kata sandi login dan sesi admin diverifikasi Supabase Auth; email selain `felixreuss29@gmail.com`, kata sandi salah, dan penanda buatan di browser ditolak. Sebelum `assets/js/supabase-config.js` diisi dan `supabase-setup.sql` dijalankan, **tidak ada yang bisa masuk** (termasuk pemilik). Alur 2 langkah lama yang menerima enam digit apa pun sudah dihapus; `login-2fa.html` kini hanya mengalihkan ke `login.html`. Unggah postingan tetap memakai token GitHub di browser pemilik, bukan sesi pengguna.
+1. **Backend & CMS penuh** — tidak ada lagi artikel contoh di `assets/js/data.js`; seluruh berita berasal dari `assets/js/posts.json`. Unggahan admin memakai Edge Function `simpan-postingan` dengan token GitHub sebagai Supabase Secret (bukan disimpan di browser). Belum ada versioning konten, penjadwalan terbit, atau pengelolaan media yang lengkap.
+2. **Autentikasi nyata** — kata sandi login dan sesi admin diverifikasi Supabase Auth; email selain `felixreuss29@gmail.com`, kata sandi salah, dan penanda buatan di browser ditolak. Alur 2 langkah lama yang menerima enam digit apa pun sudah dihapus beserta halaman `login-2fa.html`. Unggah postingan memakai token sesi pemilik, bukan PAT di browser.
 3. **WYSIWYG & upload media** — editor lama masih `textarea` dan berlabel pratinjau; unggah foto nyata ada di `posting.html`, tetapi belum ada rich text atau pengelola aset.
 4. **Alur persetujuan persisten** — tabel alur hanya contoh; tombol "Kirim review" belum mengubah data/status di server maupun menyimpan riwayat.
 5. **Komentar & statistik bersama** — kode dan SQL sudah siap, tetapi `assets/js/supabase-config.js` masih kosong dan `supabase-setup.sql` belum dijalankan. Sebelum dihubungkan, komentar dan angka kunjungan hanya tersimpan di perangkat masing-masing. Panel moderasi juga baru bisa menghapus komentar setelah akun pemilik Supabase dibuat. Belum ada anti-spam otomatis selain batas panjang teks/nama.
-6. **SEO & metadata lengkap** — `robots.txt` sudah ada, tetapi belum ada canonical URL, Open Graph/Twitter card, JSON-LD, dan sitemap.xml (URL final deploy belum diketahui).
+6. **SEO & metadata lengkap** — `robots.txt`, `sitemap.xml`, canonical, Open Graph, Twitter card, dan JSON-LD (NewsArticle/WebSite) sudah memakai `https://faisalnews.web.id`. Daftarkan sitemap ke Google Search Console setelah domain stabil.
 7. **Analitik & iklan** — slot iklan masih placeholder; belum ada integrasi ads/analytics.
 8. **QA lanjutan** — audit Lighthouse otomatis sudah dijalankan (aksesibilitas, best practices, SEO = 100 pada halaman utama, artikel, kategori, dan dasbor; light & dark). Namun uji pembaca layar manual dan tinjauan visual manusia pada 1440/768/390 belum dilakukan.
 9. **Desain yang belum tersalin penuh** — layout tablet admin 768 dan beberapa state UI baru belum direbuild di file desain setelah perubahan warna.
