@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/style.css?v=57" />
+  <link rel="stylesheet" href="assets/css/style.css?v=58" />
 </head>
 <body data-page="Kebijakan Privasi">
   <div data-site-header></div>
@@ -35,19 +35,19 @@
       <h2 class="panel-title" id="judul-data">1. Data yang kami minta dan proses</h2>
       <ul class="step-list">
         <li><strong>Akun pembaca.</strong> Jika Anda mendaftar, alamat email dan kata sandi diverifikasi oleh Supabase Auth. Kata sandi tidak pernah disimpan di website. Email dipakai untuk mengenali akun Anda dan mengaktifkan notifikasi berita. Akun dapat ditinggalkan kapan saja dengan menekan tombol keluar, dan penghapusan dapat diminta lewat email di bawah.</li>
-        <li><strong>Komentar.</strong> Nama pilihan Anda dan teks komentar disimpan agar tampil untuk semua pembaca dan dapat dimoderasi pemilik. Jangan memasukkan data sensitif ke dalam komentar.</li>
+        <li><strong>Komentar.</strong> Nama pilihan Anda dan teks komentar disimpan agar tampil untuk semua pembaca dan dapat dimoderasi redaksi. Jangan memasukkan data sensitif ke dalam komentar.</li>
         <li><strong>Statistik kunjungan.</strong> Kami mencatat pengenal acak yang dibuat di browser, tanggal (WIB), dan halaman yang dibuka, maksimal sekali per hari per halaman, untuk menghitung pengunjung unik. Pengenal ini bukan nama, email, nomor telepon, atau alamat IP.</li>
-        <li><strong>Pengikut penulis.</strong> Tombol “Ikuti” menyimpan pengenal acak browser dan nama penulis yang diikuti. Jumlah pengikut ditampilkan sebagai angka; daftar identitas pembaca tidak dibuka ke publik. Ikutan dapat dibatalkan dengan menekan tombol itu lagi.</li>
+        <li><strong>Pengikut penulis.</strong> Tombol “Ikuti” hanya tersedia di halaman profil lengkap dan menyimpan pengenal acak browser serta nama penulis yang diikuti. Jumlah pengikut ditampilkan sebagai angka; daftar identitas pembaca tidak dibuka ke publik. Ikutan dapat dibatalkan dengan menekan tombol itu lagi.</li>
         <li><strong>Notifikasi berita.</strong> Jika Anda mengizinkan, browser menyimpan langganan Web Push di Supabase agar berita baru dapat dikirim walau halaman sedang tertutup. Kami menyimpan pengenal acak dan langganan perangkat, bukan nama, email, atau nomor telepon. Notifikasi dapat dimatikan kapan saja lewat tombol di footer.</li>
-        <li><strong>Dukungan sukarela.</strong> Faisal tidak mengumpulkan nama, email, nominal, catatan, atau bukti transfer untuk donasi. Nomor DANA pemilik ditampilkan sebagai penerima dukungan, dan pengiriman email kepada pemilik bersifat opsional.</li>
+        <li><strong>Dukungan sukarela.</strong> Faisal tidak mengumpulkan nama, email, nominal, catatan, atau bukti transfer untuk donasi. Nomor DANA Faisal Akbar ditampilkan sebagai penerima dukungan, dan pengiriman email kepada redaksi bersifat opsional.</li>
         <li><strong>Preferensi browser.</strong> Tema, bahasa, dan jawaban banner cookie/notifikasi disimpan di <code>localStorage</code> pada perangkat Anda. Tidak ada status akses donasi yang disimpan.</li>
-        <li><strong>Akun pemilik CMS.</strong> Email dan kata sandi pemilik hanya diverifikasi melalui Supabase Auth. Kata sandi tidak pernah disimpan di repositori website.</li>
+        <li><strong>Akun redaksi CMS.</strong> Email dan kata sandi akun redaksi hanya diverifikasi melalui Supabase Auth. Kata sandi tidak pernah disimpan di repositori website.</li>
       </ul>
     </section>
 
     <section class="panel" id="tujuan" aria-labelledby="judul-tujuan">
       <h2 class="panel-title" id="judul-tujuan">2. Tujuan penggunaan data</h2>
-      <p class="meta">Data digunakan semata-mata untuk: mengelola akun pembaca; menampilkan dan memoderasi komentar; menghitung statistik pengunjung unik; menampilkan jumlah pengikut penulis; mengirim notifikasi berita yang Anda izinkan; serta menjaga keamanan akun CMS pemilik. Kami tidak menjual, menyewakan, atau membagikan data pribadi Anda kepada pihak lain untuk kepentingan komersial.</p>
+      <p class="meta">Data digunakan semata-mata untuk: mengelola akun pembaca; menampilkan dan memoderasi komentar; menghitung statistik pengunjung unik; menampilkan jumlah pengikut penulis; mengirim notifikasi berita yang Anda izinkan; serta menjaga keamanan akun CMS redaksi. Kami tidak menjual, menyewakan, atau membagikan data pribadi Anda kepada pihak lain untuk kepentingan komersial.</p>
     </section>
 
     <section class="panel" id="pihak-ketiga" aria-labelledby="judul-pihak">
@@ -55,7 +55,7 @@
       <p class="meta">Karena Faisal adalah situs statis di GitHub Pages, beberapa fungsi memakai layanan pihak ketiga berikut:</p>
       <ul class="step-list">
         <li><strong>GitHub Pages</strong> — menyajikan halaman website.</li>
-        <li><strong>Supabase</strong> — menyimpan komentar, statistik kunjungan, pengikut penulis, langganan notifikasi, akun pembaca, dan autentikasi pemilik. Kunci yang dipublikasikan di browser hanya publishable/anon key, bukan secret key.</li>
+        <li><strong>Supabase</strong> — menyimpan komentar, statistik kunjungan, pengikut penulis, langganan notifikasi, akun pembaca, dan autentikasi redaksi. Kunci yang dipublikasikan di browser hanya publishable/anon key, bukan secret key.</li>
         <li><strong>Google Fonts</strong> — memuat font Inter dan Playfair Display.</li>
         <li><strong>Layanan terjemahan mesin</strong> — Google Translate dan, sebagai cadangan, MyMemory Translation API. Saat Anda memilih bahasa selain Indonesia, teks halaman dikirim ke layanan tersebut untuk diterjemahkan.</li>
       </ul>
@@ -70,7 +70,7 @@
 
     <section class="panel" id="kontak" aria-labelledby="judul-kontak">
       <h2 class="panel-title" id="judul-kontak">5. Kontak pengelola</h2>
-      <p class="meta">Pengelola data: Faisal Akbar, Pemilik &amp; Pemimpin Redaksi Faisal. Email: <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a>.</p>
+      <p class="meta">Pengelola data: Faisal Akbar. Email: <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a>.</p>
       <p class="meta">Dokumen terkait: <a href="disclaimer">Syarat Penggunaan</a> · <a href="koreksi">Koreksi &amp; Hak Jawab</a> · <a href="tentang">Tentang Faisal</a>.</p>
     </section>
 
@@ -79,11 +79,11 @@
 
   <div data-site-footer></div>
   <div class="toast" role="status" aria-live="polite"></div>
-  <script src="assets/js/supabase-config.js?v=57"></script>
-  <script src="assets/js/supabase.js?v=57"></script>
-  <script src="assets/js/data.js?v=57"></script>
-  <script src="assets/js/config.js?v=57"></script>
-  <script src="assets/js/i18n.js?v=57"></script>
-  <script src="assets/js/app.js?v=57"></script>
+  <script src="assets/js/supabase-config.js?v=58"></script>
+  <script src="assets/js/supabase.js?v=58"></script>
+  <script src="assets/js/data.js?v=58"></script>
+  <script src="assets/js/config.js?v=58"></script>
+  <script src="assets/js/i18n.js?v=58"></script>
+  <script src="assets/js/app.js?v=58"></script>
 </body>
 </html>

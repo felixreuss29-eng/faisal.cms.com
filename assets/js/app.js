@@ -130,7 +130,8 @@ function tulisIkuti(daftar) {
 }
 function peranPenulis(a) {
   const peran = (a && a.author && a.author.role) || 'Penulis Faisal';
-  return peran === 'Pemilik & Redaktur Utama' ? 'Pemilik & Pemimpin Redaksi' : peran;
+  // Di halaman publik, peran pemilik/pemimpin redaksi hanya muncul di profil lengkap.
+  return /pemilik|pemimpin redaksi|redaktur utama/i.test(peran) ? 'Redaksi Faisal' : peran;
 }
 function namaPenulis(a) {
   return (a && a.author && a.author.name) || 'Faisal Akbar';
@@ -182,6 +183,9 @@ async function sinkronIkuti() {
   }
 }
 function initFollow() {
+  // Tombol "Ikuti" hanya tampil di halaman profil lengkap.
+  const profil = document.querySelector('#profil-ikuti');
+  if (profil) profil.innerHTML = tombolIkuti('Faisal Akbar', 'btn btn-outline btn-follow', true);
   document.addEventListener('click', async (e) => {
     const tombol = e.target.closest('[data-follow]');
     if (!tombol) return;
@@ -443,7 +447,7 @@ function renderFooter() {
           <div>
             <span class="brand-name">Faisal</span>
             <p style="font-size:11px;margin:12px 0 0">Berita independen dan tepercaya untuk Indonesia.</p>
-            <p style="font-size:11px;margin:10px 0 0">Pemilik &amp; Pemimpin Redaksi: Faisal Akbar<br />Email: <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a><br />DANA: nomor dukungan ada di halaman dukungan</p>
+            <p style="font-size:11px;margin:10px 0 0">Email: <a href="mailto:felixreuss29@gmail.com">felixreuss29@gmail.com</a><br />DANA: nomor dukungan ada di halaman dukungan</p>
             <a class="footer-translate" href="https://translate.google.com/translate?sl=id&amp;tl=en&amp;u=${encodeURIComponent(location.href)}">Terjemahkan halaman (semua bahasa)</a>
             <button class="footer-notif" type="button" data-notif-toggle aria-pressed="false"><span data-notif-teks>Aktifkan notifikasi berita</span></button>
           </div>
@@ -599,7 +603,7 @@ function postinganTerbaru() {
   return POSTINGAN.slice().sort((a, b) => new Date(b.published || 0) - new Date(a.published || 0));
 }
 function renderPostingan() {
-  const kosong = '<div class="empty-state"><h3>Belum ada berita dari pemilik</h3><p>Gunakan menu <strong>Tulis Postingan</strong> di CMS. Setiap berita yang terbit otomatis tampil di <strong>Berita Terkini</strong> dan di bagian ini.</p></div>';
+  const kosong = '<div class="empty-state"><h3>Belum ada berita</h3><p>Gunakan menu <strong>Tulis Postingan</strong> di CMS. Setiap berita yang terbit otomatis tampil di <strong>Berita Terkini</strong>.</p></div>';
   const isi = POSTINGAN.length ? `<div class="grid-3">${postinganTerbaru().map(cardHTML).join('')}</div>` : kosong;
   const beranda = document.querySelector('#daftar-postingan');
   if (beranda) beranda.innerHTML = isi;
@@ -635,7 +639,6 @@ function cardHTML(a) {
     <div class="card-meta">
       <span class="meta" data-relative="${a.published}">${waktuRelatif(a.published)}</span>
       <span class="meta" data-view="${esc(a.id)}">Dilihat …</span>
-      ${tombolIkuti(penulis, 'btn-follow follow-kicker')}
     </div>
   </article>`;
 }
@@ -676,7 +679,7 @@ function renderHome() {
           </article>
           <article class="home-about-item">
             <span class="home-about-num" aria-hidden="true">II</span>
-            <div><h3>Pemilik &amp; Pemimpin Redaksi</h3><p>Faisal Akbar adalah mahasiswa Antar Bangsa, Jakarta Timur. Situs ini dibuat sebagai sarana belajar sekaligus menyampaikan berita kepada pembaca.</p></div>
+            <div><h3>Cakupan berita</h3><p>Faisal menyajikan kabar politik, nasional, ekonomi, olahraga, hukum, teknologi, internasional, dan pendidikan dari Indonesia serta dunia.</p></div>
           </article>
           <article class="home-about-item">
             <span class="home-about-num" aria-hidden="true">III</span>
@@ -717,7 +720,7 @@ function renderArticle() {
   const penulis = namaPenulis(a);
   const peran = peranPenulis(a);
   const bioTeks = penulis === 'Faisal Akbar'
-    ? 'Pemilik dan pemimpin redaksi Faisal. Mengelola arah redaksi dan memverifikasi berita yang diterbitkan.'
+    ? 'Anggota redaksi Faisal yang menulis dan menyunting berita untuk portal ini.'
     : `Penulis Faisal. ${peran}.`;
   const isi = a.body.map((b) => {
     if (b.type === 'h2') return `<h2>${esc(b.text)}</h2>`;
@@ -735,7 +738,6 @@ function renderArticle() {
           <div class="byline">
             <img src="${img(a.author.photo)}" alt="Foto ${esc(penulis)}" />
             <div class="byline-penulis"><strong>${esc(penulis)}</strong><span class="meta">${esc(peran)}</span></div>
-            ${tombolIkuti(penulis, 'btn btn-outline btn-follow', true)}
             <div class="byline-waktu meta"><span data-relative="${a.published}">${waktuRelatif(a.published)}</span> · <span data-view="${esc(a.id)}">Dilihat …</span> · <b data-reading="${a.id}">${readingMinutes(a.body)} menit baca</b></div>
             <div class="share"><span>Bagikan</span><a href="#" data-bagikan="email" aria-label="Email — bagikan lewat email">Email</a><a href="#" data-bagikan="link" aria-label="Link — salin tautan artikel">Link</a></div>
           </div>
@@ -744,9 +746,9 @@ function renderArticle() {
         <figure class="article-figure"><img src="${gambarArtikel(a)}" alt="${esc(a.alt || 'Ilustrasi: ' + a.title)}" /><figcaption>${dariAdmin ? 'Foto: ' + esc(kreditFoto(a)) + '.' : 'Ilustrasi artikel. Foto: Dokumentasi Faisal.'}</figcaption></figure>
         <div class="article-body" style="margin-top:28px">${isi}</div>
         <div class="tags"><span class="tag">#${esc(a.category)}</span><span class="tag">#Faisal</span></div>
-        <div class="author-bio"><img src="${img(a.author.photo)}" alt="Foto ${esc(penulis)}" /><div><h3>${esc(penulis)}</h3><div class="meta">${esc(peran)} · Faisal</div><p class="meta">${esc(bioTeks)}</p></div>${tombolIkuti(penulis, 'btn btn-outline btn-follow', true)}</div>
+        <div class="author-bio"><img src="${img(a.author.photo)}" alt="Foto ${esc(penulis)}" /><div><h3>${esc(penulis)}</h3><div class="meta">${esc(peran)}</div><p class="meta">${esc(bioTeks)}</p></div></div>
         <section class="comments"><h3 class="komentar-judul">Komentar</h3>
-          <p class="meta" data-komentar-status>Komentar tampil untuk semua pembaca dan dapat dimoderasi pemilik.</p>
+          <p class="meta" data-komentar-status>Komentar tampil untuk semua pembaca dan dapat dimoderasi redaksi.</p>
           <div class="comment-form">
             <label class="sr-only" for="nama-komentar">Nama</label>
             <input id="nama-komentar" type="text" placeholder="Nama Anda" maxlength="40" autocomplete="name" />
@@ -809,7 +811,7 @@ function renderArticle() {
       const daftar = await FD.komentar(artikelId);
       tampilkanKomentar(daftar);
       if (statusKomentar) statusKomentar.textContent = FD.siap()
-        ? 'Komentar tampil untuk semua pembaca dan dapat dimoderasi pemilik.'
+        ? 'Komentar tampil untuk semua pembaca dan dapat dimoderasi redaksi.'
         : 'Supabase belum terhubung; komentar baru tersimpan di perangkat ini.';
     } catch (e) {
       judulKomentar.textContent = 'Komentar';
