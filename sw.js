@@ -3,7 +3,7 @@
    Hanya menampilkan notifikasi yang dikirim Edge Function
    Supabase; tidak menyimpan konten artikel di cache.
    ============================================================ */
-const SITUS = 'https://felixreuss29-eng.github.io/faisal.cms.com/';
+const SITUS = 'https://faisalnews.web.id/';
 
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (event) => event.waitUntil(self.clients.claim()));
