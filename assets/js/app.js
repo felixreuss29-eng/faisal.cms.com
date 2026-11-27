@@ -86,6 +86,11 @@ function startClock() {
   setInterval(updateDynamicTime, 30000);
 }
 
+/* ---------- Ikon UI ---------- */
+const IKON_PENGGUNA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></svg>';
+const IKON_BULAN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 14.6A8.6 8.6 0 0 1 9.4 3.6a8.6 8.6 0 1 0 11 11Z"/></svg>';
+const IKON_MATAHARI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+
 /* ---------- Tema ---------- */
 function initTheme() {
   const saved = localStorage.getItem('faisal-theme') || 'light';
@@ -100,9 +105,21 @@ function toggleTheme() {
 }
 function updateThemeButton() {
   const dark = document.documentElement.dataset.theme === 'dark';
+  const ikon = dark ? IKON_MATAHARI : IKON_BULAN;
+  const label = dark ? 'Mode terang' : 'Mode gelap';
   document.querySelectorAll('[data-theme-toggle]').forEach((b) => {
-    b.setAttribute('aria-label', dark ? 'Aktifkan mode terang' : 'Aktifkan mode gelap');
-    b.textContent = dark ? '☀' : '☾';
+    b.setAttribute('aria-label', 'Aktifkan ' + label.toLowerCase());
+    b.title = 'Aktifkan ' + label.toLowerCase();
+    let wadah = b.querySelector('.ikon-tema');
+    if (!wadah) {
+      wadah = document.createElement('span');
+      wadah.className = 'ikon-tema';
+      wadah.setAttribute('aria-hidden', 'true');
+      b.prepend(wadah);
+    }
+    wadah.innerHTML = ikon;
+    const teks = b.querySelector('[data-theme-teks]');
+    if (teks) teks.textContent = label;
   });
 }
 
@@ -234,7 +251,7 @@ async function perbaruiTampilanAkun() {
     link.classList.add('masuk');
   } else {
     if (label) label.textContent = 'Masuk';
-    if (avatar) avatar.textContent = '@';
+    if (avatar) avatar.innerHTML = IKON_PENGGUNA;
     link.setAttribute('aria-label', 'Masuk atau daftar akun pembaca');
     link.title = 'Masuk atau daftar akun pembaca';
     link.classList.remove('masuk');
@@ -324,7 +341,7 @@ function renderHeader(active = 'Beranda') {
               <select id="pilih-bahasa" class="language-select" data-bahasa aria-label="Pilih bahasa" title="Pilih bahasa. Terjemahan otomatis; teks asli tetap bahasa Indonesia."></select>
             </div>
             <a class="akun-btn" href="akun" data-akun-link aria-label="Masuk atau daftar akun pembaca" title="Masuk atau daftar akun pembaca">
-              <span class="akun-avatar" aria-hidden="true">@</span><span class="akun-teks" data-akun-teks>Masuk</span>
+              <span class="akun-avatar" aria-hidden="true">${IKON_PENGGUNA}</span><span class="akun-teks" data-akun-teks>Masuk</span>
             </a>
             <div class="notif-wrap">
               <button class="icon-btn notif-btn" type="button" data-notif-toggle aria-pressed="false" aria-label="Aktifkan notifikasi berita" title="Aktifkan notifikasi berita">
@@ -334,7 +351,7 @@ function renderHeader(active = 'Beranda') {
                 </span>
               </button>
             </div>
-            <button class="icon-btn" type="button" data-theme-toggle aria-label="Aktifkan mode gelap">☾</button>
+            <button class="icon-btn tema-btn" type="button" data-theme-toggle aria-label="Aktifkan mode gelap"><span class="ikon-tema" aria-hidden="true">${IKON_BULAN}</span></button>
             <a class="btn btn-primary" href="donasi">Dukungan</a>
             <button class="icon-btn menu-toggle" type="button" data-menu-toggle aria-label="Buka menu" aria-expanded="false">☰</button>
           </div>
@@ -356,7 +373,7 @@ function renderHeader(active = 'Beranda') {
         <label class="sr-only" for="pilih-bahasa-hp">Pilih bahasa</label>
         <select id="pilih-bahasa-hp" data-bahasa-hp aria-label="Pilih bahasa"></select>
       </div>
-      <button class="mobile-nav-btn" type="button" data-theme-toggle><span aria-hidden="true">☾</span> Mode gelap</button>
+      <button class="mobile-nav-btn" type="button" data-theme-toggle><span class="ikon-tema" aria-hidden="true">${IKON_BULAN}</span><span data-theme-teks>Mode gelap</span></button>
     </nav>
     <div class="ticker" aria-label="Berita berjalan">
       <div class="wrap" style="display:flex;align-items:center;gap:14px;width:100%">
