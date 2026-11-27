@@ -512,12 +512,13 @@ function gabunganTerkini() {
 function renderBeritaHarian() {
   const host = document.querySelector('#daftar-berita-harian');
   if (!host) return;
-  const semua = gabunganTerkini();
+  const semua = gabunganTerkini().slice(0, 3);
   if (!semua.length) {
     host.innerHTML = '<div class="empty-state"><h3>Berita belum tersedia</h3><p>Unggah berita melalui <strong>Tulis Postingan</strong> di CMS.</p></div>';
     return;
   }
-  host.innerHTML = `<div class="grid-3">${semua.map(kartuTerkiniHTML).join('')}</div>`;
+  host.innerHTML = `<div class="grid-3">${semua.map(kartuTerkiniHTML).join('')}</div>
+    <div class="lihat-semua-wrap"><a class="btn btn-outline" href="berita">Lihat semua berita →</a></div>`;
   updateDynamicTime();
 }
 function renderBeritaPage() {
