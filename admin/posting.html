@@ -100,7 +100,9 @@
       const token = tokenPemilik();
       if (!c.url || !c.anonKey) throw new Error('Konfigurasi Supabase belum tersedia.');
       if (!token) throw new Error('Masuk ke CMS sebagai pemilik terlebih dahulu.');
-      const r = await fetch(c.url + '/functions/v1/simpan-postingan', {
+      // Slug fungsi di dashboard adalah "smooth-action" (slug tidak bisa diubah
+      // setelah dibuat). Endpoint ini sudah aktif dan menjalankan kode yang sama.
+      const r = await fetch(c.url + '/functions/v1/smooth-action', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', apikey: c.anonKey },
         body: JSON.stringify(Object.assign({ aksi, token }, badan))
