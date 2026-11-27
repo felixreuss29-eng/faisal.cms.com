@@ -5,7 +5,7 @@
 -- 1. Hapus komentar percobaan. Sesuaikan nama/isi jika perlu.
 delete from public.faisal_komentar
 where lower(nama) in ('test', 'testing', 'uji', 'coba', 'admin')
-   or lower(isi) like '%test%' or lower(isi) like '%coba%';
+   or lower(teks) like '%test%' or lower(teks) like '%coba%';
 
 -- 2. Hapus tabel langganan lama (donasi kini QRIS sukarela, tanpa formulir).
 drop table if exists public.subscriptions cascade;
