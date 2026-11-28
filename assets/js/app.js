@@ -532,7 +532,7 @@ function catatKunjunganSekali() {
   if (!FD || document.body.dataset.admin === '1') return;
   FD.catatKunjungan('situs', 'situs').catch(() => {});
   if (document.querySelector('#article-root')) {
-    const id = new URLSearchParams(location.search).get('id') || (postinganTerbaru()[0] || {}).id || 'situs';
+    const id = idArtikelDariURL() || (postinganTerbaru()[0] || {}).id || 'situs';
     FD.catatKunjungan(id, 'artikel').catch(() => {});
   }
 }
