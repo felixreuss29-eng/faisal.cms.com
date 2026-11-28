@@ -287,7 +287,7 @@
   }
   function alamatSW() {
     const skrip = [...document.scripts].find((s) => /app\.js/.test(s.src || ''));
-    return skrip ? new URL('../../sw.js?v=58', skrip.src).href : new URL('sw.js?v=58', document.baseURI).href;
+    return skrip ? new URL('../../sw.js?v=59', skrip.src).href : new URL('sw.js?v=59', document.baseURI).href;
   }
   async function statusNotifikasi() {
     if (!('Notification' in window)) return 'tidak-didukung';
