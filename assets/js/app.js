@@ -705,7 +705,7 @@ function renderHome() {
         <p class="home-about-lead">Faisal adalah portal berita Indonesia yang menyajikan kabar nasional, olahraga, teknologi, internasional, dan pendidikan.</p>
         <div class="home-about-list">
           <article class="home-about-item">
-            <div><h3>Tentang website ini</h3><p>Faisal menghadirkan berita Indonesia dan dunia dengan bahasa yang jelas, rujukan yang disebutkan, dan pembaruan bila ada perkembangan.</p></div>
+            <div><h3>Tentang website ini</h3><p>Faisal Akbar adalah mahasiswa Antar Bangsa, Jakarta Timur. Situs ini dibuat sebagai sarana belajar sekaligus menyampaikan berita tentang peristiwa di Indonesia dan dunia. Faisal menyajikannya dengan bahasa yang jelas, rujukan yang disebutkan, dan pembaruan bila ada perkembangan.</p></div>
           </article>
           <article class="home-about-item">
             <div><h3>Cakupan berita</h3><p>Faisal menyajikan kabar nasional, olahraga, teknologi, internasional, dan pendidikan dari Indonesia serta dunia.</p></div>
