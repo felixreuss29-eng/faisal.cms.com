@@ -57,7 +57,7 @@ function artikelStatik(a) {
   const penulis = namaPenulis(a);
   const peran = peranPenulis(a);
   const terkait = posts.filter((x) => x.id !== a.id).slice(0, 4).map((x) => `
-          <div class="sidebar-item"><a href="/artikel/${enc(x.id)}/"><img src="/${esc(gambarArtikel(x))}" alt="Thumbnail ${esc(x.title)}" loading="lazy" /></a><div><span class="kicker">${esc(x.category)}</span><h3><a href="/artikel/${enc(x.id)}/">${esc(x.title)}</a></h3></div></div>`).join('');
+          <div class="sidebar-item"><a href="/artikel/${enc(x.id)}/"><img src="/${esc(gambarArtikel(x))}"${x.imageFit === 'contain' ? ' class="foto-penuh"' : ''} alt="Thumbnail ${esc(x.title)}" loading="lazy" /></a><div><span class="kicker">${esc(x.category)}</span><h3><a href="/artikel/${enc(x.id)}/">${esc(x.title)}</a></h3></div></div>`).join('');
   return `<div class="breadcrumb"><a href="/">Beranda</a> › <a href="/kategori?k=${enc(a.category)}">${esc(a.category)}</a> › ${esc(a.title)}</div>
     <div class="article-layout">
       <div>

@@ -662,7 +662,7 @@ async function muatPostingan() {
 function cardHTML(a) {
   const penulis = namaPenulis(a);
   return `<article class="card">
-    <a href="artikel/${encodeURIComponent(a.id)}/"><img src="${gambarArtikel(a)}" alt="${esc(a.alt || 'Ilustrasi: ' + a.title)}" loading="lazy" /></a>
+    <a href="artikel/${encodeURIComponent(a.id)}/"><img src="${gambarArtikel(a)}"${a.imageFit === 'contain' ? ' class="foto-penuh"' : ''} alt="${esc(a.alt || 'Ilustrasi: ' + a.title)}" loading="lazy" /></a>
     <div class="card-tags"><span class="kicker">${esc(a.category)}</span> <span class="sumber-label">${esc(penulis)}</span></div>
     <h3><a href="artikel/${encodeURIComponent(a.id)}/">${esc(a.title)}</a></h3>
     ${a.excerpt ? `<p class="meta card-excerpt">${esc(a.excerpt)}</p>` : ''}
@@ -798,7 +798,7 @@ function renderArticle() {
       </div>
       <aside>
         <div class="sidebar-section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title" style="font-size:20px">Artikel Terkait</h2></div>
-          ${postinganTerbaru().filter((x) => x.id !== a.id).slice(0, 4).map((x) => `<div class="sidebar-item"><a href="artikel/${encodeURIComponent(x.id)}/"><img src="${gambarArtikel(x)}" alt="Thumbnail ${esc(x.title)}" loading="lazy" /></a><div><span class="kicker">${esc(x.category)}</span><h3><a href="artikel/${encodeURIComponent(x.id)}/">${esc(x.title)}</a></h3><span class="meta" data-relative="${x.published}">${waktuRelatif(x.published)}</span></div></div>`).join('')}
+          ${postinganTerbaru().filter((x) => x.id !== a.id).slice(0, 4).map((x) => `<div class="sidebar-item"><a href="artikel/${encodeURIComponent(x.id)}/"><img src="${gambarArtikel(x)}"${x.imageFit === 'contain' ? ' class="foto-penuh"' : ''} alt="Thumbnail ${esc(x.title)}" loading="lazy" /></a><div><span class="kicker">${esc(x.category)}</span><h3><a href="artikel/${encodeURIComponent(x.id)}/">${esc(x.title)}</a></h3><span class="meta" data-relative="${x.published}">${waktuRelatif(x.published)}</span></div></div>`).join('')}
         </div>
         ${iklanHTML('ad-sidebar')}
       </aside>
@@ -891,7 +891,7 @@ function renderCategory() {
     <div class="wrap">
       <div class="filter-bar">${daftarKategori.map((k) => `<a class="chip ${k === kategori ? 'active' : ''}" href="kategori?k=${encodeURIComponent(k)}">${k}</a>`).join('')}</div>
       ${utama ? `<div class="section"><h2 class="sr-only">Sorotan ${esc(kategori)}</h2><div class="split">
-        <article class="lead"><a href="artikel/${encodeURIComponent(utama.id)}/"><img src="${gambarArtikel(utama)}" alt="${esc(utama.alt || 'Ilustrasi: ' + utama.title)}" /></a><span class="kicker">Utama</span><h3><a href="artikel/${encodeURIComponent(utama.id)}/">${esc(utama.title)}</a></h3></article>
+        <article class="lead"><a href="artikel/${encodeURIComponent(utama.id)}/"><img src="${gambarArtikel(utama)}"${utama.imageFit === 'contain' ? ' class="foto-penuh"' : ''} alt="${esc(utama.alt || 'Ilustrasi: ' + utama.title)}" /></a><span class="kicker">Utama</span><h3><a href="artikel/${encodeURIComponent(utama.id)}/">${esc(utama.title)}</a></h3></article>
         <div>${rankedHTML(semua.slice(1, 4).map((a) => a.title), kategori)}</div>
       </div></div>` : ''}
       <div class="section"><div class="section-head"><span class="section-mark"></span><h2 class="section-title">Berita ${esc(kategori)}</h2></div><div class="grid-3">${kartu.length ? kartu.join('') : '<p class="meta">Belum ada berita pada kategori ini. Unggah melalui menu <strong>Tulis Postingan</strong> di CMS.</p>'}</div></div>
