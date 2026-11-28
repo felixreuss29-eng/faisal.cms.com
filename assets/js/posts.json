@@ -1,6 +1,45 @@
 {
   "posts": [
     {
+      "id": "post-1795856691510",
+      "title": "Siswi SMA di Malang Tewas Diduga Dianiaya, Pakar: Pendidikan Karakter Tak Cukup di Ruang Kelas",
+      "category": "Nasional",
+      "excerpt": "Seorang siswi SMA Negeri 7 Malang tewas diduga dianiaya sejumlah remaja perempuan. Pakar pendidikan menilai kasus ini harus jadi refleksi soal nilai yang dipelajari anak dari lingkungannya.",
+      "image": "upload/post-1795856691510.webp",
+      "alt": "Empat potret berdampingan: pelaku pembullyan.",
+      "sumberRujukan": "Universitas Muhammadiyah Surabaya (UMSURA)",
+      "kreditFoto": "Jakarta keras",
+      "author": {
+        "name": "Faisal Akbar",
+        "role": "Pemilik & Pemimpin Redaksi",
+        "photo": "pemilik-profil-rapi.jpg"
+      },
+      "published": "2026-11-28T09:04:55.221Z",
+      "updated": "2026-11-28T09:04:55.221Z",
+      "body": [
+        {
+          "type": "p",
+          "text": "Seorang siswi SMA Negeri 7 Kota Malang, Jawa Timur, berusia 17 tahun, meninggal dunia setelah diduga dianiaya sejumlah remaja perempuan di kawasan Perumahan Bulan Terang Utama, Kedungkandang, pada Rabu (25/11/2026) malam. Menurut keterangan kepolisian yang dikutip Universitas Muhammadiyah Surabaya (Umsura), korban diduga dipukul dan ditendang berulang kali sebelum dinyatakan meninggal di rumah sakit. Kasus ini masih diselidiki Polresta Malang Kota."
+        },
+        {
+          "type": "p",
+          "text": "Menanggapi peristiwa tersebut, Pakar Pendidikan dan Anak Umsura, Holy Ichda Wahyuni, menilai pendidikan perlu mengevaluasi bukan hanya materi pelajaran, tetapi juga nilai yang diserap anak dari kebiasaan dan lingkungan sosialnya. Ia menyebut ejekan yang dianggap candaan dan kekerasan yang dibiarkan ikut mengajarkan nilai tertentu secara diam-diam."
+        },
+        {
+          "type": "p",
+          "text": "Menurut Holy, pendidikan moral perlu dibangun bertahap: anak patuh aturan, lalu memahami nilai kemanusiaan, hingga berani membela korban meski berisiko dijauhi teman. Ia juga mengingatkan bahaya solidaritas kelompok yang toksik, ketika anak tahu kekerasan itu salah tetapi tetap ikut melakukannya."
+        },
+        {
+          "type": "p",
+          "text": "Holy mendorong sekolah memetakan iklim sosial secara berkala, menyediakan ruang aman bagi siswa untuk bercerita, dan menjalin komunikasi dengan keluarga. Ia menegaskan pencegahan tidak boleh baru dilakukan setelah ada korban, dan harus melibatkan pemerintah, sekolah, keluarga, serta masyarakat."
+        },
+        {
+          "type": "p",
+          "text": "Status hukum para terduga dan perkembangan penyelidikan belum dijelaskan dalam sumber ini."
+        }
+      ]
+    },
+    {
       "id": "post-1795808496216",
       "title": "Prabowo Janjikan Kenaikan Gaji Guru di Hari Guru Nasional 2026; Kapan Direalisasikan?",
       "category": "Nasional",
