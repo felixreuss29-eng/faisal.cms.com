@@ -307,6 +307,8 @@ main { padding-bottom: 64px; }
 .article-figure { margin: 24px 0 0; }
 .article-figure img { width: 100%; max-height: 460px; object-fit: cover; border-radius: 4px; }
 .article-figure.foto-penuh img { max-height: none; height: auto; object-fit: contain; }
+.article-figure.foto-potret { max-width: 420px; margin-left: auto; margin-right: auto; }
+.article-figure.foto-potret img { max-height: none; height: auto; object-fit: contain; }
 .card img.foto-penuh, .lead img.foto-penuh, .split .lead img.foto-penuh, .sidebar-item img.foto-penuh { object-fit: contain; background: var(--surface); }
 .article-figure figcaption { background: var(--surface); padding: 12px 16px; font-size: 10px; color: var(--muted); }
 .article-layout { display: grid; grid-template-columns: minmax(0, 820px) minmax(0, 436px); gap: 40px; margin-top: 32px; align-items: start; }
