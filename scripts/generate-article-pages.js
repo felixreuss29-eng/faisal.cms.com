@@ -77,7 +77,7 @@ function artikelStatik(a) {
             <span>Diterbitkan: ${esc(waktuTerbit(a.published))} · Diperbarui: ${esc(waktuTerbit(a.updated || a.published))}</span>
           </div>
         </header>
-        <figure class="article-figure"><img src="/${esc(gambar)}" alt="${esc(a.alt || 'Ilustrasi: ' + a.title)}" /><figcaption>Foto: ${esc(kreditFoto(a))}.</figcaption></figure>
+        <figure class="article-figure${a.imageFit === 'contain' ? ' foto-penuh' : ''}"><img src="/${esc(gambar)}" alt="${esc(a.alt || 'Ilustrasi: ' + a.title)}" /><figcaption>Foto: ${esc(kreditFoto(a))}.</figcaption></figure>
         <div class="article-body" style="margin-top:28px">${isiArtikel(a)}</div>
         <div class="tags"><span class="tag">#${esc(a.category)}</span><span class="tag">#Faisal</span></div>
         <div class="author-bio"><img src="/assets/img/${esc((a.author && a.author.photo) || 'pemilik-profil-rapi.jpg')}" alt="Foto ${esc(penulis)}" /><div><h3>${esc(penulis)}</h3><div class="meta">${esc(peran)}</div><p class="meta">Anggota redaksi Faisal yang menulis dan menyunting berita untuk portal ini.</p></div></div>

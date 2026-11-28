@@ -778,7 +778,7 @@ function renderArticle() {
           </div>
           ${dariAdmin ? infoPostinganHTML(a) : ''}
         </header>
-        <figure class="article-figure"><img src="${gambarArtikel(a)}" alt="${esc(a.alt || 'Ilustrasi: ' + a.title)}" /><figcaption>${dariAdmin ? 'Foto: ' + esc(kreditFoto(a)) + '.' : 'Ilustrasi artikel. Foto: Dokumentasi Faisal.'}</figcaption></figure>
+        <figure class="article-figure${a.imageFit === 'contain' ? ' foto-penuh' : ''}"><img src="${gambarArtikel(a)}" alt="${esc(a.alt || 'Ilustrasi: ' + a.title)}" /><figcaption>${dariAdmin ? 'Foto: ' + esc(kreditFoto(a)) + '.' : 'Ilustrasi artikel. Foto: Dokumentasi Faisal.'}</figcaption></figure>
         <div class="article-body" style="margin-top:28px">${isi}</div>
         <div class="tags"><span class="tag">#${esc(a.category)}</span><span class="tag">#Faisal</span></div>
         <div class="author-bio"><img src="${img(a.author.photo)}" alt="Foto ${esc(penulis)}" /><div><h3>${esc(penulis)}</h3><div class="meta">${esc(peran)}</div><p class="meta">${esc(bioTeks)}</p></div></div>
